@@ -1354,8 +1354,12 @@ static Str::StringRef BuildableAvailability( buildable_t buildable )
 	if ( BG_BuildableDisabled( buildable ) || !BG_BuildableUnlocked( buildable ) )
 		return "locked";
 
-	if ( BG_Buildable( buildable )->buildPoints > availableBudget )
-		return "expensive";
+	// TODO: this duplicates the budget check in the server, it should not
+	if ( strcmp(BG_Buildable( buildable )->name, "booster") != 0
+		 && strcmp(BG_Buildable( buildable )->name, "arm") != 0
+		 && strcmp(BG_Buildable( buildable )->name, "medistat") != 0)
+		if ( BG_Buildable( buildable )->buildPoints > availableBudget )
+			return "expensive";
 
 	return "available";
 }
