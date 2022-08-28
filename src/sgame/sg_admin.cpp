@@ -982,6 +982,47 @@ static bool admin_higher( gentity_t *admin, gentity_t *victim )
 	                           victim->client->pers.admin );
 }
 
+static bool admin_higher_admin_slap( g_admin_admin_t *a, g_admin_admin_t *b )
+{
+	bool perm;
+
+	if ( !b )
+	{
+		return true;
+	}
+
+	if ( admin_permission( b->flags, ADMF_IMMUTABLE, &perm ) )
+	{
+		return !perm;
+	}
+
+	int a_level = a ? a->level : 0;
+	if (a_level >= 90)
+	{
+		return b->level <= a_level;
+	}
+	else
+	{
+		return b->level + 3 <= a_level;
+	}
+}
+
+static bool admin_higher_slap( gentity_t *admin, gentity_t *victim )
+{
+	// console always wins
+	if ( !admin )
+	{
+		return true;
+	}
+	// anyone may slap bots (they deserve it)
+	else if ( victim->r.svFlags & SVF_BOT )
+	{
+		return true;
+	}
+
+	return admin_higher_admin_slap( admin->client->pers.admin, victim->client->pers.admin );
+}
+
 static void admin_writeconfig_string( Str::StringRef s, fileHandle_t f )
 {
 	if ( !s.empty() )
@@ -2653,7 +2694,7 @@ bool G_admin_slap( gentity_t *ent )
 
 	vic = &g_entities[ pid ];
 
-	if ( !admin_higher( ent, vic ) )
+	if ( !admin_higher_slap( ent, vic ) )
 	{
 		ADMP( va( "%s %s", QQ( N_( "^3$1$:^* sorry, but your intended victim has a higher admin"
 		          " level than you" ) ), "slap" ) ); // todo: move this print to a single helper function

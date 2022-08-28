@@ -425,7 +425,7 @@ void G_PlayerDie( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 
 	if ( attacker && attacker->client )
 	{
-		if ( G_OnSameTeam( self, attacker ) )
+		if ( G_OnSameTeam( self, attacker ) && meansOfDeath != MOD_SLAP )
 		{
 			// punish team kills and suicides
 			if ( attacker->client->pers.team == TEAM_ALIENS )
@@ -446,14 +446,14 @@ void G_PlayerDie( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 				G_AddCreditsToScore( attacker, -HUMAN_TK_SUICIDE_PENALTY );
 			}
 		}
-		else if ( g_showKillerHP.Get() )
+		else if ( g_showKillerHP.Get() && meansOfDeath != MOD_SLAP )
 		{
 			trap_SendServerCommand( self->num(), va( "print_tr %s %s %3i", QQ( N_("Your killer, $1$^*, had $2$ HP.") ),
 			                        Quote( killerName ),
 			                        (int)std::ceil(attacker->entity->Get<HealthComponent>()->Health()) ) );
 		}
 	}
-	else if ( attacker->s.eType != entityType_t::ET_BUILDABLE )
+	else if ( attacker->s.eType != entityType_t::ET_BUILDABLE && meansOfDeath != MOD_SLAP )
 	{
 		if ( self->client->pers.team == TEAM_ALIENS )
 		{
