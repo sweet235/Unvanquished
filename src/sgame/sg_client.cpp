@@ -256,6 +256,53 @@ static gentity_t *G_SelectSpawnBuildable( vec3_t preference, buildable_t buildab
 	return spot;
 }
 
+static gentity_t *G_SelectRandomSpawnBuildable( vec3_t preference, buildable_t buildable )
+{
+	gentity_t *search = nullptr;
+	gentity_t *spots[ MAX_ENTITIES ];
+	int index = 0;
+
+	while ( ( search = G_IterateEntitiesOfClass( search, BG_Buildable( buildable )->entityName ) ) != nullptr )
+	{
+		if ( !search->spawned )
+		{
+			continue;
+		}
+
+		if ( Entities::IsDead( search ) )
+		{
+			continue;
+		}
+
+		if ( search->s.groundEntityNum == ENTITYNUM_NONE )
+		{
+			continue;
+		}
+
+		if ( search->clientSpawnTime > 0 )
+		{
+			continue;
+		}
+
+		Entity* blocker = nullptr;
+		glm::vec3 spawnPoint;
+
+		search->entity->CheckSpawnPoint(blocker, spawnPoint);
+
+		if (blocker)
+		{
+			continue;
+		}
+
+		spots[index++] = search;
+	}
+
+	return index == 0 ? nullptr : spots[ rand() % index ];
+}
+
+
+Cvar::Cvar<int> g_randomSpawnAliens( "g_randomSpawnAliens", "make every n'th alien spawn at a random egg. 0 = disabled", Cvar::NONE, 0 );
+
 /*
 ===========
 G_SelectUnvanquishedSpawnPoint
@@ -266,6 +313,7 @@ Chooses a player start, deathmatch start, etc
 gentity_t *G_SelectUnvanquishedSpawnPoint( team_t team, vec3_t preference, vec3_t origin, vec3_t angles )
 {
 	gentity_t *spot = nullptr;
+	static int alienRandomCounter = 0;
 
 	/* team must exist, or there will be a sigsegv */
 	ASSERT( G_IsPlayableTeam( team ) );
@@ -276,7 +324,20 @@ gentity_t *G_SelectUnvanquishedSpawnPoint( team_t team, vec3_t preference, vec3_
 
 	if ( team == TEAM_ALIENS )
 	{
-		spot = G_SelectSpawnBuildable( preference, BA_A_SPAWN );
+		alienRandomCounter++;
+		if ( alienRandomCounter >= g_randomSpawnAliens.Get() )
+		{
+			alienRandomCounter = 0;
+		}
+
+		if ( g_randomSpawnAliens.Get() > 0 && alienRandomCounter == 0 )
+		{
+			spot = G_SelectRandomSpawnBuildable( preference, BA_A_SPAWN );
+		}
+		else
+		{
+			spot = G_SelectSpawnBuildable( preference, BA_A_SPAWN );
+		}
 	}
 	else if ( team == TEAM_HUMANS )
 	{
