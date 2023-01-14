@@ -846,3 +846,14 @@ std::string G_BotToString( gentity_t *bot )
 			bot->botMind->skillLevel,
 			bot->botMind->skillSetExplaination );
 }
+
+std::string G_BotToStringShort( gentity_t *bot )
+{
+	if ( !( bot->r.svFlags & SVF_BOT ) )
+	{
+		return "";
+	}
+	return Str::Format( "^*%s^*: %s [s=%d b=%s g=%s]",
+			bot->client->pers.netname, BG_TeamName( G_Team( bot ) ), bot->botMind->skillLevel,
+			bot->botMind->behaviorTree->name, BotGoalToString( bot ) );
+}
