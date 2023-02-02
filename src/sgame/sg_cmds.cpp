@@ -3080,6 +3080,18 @@ static void Cmd_Reload_f( gentity_t *ent )
 	}
 }
 
+bool BotChangeGoalEntity( gentity_t *self, gentity_t const *goal );
+static void Cmd_ForgetIt_f( gentity_t * ent )
+{
+	for ( int id = 0; id < MAX_CLIENTS; id++ )
+	{
+		if ( ( g_entities[ id ].r.svFlags & SVF_BOT ) && G_OnSameTeam( &g_entities[ id ], ent ) )
+		{
+			BotChangeGoalEntity( g_entities + id, g_entities + id );
+		}
+	}
+}
+
 static int nextTacticId( int id )
 {
 	int next = id + 1;
@@ -4272,6 +4284,7 @@ static const commands_t cmds[] =
 	{ "follow",          CMD_SPEC,                            Cmd_Follow_f           },
 	{ "follownext",      CMD_SPEC,                            Cmd_FollowCycle_f      },
 	{ "followprev",      CMD_SPEC,                            Cmd_FollowCycle_f      },
+	{ "forgetit",        CMD_TEAM,                            Cmd_ForgetIt_f         },
 	{ "give",            CMD_CHEAT,                           Cmd_Give_f             },
 	{ "god",             CMD_CHEAT,                           Cmd_God_f              },
 	{ "ignite",          CMD_CHEAT | CMD_TEAM | CMD_ALIVE,    Cmd_Ignite_f           },
