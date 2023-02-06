@@ -127,6 +127,10 @@ Util::optional<glm::vec3> direction, int flags, meansOfDeath_t meansOfDeath) {
 			if (G_OnSameTeam(entity.oldEnt, source) && !g_friendlyBuildableFire.Get()) {
 				return;
 			}
+			// dont make bots harm their own buildings
+			else if (G_OnSameTeam(entity.oldEnt, source) && (source->r.svFlags & SVF_BOT)) {
+				return;
+			}
 		}
 	}
 
