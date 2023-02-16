@@ -715,7 +715,8 @@ int BotGetDesiredBuy( gentity_t *self, weapon_t &weapon, upgrade_t upgrades[], s
 	if ( numUpgrades > 0 && teamNeedsRadar
 			&& others[0].canBuyNow() && usableCapital >= others[0].price()
 			&& ( usedSlots & others[0].slots() ) == 0
-			&& numUpgrades < upgradesSize )
+			&& numUpgrades < upgradesSize
+		 && usableCapital >= 600 )
 	{
 		upgrades[numUpgrades] = others[0].item;
 		usableCapital -= others[0].price();
@@ -765,8 +766,14 @@ int BotGetDesiredBuy( gentity_t *self, weapon_t &weapon, upgrade_t upgrades[], s
 
 	if ( self->botMind->skillSet[BOT_H_PREFER_ARMOR] )
 	{
+		size_t oldNumUpgrades = numUpgrades;
 		// buy armor before anything else
 		buyArmors();
+		if ( numUpgrades == oldNumUpgrades )
+		{
+			// too poor for armor: do not spend any funds
+			usableCapital = 0;
+		}
 		buyRadar();
 		buyWeapons();
 		buyTools();
