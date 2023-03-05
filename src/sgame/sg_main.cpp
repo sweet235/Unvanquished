@@ -169,6 +169,7 @@ Cvar::Cvar<float> g_alienOffCreepRegenHalfLife("g_alienOffCreepRegenHalfLife", "
 
 Cvar::Cvar<int> g_teamImbalanceWarnings("g_teamImbalanceWarnings", "send 'Teams are imbalanced' messages every x seconds if >0", Cvar::NONE, 0);
 Cvar::Cvar<int> g_freeFundPeriod("g_freeFundPeriod", "every x seconds, players get funds for nothing", Cvar::NONE, DEFAULT_FREEKILL_PERIOD);
+Cvar::Cvar<int> g_freeFundPeriodAliens("g_freeFundPeriodAliens", "every x seconds, alien players get funds for nothing", Cvar::NONE, 0);
 // int instead of bool for now to avoid changing the serverinfo format
 Cvar::Range<Cvar::Cvar<int>> g_unlagged("g_unlagged", "whether latency compensation is enabled", Cvar::SERVERINFO, 1, 0, 1);
 Cvar::Cvar<std::string> g_disabledVoteCalls(
