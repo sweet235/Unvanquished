@@ -3098,6 +3098,71 @@ static int nextTacticId( int id )
 	return ( next >= MAX_CLIENTS ) ? 0 : next;
 }
 
+static void tacticSquadCommand( gentity_t * ent, char squadTag, char * behavior )
+{
+	int numBotsOnTeam = 0;
+	for ( int id = 0; id < MAX_CLIENTS; id++ )
+	{
+		if ( !( g_entities[ id ].r.svFlags & SVF_BOT ) || !G_OnSameTeam( &g_entities[ id ], ent ) )
+		{
+			continue;
+		}
+		numBotsOnTeam++;
+	}
+
+	int skipNum = 0;
+	int changeNum = 0;
+	// TODO: implement more than 2 squads
+	if ( squadTag == 'A' )
+	{
+		changeNum = (numBotsOnTeam + 1) / 2;
+	}
+	else if ( squadTag == 'B' )
+	{
+		skipNum = (numBotsOnTeam + 1) / 2;
+		changeNum = numBotsOnTeam / 2;
+	}
+
+	int counter = 0;
+	int changedBots = 0;
+	for ( int id = 0; id < MAX_CLIENTS; id++ )
+	{
+		if ( !( g_entities[ id ].r.svFlags & SVF_BOT ) || !G_OnSameTeam( &g_entities[ id ], ent ) )
+		{
+			continue;
+		}
+		counter++;
+		if ( counter <= skipNum )
+		{
+			continue;
+		}
+		G_BotChangeBehavior( id, behavior );
+		if ( Entities::IsAlive( ent ) )
+		{
+			glm::vec3 position = VEC2GLM( ent->s.origin );
+			g_entities[ id ].botMind->userSpecifiedPosition = position;
+		}
+		else
+		{
+			g_entities[ id ].botMind->userSpecifiedPosition = Util::nullopt;
+		}
+		g_entities[ id ].botMind->userSpecifiedClientNum = ent->s.number;
+		changedBots++;
+		if ( changedBots >= changeNum )
+		{
+			break;
+		}
+	}
+	if ( changedBots == 0 )
+	{
+		ADMP( QQ( N_( "^3tactic:^* there are no bots in this squad" ) ) );
+	}
+	else
+	{
+		G_Say( ent, SAY_TEAM, va( changedBots == 1 ? "^A[squad %c: %d bot]^5 command \"%s\"!" : "^A[squad %c: %d bots]^5 command \"%s\"!", squadTag, changedBots, behavior ) );
+	}
+}
+
 static void Cmd_Tactic_f( gentity_t * ent )
 {
 	if ( level.intermissiontime )
@@ -3147,7 +3212,17 @@ static void Cmd_Tactic_f( gentity_t * ent )
 	{
 		char numBotsStr[ MAX_STRING_CHARS ];
 		trap_Argv( 2, numBotsStr, sizeof( numBotsStr ) );
-		if ( !Str::ParseInt( numBots, numBotsStr ) || numBots < 0 )
+		if ( strcmp( numBotsStr, "a" ) == 0 || strcmp( numBotsStr, "A" ) == 0 )
+		{
+			tacticSquadCommand( ent, 'A', behavior );
+			return;
+		}
+		else if ( strcmp( numBotsStr, "b" ) == 0 || strcmp( numBotsStr, "B" ) == 0 )
+		{
+			tacticSquadCommand( ent, 'B', behavior );
+			return;
+		}
+		else if ( !Str::ParseInt( numBots, numBotsStr ) || numBots < 0 )
 		{
 			ADMP( QQ( N_( "^3tactic:^* number must be non-negative" ) ) );
 			return;
