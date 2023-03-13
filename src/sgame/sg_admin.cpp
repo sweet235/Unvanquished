@@ -2667,8 +2667,11 @@ bool G_admin_setlevel( gentity_t *ent )
 	admin_log( va( "%d (%s) \"%s^*\"", a->level, a->guid,
 	               a->name ) );
 
-	G_admin_action( QQ( N_("^3setlevel:^* $2$^* was given level $3$ admin rights by $1$") ),
-	                "%s %s %d", ent, Quote( a->name ), a->level );
+	if ( ent )
+	{
+		G_admin_action( QQ( N_("^3setlevel:^* $2$^* was given level $3$ admin rights by $1$") ),
+						"%s %s %d", ent, Quote( a->name ), a->level );
+	}
 
 	G_admin_writeconfig();
 
