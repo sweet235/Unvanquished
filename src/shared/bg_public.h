@@ -439,8 +439,9 @@ enum persEnum_t
   PERS_SPENTBUDGET,
   PERS_MARKEDBUDGET,
   PERS_TOTALBUDGET,
-  PERS_QUEUEDBUDGET
-  // netcode has space for 2 more. TODO: extend
+  PERS_QUEUEDBUDGET,
+  PERS_BASESTATUS      // see G_GetBaseStatusCode
+  // netcode has space for 1 more. TODO: extend
 };
 
 #define PS_WALLCLIMBINGFOLLOW BIT(0)
@@ -1816,6 +1817,14 @@ namespace CombatFeedback
   static const int HIT_LETHAL   = 1 << 2;
 
   static const int INDICATOR_LIFETIME = 1000;
+}
+
+namespace BaseStatus
+{
+  static const int NO_SPAWN = 1 << 15;
+  static const int NO_MAIN  = 1 << 14;
+  static const int MAIN_BUILDING  = 1 << 13;
+  static const int TIME_LEFT_MASK = MAIN_BUILDING - 1;
 }
 
 // each of sgame and cgame must provide these
