@@ -28,6 +28,8 @@
 			text-align: left;
 			width: 40%;
 			left: 0.5em;
+			color: #ffffffff;
+			font-size: 1.15em;
 		}
 
 		region.tutorial {

@@ -1,0 +1,111 @@
+<rml>
+	<head>
+		<link type="text/template" href="/ui/shared/window.rml" />
+		<style>
+			panel {
+			width: 65%;
+			padding: 0.5em;
+			}
+		</style>
+	</head>
+	<body template="window" id="tactic_commands" style="width:45em; margin: 1em;">
+		<h1>Map&amp;Tactic Testing Server</h1>
+		<tabset>
+			<tab>
+				<translate>Overview</translate>
+			</tab>
+			<panel>
+ 				<h2>Overview of Bot Tactic Commands</h2>
+				<br />
+				<p>
+					Bot tactic commands control the behavior of bots on your team.
+					The following bot tactic commands can be entered into the console
+					(press Shift+Esc to open the console):
+				</p>
+				<p>
+					/tactic default <br />
+					/tactic defend <br />
+					/tactic rush <br />
+					/tactic stay-here <br />
+					/tactic stay-here-noheal <br />
+					/tactic follow <br />
+					/tactic follow-noheal <br />
+				</p>
+				<p>
+					Each time you enter a bot tactic command, a single bot your team changes its behavior.
+				</p>
+				<h3>default</h3>
+				<p>This is what bots usually do: they run around wherever they want.</p>
+				<h3>defend</h3>
+				<p>This tactic makes bots stay close to your reactor/overmind.</p>
+				<h3>rush</h3>
+				<p>This tactic makes bots attack the enemy base.</p>
+				<h3>stay-here</h3>
+				<p>
+					This tactic makes bots stay close to the point where you currently are.
+					When you go away, the bots will stay there.
+					Bots will go to a medistation/booster to heal.
+					Human bots will go to an armoury when out of ammo.
+				</p>
+				<h3>stay-here-noheal</h3>
+				<p>
+					Like stay-here, but bots will not go to a medistation/booster to heal.
+				</p>
+				<h3>follow</h3>
+				<p>
+					This tactic makes bots follow you wherever you go.
+					Bots will go to a medistation/booster to heal.
+					Human bots will go to an armoury when out of ammo.
+				</p>
+				<h3>follow-noheal</h3>
+				<p>
+					Like follow, but bots will not go to a medistation/booster to heal.
+				</p>
+			</panel>
+			<tab>
+				<translate>Bindings</translate>
+			</tab>
+			<panel>
+				<h2>Bind the commands!</h2>
+				<br />
+				<p>
+					It is recommended that you bind the commands to keys on your keyboard.
+					For example, enter this into your console:
+				</p>
+				<p>
+					/bind f6 tactic default <br />
+					/bind f7 tactic defend <br />
+					/bind f8 tactic rush <br />
+					/bind f9 tactic stay-here <br />
+					/bind f10 tactic stay-here-noheal <br />
+					/bind f11 tactic follow <br />
+					/bind f12 tactic follow-noheal <br />
+				</p>
+				<p>
+					After you did this, you can use the keys F6 to F12 to use the commands.
+				</p>
+			</panel>
+			<tab>
+				<translate>Commanding Many Bots</translate>
+			</tab>
+			<panel>
+				<h2>Commanding Many Bots At Once</h2>
+				<br />
+				<p>
+					The /tactic command takes an optional second argument to
+					specify how many bots you want to command. For example,
+					this will make 3 bots defend:
+				</p>
+				<p>
+					/tactic defend 3
+				</p>
+				<p>
+					If you want to command all bots on your team, use
+				</p>
+				<p>
+					/tactic defend 64
+				</p>
+			</panel>
+		</tabset>
+	</body>
+</rml>
