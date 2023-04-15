@@ -38,6 +38,8 @@
 		ui/options_democracy.rml
 		ui/options_bots.rml
 		ui/options_movements_cosmetic.rml
+		ui/changelog.rml
+		ui/tactic_commands.rml
 		ui/options_player.rml
 		ui/options.rml
 		ui/options_fov.rml
@@ -60,6 +62,10 @@
 		ui/callvote_map.rml
 		ui/callvote_fillbots.rml
 
+		ui/callvote_botskill.rml
+		ui/callvote_maxminers.rml
+		ui/callvote_minerbp.rml
+		ui/callvote_ff.rml
 	}
 	cursor ui/assets/cursor
 }

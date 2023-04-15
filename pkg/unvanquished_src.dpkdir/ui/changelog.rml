@@ -1,0 +1,513 @@
+<rml>
+	<head>
+		<link type="text/template" href="/ui/shared/window.rml" />
+		<style>
+			panel {
+			width: 65%;
+			padding: 0.5em;
+			}
+		</style>
+	</head>
+	<body template="window" id="changelog" style="width:45em; margin: 1em;">
+		<h1>Map&Tactic Testing Server</h1>
+		<tabset>
+			<tab>
+				<translate>Welcome</translate>
+			</tab>
+			<panel>
+				<translate><h1>Welcome to Map&Tactic Testing Server</h1></translate>
+				<br />
+				This server is for testing ported Tremulous maps (and
+				some game features).
+				A readable map list is at https://users.unvanquished.net/~sweet/maps.
+				<br />
+				<h2>Please check the changelogs</h2>
+				<h2>located left of this panel.</h2>
+				<h1> ← </h1>
+			</panel>
+			<tab>
+				<translate>2023-02-16</translate>
+			</tab>
+			<panel>
+				<h1>Changelog</h1>
+				<h2>2023-02-16</h2>
+				<br />
+				<h3>Tyrant</h3>
+				<p>
+					The tyrant's health is now 375. This is a
+					compromise, and by no means a final decision.
+				</p>
+				<h3>Human Bot Behavior</h3>
+				<p>
+					Previously, human bots using the behaviors
+					"follow" or "stay-here" would frequently run to
+					an armoury in order to buy bigger guns. They do
+					not do this anymore, except if an armoury is near.
+				</p>
+				<p>
+					If you plan to use these behaviors in a game, make
+					sure that there is an armoury near each telenode.
+				</p>
+				<h3>Bots Damaging Their Own Base</h3>
+				<p>
+					Bots cannot damage their own team's buildings anymore.
+					Previously, human bots with big weapons frequently
+					destroyed their own buildings.
+				</p>
+				<h3>Damage Buttons</h3>
+				<p>
+					A few maps have buttons that could be activated by
+					damaging them in Tremulous. This works now.
+				</p>
+				<p>
+					Examples are in the maps p4x and rotcannon-garbage.
+				</p>
+			</panel>
+			<tab>
+				<translate>2023-01-05</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2023-01-05</h2></translate>
+				<br />
+				<translate><h3>Bot tactic GUI</h3></translate>
+				<translate>
+					<p>
+						GUI for the bot tactic commands has been
+						added. At the moment, it only allows changing
+						all bots at once.
+					</p>
+				</translate>
+				<translate><h3>Bot tactic commands</h3></translate>
+				<translate>
+					<p>
+						The following commands have been renamed:
+					</p>
+					<p>
+						/tactic rush → /tactic attack <br />
+						/tactic follow-please → /tactic follow <br />
+						/tactic follow → /tactic follow-noheal <br />
+						/tactic no-heal-please → /tactic no-heal <br />
+						/tactic no-heal → /tactic no-heal-noheal
+					</p>
+					<p>
+						The old names are still supported, but this
+						might change in the future.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-12-16</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-12-16</h2></translate>
+				<br />
+				<translate><h3>Bot tactic commands</h3></translate>
+				<translate>
+					<p>
+						Do not use the command "/tactic camper"
+						anymore. Use "/tactic defend" instead.
+						These commands should work in most cases:
+					</p>
+					<p>
+						/tactic default<br />
+						/tactic defend<br />
+						/tactic rush
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-12-14</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-12-14</h2></translate>
+				<br />
+				<translate><h3>Booster</h3></translate>
+				<translate>
+					<p>
+						Aliens do not have to touch the booster
+						anymore for poison. It is enough to be in its
+						healing range.
+					</p>
+					<p>
+						This makes bots pick up poison when they heal.
+					</p>
+				</translate>
+				<translate><h3>Bot tactic commands</h3></translate>
+				<translate>
+					<p>
+						The tactic command was added to give players
+						some control over bot behavior. Use it like
+						this:
+					</p>
+					<p>
+						/tactic default<br />
+						/tactic camper<br />
+						/tactic rush
+					</p>
+					<p>
+						Each time a tactic command is entered, a
+						single bot on your team changes its behavior.
+					</p>
+					<p>
+						"default" is what the bots usually do.
+						"camper" makes bots stay near the
+						overmind/reactor.
+						"rush" makes bots attack the enemy base.
+					</p>
+					<p>
+						It is recommened to bind these commands to
+						keys on your keyboard, for example:
+					</p>
+					<p>
+						/bind f9 tactic default<br />
+						/bind f10 tactic camper<br />
+						/bind f11 tactic rush
+					</p>
+					<p>
+						This is experimental and will likely change in
+						the future.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-12-04</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-12-04</h2></translate>
+				<br />
+				<translate><h3>Easier Bots</h3></translate>
+				<translate>
+					<p>
+						Bot aim accuracy has been reduced. Skill 9
+						bots are unchanged. The accuracy for
+						lower skills has been reduced progressively,
+						such that the old skill 1 bots correspond to
+						the new skill 5 bots.
+					</p>
+					<p>
+						Aim accuracy is not the only bot
+						characteristic affected by skill, bot the most noticable.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-12-02</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-12-02</h2></translate>
+				<br />
+				<translate><h3>New Vote: Friendly Fire</h3></translate>
+				<translate>
+					<p>
+						There is a new vote to choose if friendly fire is enabled or disabled.
+					</p>
+					<p>
+						The vote can be called using the menu, or by the follwing
+						commands:
+					</p>
+					<p>
+						/callvote enableff<br />
+						/callvote disableff
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-10-24</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-10-24</h2></translate>
+				<br />
+				<translate><h3>New Vote: Build Points</h3></translate>
+				<translate>
+					<p>
+						There is a new vote to set how many build points a drill
+						or leech gives to a team. This should allow for nearly
+						unlimited build points.
+					</p>
+					<p>
+						The vote can be called using the menu, or by the follwing
+						command:
+					</p>
+					<p>
+						/callvote minerbp 100
+					</p>
+				</translate>
+				<translate><h3>New Maps</h3></translate>
+				<translate>
+					<p>
+						The following maps were added:
+						adoc, arena-ds, atcsbygucior, atcsfield, dunno.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-10-03</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-10-03</h2></translate>
+				<br />
+				<translate><h3>Las Gun Zoom</h3></translate>
+				<translate>
+					<p>
+						The las gun now has a zoom function similar to
+						the mass driver.
+					</p>
+				</translate>
+				<translate><h3>Marauder Zap</h3></translate>
+				<translate>
+					<p>
+						The marauder zap now deals damage to all
+						entities hit by lightning. The previous
+						behavior was a bug: all the damage was dealt
+						to the directly hit entity.
+					</p>
+				</translate>
+				<translate><h3>Vote For Maximum Drills/Leeches</h3></translate>
+				<translate>
+					<p>
+						Under "Democracy", there is a new entry to
+						call a vote for the maximum number of drills/leeches.
+					</p>
+				</translate>
+				<translate><h3>Human Stamina</h3></translate>
+				<translate>
+					<p>
+						Medium armour and battlesuit use a little less
+						stamina for running and jumping.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-29</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-29</h2></translate>
+				<br />
+				<translate><h3>New Vote</h3></translate>
+				<translate>
+					<p>
+						There is a new vote to set the bot skill.
+					</p>
+				</translate>
+				<translate><h3>Vote GUI</h3></translate>
+				<translate>
+					<p>
+						Under "Democracy", there are new entries for bot votes.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-26</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-26</h2></translate>
+				<br />
+				<translate><h3>Bot Navigation</h3></translate>
+				<translate>
+					<p>
+						Bot navigation has been improved for the following maps:
+					</p>
+					<p>
+						acidcave, apollo, atcszalpha, base-a51, boxfield, cerberus, chasm, cleanserb4, drift, dsarena, force, forlorn, fort5, freeway, gfic, gomeisa, greek, groundsource, hamunaptra, induction, intent, kaiji-starsidehotel, lowrise3, mancannon, mcc, meep, methane, multiply, nano, new-hope, orion, parpax, pmw, procyon, ptcs7, reflex4, rsmse, rtb, sectorb17, shiptoship, sokolov, stamina, strangelove, takana, tds, thanatos, transparency, treecannon, tremship, warehouse, wds, xtce, zittrig-arena.
+					</p>
+					<p>
+						Bots find more ways to the enemy base now. There are also fewer places for bots to get stuck on these maps
+						now.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-14</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-14</h2></translate>
+				<br />
+				<translate><h3>Tyrant</h3></translate>
+				<translate>
+					<p>
+						The tyrant has 400 health points now, and its healing
+						speed is increased slightly.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-13</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-13</h2></translate>
+				<br />
+				<translate><h3>New Vote</h3></translate>
+				<translate>
+					<p>
+						There is a new vote to allow players to choose how many
+						miners (drills or leeches) a team may have.
+						If you would like to set a maximum of 7 miners, use this command:
+					</p>
+					<p>
+						/callvote maxminers 7
+					</p>
+					<p>
+						The /teamstatus command now shows how many miners are
+						allowed.
+					</p>
+					<p>
+						By the way, it is recommended to type "/bind L
+						teamstatus" into the console. Use Shift+Esc to open the
+						console and Esc to close it. This command works on other
+						servers too.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-12</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-12</h2></translate>
+				<br />
+				<translate><h3>Negative Build Points</h3></translate>
+				<translate>
+					<p>
+						When a team has negative build points, they may mark
+						existing buildings and use the marked build points to
+						build new buildings. For example: if humans have -100
+						build points, and mark two turrets, they have -100+20=-80
+						build points. Now they can use the 20 build points, maybe
+						to build an armoury and a medistation.
+					</p>
+					<p>
+						For this reason, the ability to build
+						armoury/medistation/booster in any case if not present has
+						been removed. Mark other buildings if you want to rebuild
+						armoury/medistation/booster.
+					</p>
+				</translate>
+				<translate><h3>Miners</h3></translate>
+				<translate>
+					<p>
+						The maximum number of drills/leeches a team may have has
+						been increased from 4 to 5.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-08</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-08</h2></translate>
+				<br />
+				<translate><h3>New Votes</h3></translate>
+				<translate>
+					<p>
+						There is a new vote to allow players to choose how many bots
+						there are in a game. If you would like to have both teams
+						filled with bots to 7, use this command:
+					</p>
+					<p>
+						/callvote fillbots 7
+					</p>
+					<p>
+						To fill only one team with 7 bots, use one of these commands:
+					</p>
+					<p>
+						/callvote fillbots_aliens 7<br />
+						/callvote fillbots_humans 7
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-09-01</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-09-01</h2></translate>
+				<br />
+				<translate><h3>Marauder Zap</h3></translate>
+				<translate>
+					<p>
+						The marauder zap has been nerfed slightly.
+						This mirrors the flamer nerf recently made in upstream.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-08-28</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-08-28</h2></translate>
+				<br />
+				<translate><h3>Rebuilding Armoury/Medistation/Booster</h3></translate>
+				<translate>
+					<p>
+						If a team has no Armoury/Medistation/Booster, they may
+						build one even while their build points are negative.
+						This will remove the unfortunate situation where a team
+						lost their armoury, but continues to fight on without it.
+					</p>
+					<p>
+						As an unintended side effect, the banknote symbol
+						indicating negative build points in the build menu is not
+						shown anymore for the Armoury/Medistation/Booster icon.
+						The reason is that upstream lets clients decide when to
+						display this symbol, while only the server should do that.
+					</p>
+				</translate>
+			</panel>
+			<tab>
+				<translate>2022-08-25</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-08-25</h2></translate>
+				<br />
+				<translate><h3>Granger Spit Blob</h3></translate>
+				<translate><p>Granger blob does not lock a human completely
+						anymore, but slows it down instead. This is a change in
+						upstream.</p></translate>
+				<translate><h3>Credits For Destroying Buildings</h3></translate>
+				<translate><p>Destroying an enemy building is now rewarded
+						with credits/morph points.</p></translate>
+			</panel>
+			<tab>
+				<translate>2022-08-24</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-08-24</h2></translate>
+				<br />
+				<translate><h3>Damage Buttons</h3></translate>
+				<translate><p>Buttons that were	used by shooting in Tremulous can be used by +activate (default binding: Q). This is a temporary fix to make some maps playable at all, and might change in the future. As an unintended side effect, the armoury using range is slightly increased.</p></translate>
+			</panel>
+			<tab>
+				<translate>2022-08-22</translate>
+			</tab>
+			<panel>
+				<translate><h1>Changelog</h1></translate>
+				<translate><h2>2022-08-22</h2></translate>
+				<br />
+				<translate><h3>Momentum</h3></translate>
+				<translate><p>Momentum regression has been slowed down.</p></translate>
+				<translate><h3>Miners</h3></translate>
+				<translate><p>No team may have more than 4 drills or leeches.</p></translate>
+				<translate><h3>Slap</h3></translate>
+				<translate><p>Known players (level 2) have permission to /slap bots and unregistered players. Type /register in the console to avoid being slapped.</p></translate>
+			</panel>
+		</tabset>
+		<buttonbar>
+			<button onclick='Events.pushevent("hide changelog", event)'><translate>Close</translate></button>
+		</buttonbar>
+	</body>
+</rml>
