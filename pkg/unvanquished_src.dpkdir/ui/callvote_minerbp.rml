@@ -1,0 +1,18 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="/ui/shared/basics.rcss" />
+		<link type="text/template" href="/ui/shared/window.rml" />
+	</head>
+	<body id="callvote_minerbp" template="window" style="width: 35em; margin: 1em;">
+		<h1><translate>Build Points per Drill/Leech</translate></h1>
+		<br />
+		<p>How many build points should a drill/leech give?</p>
+		<form onsubmit='Events.pushevent("execForm \"callvote minerbp $amount$\"; hide", event)'>
+			<row>
+				<input type="text" class="text" style="width: 12em;" name="amount" value="50"/>
+				<h3><translate>Build Points</translate></h3>
+			</row>
+			<input type="submit"><button><translate>Call vote</translate></button></input>
+		</form>
+	</body>
+</rml>

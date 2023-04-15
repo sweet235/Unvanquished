@@ -12,6 +12,28 @@
 		<img class="circles" src="/ui/assets/background/circles2" />
 		<img class="black2" src="/ui/assets/background/black2" />
 
+		<div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; padding: 1em; width: 33em; height: 17em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);">
+			<h1>Bot Tactic</h1>
+			<h2>All Bots</h2>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic stay-here 64\"; hide", event)'><button>Stay Here</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic follow 64\"; hide", event)'><button>Follow</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic attack 64\"; hide", event)'><button>Attack</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic defend 64\"; hide", event)'><button>Defend</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic default 64\"; hide", event)'><button>Default</button></input>
+			<h2>Squad A</h2>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic stay-here a\"; hide", event)'><button>Stay Here</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic follow a\"; hide", event)'><button>Follow</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic attack a\"; hide", event)'><button>Attack</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic defend a\"; hide", event)'><button>Defend</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic default a\"; hide", event)'><button>Default</button></input>
+			<h2>Squad B</h2>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic stay-here b\"; hide", event)'><button>Stay Here</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic follow b\"; hide", event)'><button>Follow</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic attack b\"; hide", event)'><button>Attack</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic defend b\"; hide", event)'><button>Defend</button></input>
+			<input type="button" onclick='Events.pushevent("execForm \"tactic default b\"; hide", event)'><button>Default</button></input>
+		</div>
+
 		<div class="devmsg"><translate>This is a beta version of Unvanquished. Please report any issue you may find at <web dest="bugs" /></translate></div>
 
 		<sidebar style="top: 10%;">

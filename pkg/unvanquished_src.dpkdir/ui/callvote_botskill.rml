@@ -1,0 +1,28 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="/ui/shared/basics.rcss" />
+		<link type="text/template" href="/ui/shared/window.rml" />
+	</head>
+	<body id="callvote_botskill" template="window" style="width: 35em; margin: 1em;">
+		<h1><translate>Set bot skill level</translate></h1>
+		<br />
+		<p>What skill level should bots have?</p>
+		<form onsubmit='Events.pushevent("execForm \"callvote botskill $skill$\"; hide", event)'>
+			<row>
+				<select name="skill">
+					<option value="1">1 (easiest)</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5" selected="selected">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9 (hardest)</option>
+				</select>
+				<h3><translate>Skill level</translate></h3>
+			</row>
+			<input type="submit"><button><translate>Call vote</translate></button></input>
+		</form>
+	</body>
+</rml>
