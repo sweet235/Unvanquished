@@ -1,0 +1,20 @@
+<rml>
+	<head>
+		<link type="text/rcss" href="/ui/shared/basics.rcss" />
+		<link type="text/template" href="/ui/shared/window.rml" />
+	</head>
+	<body id="callvote_ff" template="window" style="width: 35em; margin: 1em;">
+		<h1><translate>Friendly Fire</translate></h1>
+		<br />
+		<form onsubmit='Events.pushevent("execForm \"callvote $action$\"; hide", event)'>
+			<row>
+				<select name="action">
+					<option value="enableff"><translate>Enable</translate></option>
+					<option value="disableff"><translate>Disable</translate></option>
+				</select>
+				<h3><translate>Friendly fire</translate></h3>
+			</row>
+			<input type="submit"><button><translate>Call vote</translate></button></input>
+		</form>
+	</body>
+</rml>
