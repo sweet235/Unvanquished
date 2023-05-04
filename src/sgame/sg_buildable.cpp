@@ -1572,6 +1572,24 @@ static void SetBuildableMarkedLinkState( bool link )
 	}
 }
 
+static Cvar::Cvar<int> g_customNobuildX("g_customNobuildX", "custom nobuild area", Cvar::NONE, 0);
+static Cvar::Cvar<int> g_customNobuildY("g_customNobuildY", "custom nobuild area", Cvar::NONE, 0);
+static Cvar::Cvar<int> g_customNobuildZ("g_customNobuildZ", "custom nobuild area", Cvar::NONE, 0);
+static Cvar::Cvar<int> g_customNobuildR("g_customNobuildR", "custom nobuild area", Cvar::NONE, 100);
+static Cvar::Cvar<bool> g_customNobuild("g_customNobuild", "custom nobuild area", Cvar::NONE, false);
+
+static bool isCustomNobuild( glm::vec3 t )
+{
+	if ( !g_customNobuild.Get() )
+	{
+		return false;
+	}
+	glm::vec3 c = glm::vec3( g_customNobuildX.Get(), g_customNobuildY.Get(), g_customNobuildZ.Get() );
+	glm::vec3 diff = t - c;
+	float distanceSquare = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+	return distanceSquare < g_customNobuildR.Get() * g_customNobuildR.Get();
+}
+
 itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int /*distance*/, //TODO
                              vec3_t origin, vec3_t normal, int *groundEntNum )
 {
@@ -1638,6 +1656,11 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int /*distan
 			reason = IBE_SURFACE;
 		}
 
+		if ( isCustomNobuild( VEC2GLM( origin ) ) )
+		{
+			reason = IBE_SURFACE;
+		}
+
 		// Check level permissions
 		if ( !g_alienAllowBuilding.Get() )
 		{
@@ -1658,6 +1681,11 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int /*distan
 		// Check permissions
 		bool invalid = (tr1.contents & (CUSTOM_CONTENTS_NOHUMANBUILD | CUSTOM_CONTENTS_NOBUILD)) || (contents & (CUSTOM_CONTENTS_NOHUMANBUILD | CUSTOM_CONTENTS_NOBUILD));
 		if ( invalid && !g_ignoreNobuild.Get() )
+		{
+			reason = IBE_SURFACE;
+		}
+
+		if ( isCustomNobuild( VEC2GLM( origin ) ) )
 		{
 			reason = IBE_SURFACE;
 		}
