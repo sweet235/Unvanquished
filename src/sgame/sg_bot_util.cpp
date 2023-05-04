@@ -1949,6 +1949,8 @@ void BotClassMovement( gentity_t *self, bool inAttackRange )
 		enemyLookingAtUs = Alignment2D( forward1, forward2 ) < -0.5f;
 	}
 
+	float jumpChance = 0.3f; // chance per second
+
 	switch ( self->client->ps.stats[STAT_CLASS] )
 	{
 		case PCL_ALIEN_LEVEL0:
@@ -1971,6 +1973,7 @@ void BotClassMovement( gentity_t *self, bool inAttackRange )
 			}
 			shouldStrafe = true;
 			botIsJumper = self->botMind->skillSet[BOT_A_MARA_JUMP_ON_ATTACK];
+			jumpChance = 1.0f;
 			break;
 		case PCL_ALIEN_LEVEL3:
 			if ( BotAttackUpward( self ) )
@@ -2015,7 +2018,6 @@ void BotClassMovement( gentity_t *self, bool inAttackRange )
 	}
 
 	int msec = level.time - level.previousTime;
-	constexpr float jumpChance = 0.1f; // chance per second
 	if ( botIsJumper && self->botMind->nav().directPathToGoal && (jumpChance / 1000.0f) * msec > random() )
 	{
 		BotJump( self );
