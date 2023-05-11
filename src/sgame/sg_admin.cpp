@@ -242,6 +242,12 @@ static const g_admin_cmd_t     g_admin_cmds[] =
 	},
 
 	{
+		"demigod",    G_admin_demigod,   false, "demigod",
+		N_("make a player invulnerable"),
+		N_("[^3name|slot#^7]")
+	},
+
+	{
 		"denybuild",    G_admin_denybuild,   false, "denybuild",
 		N_("take away a player's ability to build"),
 		N_("[^3name|slot#^7]")
@@ -3925,6 +3931,53 @@ bool G_admin_denybuild( gentity_t *ent )
 
 	admin_log( va( "%d (%s) \"%s^*\"", vic->slot, vic->guid,
 	               vic->name[ vic->nameOffset ] ) );
+	return true;
+}
+
+bool G_admin_demigod( gentity_t *ent )
+{
+	int pid;
+	char name[ MAX_NAME_LENGTH ], err[ MAX_STRING_CHARS ];
+	gentity_t *vic;
+
+	RETURN_IF_INTERMISSION;
+
+	if ( trap_Argc() < 2 )
+	{
+		ADMP( QQ( N_( "^3demigod:^* usage: demigod [^3name|slot#]" ) ) );
+		return false;
+	}
+
+	trap_Argv( 1, name, sizeof( name ) );
+
+	pid = G_ClientNumberFromString( name, err, sizeof( err ) );
+
+	if ( pid == -1 )
+	{
+		ADMP( va( "%s %s %s", QQ( "^3$1$:^* $2t$" ), "demigod", Quote( err ) ) );
+		return false;
+	}
+
+	vic = &g_entities[ pid ];
+
+	if ( !admin_higher( ent, vic ) )
+	{
+		ADMP( va( "%s %s", QQ( N_( "^3$1$:^* sorry, but your intended victim has a higher admin"
+		          " level than you" ) ), "demigod" ) );
+		return false;
+	}
+
+	if ( !g_clients[ pid ].isDemigod )
+	{
+		G_admin_action( QQ( N_("^3demigod:^* $1$^* decided that $2$^6 IS A DEMIGOD^*") ), "%s %s", ent, Quote( vic->client->pers.netname ) );
+	}
+	else
+	{
+		G_admin_action( QQ( N_("^3demigod:^* $1$^* decided that $2$^* is no longer a demigod^*") ), "%s %s", ent, Quote( vic->client->pers.netname ) );
+	}
+
+	g_entities[ pid ].client->isDemigod = !g_entities[ pid ].client->isDemigod;
+
 	return true;
 }
 
