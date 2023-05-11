@@ -452,6 +452,7 @@ struct gclient_t
 	int        lastAmmoRefillTime;
 	int        lastFuelRefillTime;
 	int        lastLockWarnTime; // used for the entity locking system
+	bool       isDemigod;
 
 	unlagged_t unlaggedHist[ MAX_UNLAGGED_MARKERS ];
 	unlagged_t unlaggedBackup;
