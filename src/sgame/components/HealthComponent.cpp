@@ -59,6 +59,7 @@ Util::optional<glm::vec3> direction, int flags, meansOfDeath_t meansOfDeath) {
 	if (client) {
 		if (client->noclip) return;
 		if (client->sess.spectatorState != SPECTATOR_NOT) return;
+		if (client->isDemigod) return;
 	}
 
 	// Set source to world if missing.
