@@ -1681,6 +1681,7 @@ struct cgs_t
 	float    momentumHalfLife; // used for momentum bar (un)lock markers
 	float    unlockableMinTime;  // used for momentum bar (un)lock markers
 
+	float    suddenDeathDrillCount;
 	float    buildPointBudgetPerMiner;
 	float    buildPointRecoveryInitialRate;
 	float    buildPointRecoveryRateHalfLife;
