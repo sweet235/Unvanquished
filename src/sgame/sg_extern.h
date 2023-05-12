@@ -66,6 +66,7 @@ extern Cvar::Cvar<bool> g_allowVote;
 extern Cvar::Cvar<int> g_voteLimit;
 extern Cvar::Cvar<int> g_extendVotesPercent;
 extern Cvar::Cvar<int> g_extendVotesTime;
+extern Cvar::Cvar<int> g_suddenDeathDelayTime;
 extern Cvar::Cvar<int> g_kickVotesPercent;
 extern Cvar::Cvar<int> g_denyVotesPercent;
 extern Cvar::Cvar<int> g_mapVotesPercent;
@@ -105,6 +106,10 @@ extern Cvar::Cvar<float> g_momentumDestroyMod;
 extern Cvar::Cvar<bool> g_humanAllowBuilding;
 extern Cvar::Cvar<bool> g_alienAllowBuilding;
 extern Cvar::Callback<Cvar::Cvar<bool>> g_indestructibleBuildables;
+
+extern Cvar::Cvar<int> g_suddenDeathMode;
+extern Cvar::Range<Cvar::Cvar<int>> g_suddenDeathDrillCount;
+extern Cvar::Callback<Cvar::Cvar<int>> g_suddenDeathTime;
 
 extern Cvar::Cvar<float> g_alienOffCreepRegenHalfLife;
 
