@@ -445,6 +445,9 @@ enum itemBuildError_t
   IBE_NOROOM,           // no room
   IBE_SURFACE,          // map doesn't allow building on that surface
   IBE_DISABLED,         // building has been disabled for team
+  IBE_SUDDENDEATH_1,    // building may not be rebuilt during Sudden Death (mode 1)
+  IBE_SUDDENDEATH_2,    // building may not be rebuilt during Sudden Death (mode 2)
+  IBE_SUDDENDEATH_ONLYONE, // only one may be rebuilt during Sudden Death (during mode 1)
   IBE_LASTSPAWN,        // may not replace last spawn with non-spawn
   IBE_MAINSTRUCTURE,    // may not replace main structure with other buildable
 
@@ -844,6 +847,9 @@ enum dynMenu_t
   MN_B_MAINSTRUCTURE,
   MN_B_DISABLED,
   MN_B_REVOKED,
+  MN_B_SUDDENDEATH_1,
+  MN_B_SUDDENDEATH_2,
+  MN_B_SUDDENDEATH_ONLYONE,
   MN_B_SURRENDER,
 
   //alien build
@@ -1388,6 +1394,8 @@ struct buildableAttributes_t
 	bool    transparentTest;
 	bool    uniqueTest;
 	bool    dretchAttackable;
+
+	bool    availableAfterSD;
 };
 
 struct buildableModelConfig_t
