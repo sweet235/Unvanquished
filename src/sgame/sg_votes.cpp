@@ -413,6 +413,24 @@ static bool HandleMaxMinersVote( gentity_t* ent, team_t team, std::string& cmd,
 	return true;
 }
 
+static bool HandleBotSkillVote( gentity_t* ent, team_t team, std::string& cmd,
+                                std::string& arg, std::string& reason, std::string& name,
+                                int clientNum, int id )
+{
+	int num = 0;
+	if ( !Str::ParseInt( num, arg ) || num < 1 || num > 9 )
+	{
+		trap_SendServerCommand( ent - g_entities, va( "print_tr %s %s", QQ( N_("$1$: invalid bot skill level") ), cmd.c_str()  ) );
+		return false;
+	}
+
+	Com_sprintf( level.team[ team ].voteString, sizeof( level.team[ team ].voteString ), "bot skill %d; g_bot_defaultSkill %d", num, num );
+	Com_sprintf( level.team[ team ].voteDisplayString, sizeof( level.team[ team ].voteDisplayString ), N_("Set bot skill level to %d"), num );
+
+	return true;
+}
+
+
 // Basic vote information
 // clang-format off
 static std::unordered_map<std::string, VoteDefinition> voteInfo = {
@@ -436,6 +454,7 @@ static std::unordered_map<std::string, VoteDefinition> voteInfo = {
 	{"fillbots_humans",   { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsTeamVotesPercent, VOTE_ALWAYS, nullptr,             nullptr,                   &HandleFillBotsHumanVote } },
 	{"fillbots_aliens",   { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsTeamVotesPercent, VOTE_ALWAYS, nullptr,             nullptr,                   &HandleFillBotsAliensVote } },
 	{"maxminers",         { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_maxMinersVotesPercent,   VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleMaxMinersVote } },
+	{"botskill",          { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsVotesPercent,    VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleBotSkillVote } },
 };
 
 // clang-format on
