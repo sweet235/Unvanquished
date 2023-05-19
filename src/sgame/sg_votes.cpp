@@ -386,6 +386,33 @@ static bool HandleFillBotsAliensVote( gentity_t* ent, team_t team, std::string& 
 	return true;
 }
 
+static bool HandleMaxMinersVote( gentity_t* ent, team_t team, std::string& cmd,
+                                 std::string& arg, std::string& reason, std::string& name,
+                                 int clientNum, int id )
+{
+	int num = 0;
+	if ( !Str::ParseInt( num, arg ) || num < -1 || num > 128 )
+	{
+		trap_SendServerCommand( ent - g_entities, va( "print_tr %s %s", QQ( N_("$1$: invalid number") ), cmd.c_str() ) );
+		return false;
+	}
+
+	char maxMinersStr[12] = ""; // 11 is max strlen() for 32-bit (signed) int
+	if ( num < 0 )
+	{
+		strcpy( maxMinersStr, "∞" );
+	}
+	else
+	{
+		sprintf( maxMinersStr, "%d", num );
+	}
+
+	Com_sprintf( level.team[ team ].voteString, sizeof( level.team[ team ].voteString ), "g_maxMiners %d", num );
+	Com_sprintf( level.team[ team ].voteDisplayString, sizeof( level.team[ team ].voteDisplayString ), N_("Set maximum number of drills/leeches to %s"), maxMinersStr );
+
+	return true;
+}
+
 // Basic vote information
 // clang-format off
 static std::unordered_map<std::string, VoteDefinition> voteInfo = {
@@ -408,6 +435,7 @@ static std::unordered_map<std::string, VoteDefinition> voteInfo = {
 	{"fillbots",          { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsVotesPercent,    VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleFillBotsVote } },
 	{"fillbots_humans",   { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsTeamVotesPercent, VOTE_ALWAYS, nullptr,             nullptr,                   &HandleFillBotsHumanVote } },
 	{"fillbots_aliens",   { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsTeamVotesPercent, VOTE_ALWAYS, nullptr,             nullptr,                   &HandleFillBotsAliensVote } },
+	{"maxminers",         { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_maxMinersVotesPercent,   VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleMaxMinersVote } },
 };
 
 // clang-format on
