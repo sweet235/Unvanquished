@@ -447,6 +447,23 @@ static bool HandleBotSkillVote( gentity_t* ent, team_t team, std::string& cmd,
 	return true;
 }
 
+static bool HandleMinerBPVote( gentity_t* ent, team_t team, std::string& cmd,
+                               std::string& arg, std::string& reason, std::string& name,
+                               int clientNum, int id )
+{
+	int num = 0;
+	int max = 127;
+	if ( !Str::ParseInt( num, arg ) || num < 0 || num > max )
+	{
+		trap_SendServerCommand( ent - g_entities, va( "print_tr %s %s %d", QQ( N_("$1$: number must be between 0 and $2$") ), cmd.c_str(), max ) );
+		return false;
+	}
+
+	Com_sprintf( level.team[ team ].voteString, sizeof( level.team[ team ].voteString ), "g_BPBudgetPerMiner %d", num );
+	Com_sprintf( level.team[ team ].voteDisplayString, sizeof( level.team[ team ].voteDisplayString ), N_("Set build points per drill/leech to %d"), num );
+
+	return true;
+}
 
 // Basic vote information
 // clang-format off
@@ -472,6 +489,7 @@ static std::unordered_map<std::string, VoteDefinition> voteInfo = {
 	{"fillbots_aliens",   { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsTeamVotesPercent, VOTE_ALWAYS, nullptr,             nullptr,                   &HandleFillBotsAliensVote } },
 	{"maxminers",         { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_maxMinersVotesPercent,   VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleMaxMinersVote } },
 	{"botskill",          { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsVotesPercent,    VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleBotSkillVote } },
+	{"minerbp",           { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_mapVotesPercent,         VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleMinerBPVote } },
 };
 
 // clang-format on
