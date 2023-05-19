@@ -465,6 +465,26 @@ static bool HandleMinerBPVote( gentity_t* ent, team_t team, std::string& cmd,
 	return true;
 }
 
+static Cvar::Cvar<int> g_ffVotesPercent("g_ffVotesPercent", "percentage required for votes to enable/disable friendly fire", Cvar::NONE, 51);
+
+static bool HandleEnableFFVote( gentity_t* ent, team_t team, std::string& cmd,
+                                std::string& arg, std::string& reason, std::string& name,
+                                int clientNum, int id )
+{
+	Com_sprintf( level.team[ team ].voteString, sizeof( level.team[ team ].voteString ), "exec enableff.cfg" );
+	Com_sprintf( level.team[ team ].voteDisplayString, sizeof( level.team[ team ].voteDisplayString ), N_("Enable friendly fire") );
+	return true;
+}
+
+static bool HandleDisableFFVote( gentity_t* ent, team_t team, std::string& cmd,
+                                 std::string& arg, std::string& reason, std::string& name,
+                                 int clientNum, int id )
+{
+	Com_sprintf( level.team[ team ].voteString, sizeof( level.team[ team ].voteString ), "exec disableff.cfg" );
+	Com_sprintf( level.team[ team ].voteDisplayString, sizeof( level.team[ team ].voteDisplayString ), N_("Disable friendly fire") );
+	return true;
+}
+
 // Basic vote information
 // clang-format off
 static std::unordered_map<std::string, VoteDefinition> voteInfo = {
@@ -490,6 +510,8 @@ static std::unordered_map<std::string, VoteDefinition> voteInfo = {
 	{"maxminers",         { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_maxMinersVotesPercent,   VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleMaxMinersVote } },
 	{"botskill",          { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_fillBotsVotesPercent,    VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleBotSkillVote } },
 	{"minerbp",           { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_mapVotesPercent,         VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleMinerBPVote } },
+	{"enableff",          { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_ffVotesPercent,          VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleEnableFFVote } },
+	{"disableff",         { true,  V_PUBLIC, T_OTHER,    false,  true,  qtrinary::qno,    &g_ffVotesPercent,          VOTE_ALWAYS,  nullptr,             nullptr,                   &HandleDisableFFVote } },
 };
 
 // clang-format on
