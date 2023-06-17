@@ -1997,6 +1997,11 @@ void BotFireWeaponAI( gentity_t *self )
 	trace_t trace;
 	usercmd_t *botCmdBuffer = &self->botMind->cmdBuffer;
 
+	if ( !self->client || ( self->client->ps.stats[ STAT_CLASS ] != PCL_HUMAN_BSUIT && ( self->client->ps.stats[ STAT_STATE ] & SS_BLOBLOCKED ) ) )
+	{
+		return;
+	}
+
 	BotResetStuckTime( self );
 	AngleVectors( VEC2GLM( self->client->ps.viewangles ), &forward, nullptr, nullptr );
 	muzzle = G_CalcMuzzlePoint( self, forward );
