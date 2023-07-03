@@ -3163,6 +3163,97 @@ static void tacticSquadCommand( gentity_t * ent, char squadTag, char * behavior 
 	}
 }
 
+static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsHumans{
+	{"psaw", &g_bot_painsaw},
+	{"shotgun", &g_bot_shotgun},
+	{"lgun", &g_bot_lasgun},
+	{"mdriver", &g_bot_mdriver},
+	{"chaingun", &g_bot_chaingun},
+	{"prifle", &g_bot_prifle},
+	{"flamer", &g_bot_flamer},
+	{"lcannon", &g_bot_lcannon},
+	{"bsuit", &g_bot_battlesuit},
+	{"firebomb", &g_bot_firebomb},
+	{"grenade", &g_bot_grenade},
+	{"radar", &g_bot_radar}
+};
+static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsAliens{
+	{"level1", &g_bot_level1},
+	{"level2", &g_bot_level2},
+	{"level2upg", &g_bot_level2upg},
+	{"level3", &g_bot_level3},
+	{"level3upg", &g_bot_level3upg},
+	{"level4", &g_bot_level4},
+};
+std::vector<std::string> botEquipHumanKeys = { "psaw", "shotgun", "lgun", "mdriver", "chaingun", "prifle", "flamer", "lcannon", "bsuit", "firebomb", "grenade", "radar" };
+std::vector<std::string> botEquipAlienKeys = { "level1", "level2", "level2upg", "level3", "level3upg", "level4" };
+
+static void botEquipStatus( gentity_t * ent, std::map<std::string, Cvar::Cvar<bool> *> &cvarsMap, std::vector<std::string> &keys )
+{
+	std::string msg = "^AStatus: ";
+	for ( size_t i = 0; i < keys.size(); i++ )
+	{
+		msg += "^5" + keys[ i ] + " " + ( cvarsMap.at( keys[ i ] )->Get() ? "on" : "^1OFF^5" );
+		if ( i < keys.size() - 1 )
+		{
+			msg += ", ";
+		}
+	}
+	ADMP( Quote( msg.c_str() ) );
+}
+
+static void Cmd_Bot_Equip_f( gentity_t * ent )
+{
+	if ( trap_Argc() != 2 )
+	{
+		switch ( G_Team( ent ) )
+		{
+		case TEAM_HUMANS:
+			botEquipStatus( ent, botEquipCvarsHumans, botEquipHumanKeys );
+			break;
+		case TEAM_ALIENS:
+			botEquipStatus( ent, botEquipCvarsAliens, botEquipAlienKeys );
+			break;
+		default:
+			ASSERT( false );
+			return;
+		}
+		return;
+	}
+
+	char itemOrClassCstr[ MAX_STRING_CHARS ];
+	trap_Argv( 1, itemOrClassCstr, sizeof( itemOrClassCstr ) );
+	std::string itemOrClass = itemOrClassCstr;
+
+	std::map<std::string, Cvar::Cvar<bool> *> *cvarsMap;
+	std::string errMsg = "";
+	switch ( G_Team( ent ) )
+	{
+	case TEAM_HUMANS:
+		cvarsMap = &botEquipCvarsHumans;
+		errMsg = "item";
+		break;
+	case TEAM_ALIENS:
+		cvarsMap = &botEquipCvarsAliens;
+		errMsg = "class";
+		break;
+	default:
+		ASSERT( false );
+		return;
+	}
+
+	auto it = cvarsMap->find( itemOrClass );
+	if ( it != cvarsMap->end() )
+	{
+		it->second->Set( !it->second->Get() );
+		G_Say( ent, SAY_TEAM, va( "^A[botequip]^5 %s is %sallowed!", itemOrClassCstr, ( it->second->Get() ? "" : "^1NOT^5 " ) ) );
+	}
+	else
+	{
+		ADMP( va( "%s %s", QQ( N_( "^3botequip:^* unknown $1$" ) ), Quote( errMsg.c_str() ) ) );
+	}
+}
+
 static void Cmd_Tactic_f( gentity_t * ent )
 {
 	if ( level.intermissiontime )
@@ -4347,6 +4438,7 @@ static const commands_t cmds[] =
 	{ "a",               CMD_MESSAGE | CMD_INTERMISSION,      Cmd_AdminMessage_f     },
 	{ "asay",            CMD_MESSAGE | CMD_INTERMISSION,      Cmd_Say_f              },
 	{ "beacon",          CMD_TEAM | CMD_ALIVE,                Cmd_Beacon_f           },
+	{ "botequip",        CMD_TEAM,                            Cmd_Bot_Equip_f        },
 	{ "build",           CMD_TEAM | CMD_ALIVE,                Cmd_Build_f            },
 	{ "buy",             CMD_HUMAN | CMD_ALIVE,               Cmd_Buy_f              },
 	{ "callteamvote",    CMD_MESSAGE | CMD_TEAM,              Cmd_CallVote_f         },
