@@ -4,15 +4,27 @@
 		<link type="text/template" href="/ui/shared/window.rml" />
 		<link type="text/rcss" href="menu.rcss" />
 		<script src="lua/util.lua"></script>
+		<script>
+			function onMenuShow(event, document)
+				local team = Cvar.get("p_team")
+				if team == "0" then
+				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: none")
+				elseif team == "1" then
+				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: block")
+				elseif team == "2" then
+				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: block")
+				end
+			end
+		</script>
 	</head>
 
-	<body id="menu_ingame" class="ingame" onkeydown="detectEscape(event, document)" >
+	<body id="menu_ingame" class="ingame" onkeydown="detectEscape(event, document)" onshow="onMenuShow(event, document)">
 		<img class="gradient black" src="/ui/assets/background/black" />
 		<img class="circles" src="/ui/assets/background/circles1" />
 		<img class="circles" src="/ui/assets/background/circles2" />
 		<img class="black2" src="/ui/assets/background/black2" />
 
-		<div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; padding: 1em; width: 33em; height: 17em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);">
+		<div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; padding: 1em; width: 33em; height: 17em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_tactic_menu">
 			<h1>Bot Tactic</h1>
 			<h2>All Bots</h2>
 			<input type="button" onclick='Events.pushevent("execForm \"tactic stay-here 64\"; hide", event)'><button>Stay Here</button></input>
