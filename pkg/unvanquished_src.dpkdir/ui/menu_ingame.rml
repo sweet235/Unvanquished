@@ -9,10 +9,16 @@
 				local team = Cvar.get("p_team")
 				if team == "0" then
 				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: none")
+				   document:GetElementById("bot_equip_menu_human"):SetAttribute("style", "display: none")
+				   document:GetElementById("bot_equip_menu_alien"):SetAttribute("style", "display: none")
 				elseif team == "1" then
 				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: block")
+				   document:GetElementById("bot_equip_menu_human"):SetAttribute("style", "display: none")
+				   document:GetElementById("bot_equip_menu_alien"):SetAttribute("style", "display: block")
 				elseif team == "2" then
 				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: block")
+				   document:GetElementById("bot_equip_menu_human"):SetAttribute("style", "display: block")
+				   document:GetElementById("bot_equip_menu_alien"):SetAttribute("style", "display: none")
 				end
 			end
 		</script>
@@ -44,6 +50,48 @@
 			<input type="button" onclick='Events.pushevent("execForm \"tactic attack b\"; hide", event)'><button>Attack</button></input>
 			<input type="button" onclick='Events.pushevent("execForm \"tactic defend b\"; hide", event)'><button>Defend</button></input>
 			<input type="button" onclick='Events.pushevent("execForm \"tactic default b\"; hide", event)'><button>Default</button></input>
+		</div>
+
+		<div style="position: absolute; margin: auto; top: -21em; bottom: 0; left: 0; right: 0; padding: 1em; width: 33em; height: 17.75em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_equip_menu_human">
+			<h1>Toggle Bot Equipment</h1>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip\"; hide", event)'><button>STATUS</button></input>
+			</row>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip chaingun\"; hide", event)'><button>Chaingun</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip mdriver\"; hide", event)'><button>Mass Driver</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip lgun\"; hide", event)'><button>Lasgun</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip shotgun\"; hide", event)'><button>Shotgun</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip psaw\"; hide", event)'><button>Painsaw</button></input>
+			</row>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip lcannon\"; hide", event)'><button>Lucifer Cannon</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip prifle\"; hide", event)'><button>Pulse Rifle</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip flamer\"; hide", event)'><button>Flame- thrower</button></input>
+			</row>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip radar\"; hide", event)'><button>Radar</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip bsuit\"; hide", event)'><button>Battlesuit</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip grenade\"; hide", event)'><button>Grenade</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip firebomb\"; hide", event)'><button>Firebomb</button></input>
+			</row>
+		</div>
+
+		<div style="position: absolute; margin: auto; top: -18.625em; bottom: 0; left: 0; right: 0; padding: 1em; width: 33em; height: 13.25em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_equip_menu_alien">
+			<h1>Toggle Bot Classes</h1>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip\"; hide", event)'><button>STATUS</button></input>
+			</row>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip level3upg\"; hide", event)'><button>Advanced Dragoon</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip level3\"; hide", event)'><button>Dragoon</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip level2upg\"; hide", event)'><button>Advanced Marauder</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip level2\"; hide", event)'><button>Marauder</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip level1\"; hide", event)'><button>Mantis</button></input>
+			</row>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip level4\"; hide", event)'><button>Tyrant</button></input>
+			</row>
 		</div>
 
 		<div class="devmsg"><translate>This is a beta version of Unvanquished. Please report any issue you may find at <web dest="bugs" /></translate></div>
