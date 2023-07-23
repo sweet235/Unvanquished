@@ -571,6 +571,7 @@ static void CG_Menu( int menuType, int arg )
 						"%s" // boost
 						"%s" // medi
 						"%s" // arm
+						"%s" // leech
 						"%s", // drill
 						( t == TEAM_ALIENS ? "^7Overmind\n" : "" ),
 						( t == TEAM_HUMANS ? "^7Reactor\n" : "" ),
@@ -581,7 +582,13 @@ static void CG_Menu( int menuType, int arg )
 						  va( "^7Drill^3* ^7(x^3%.0f^7)\n", 
 						      cgs.suddenDeathDrillCount > -1 ? cgs.suddenDeathDrillCount : 999 )
 							  // show the real drill count, or an unlikely max value;	
-						  : "" ) ) );
+						  : "" ),
+						( t == TEAM_ALIENS && cgs.suddenDeathDrillCount != 0 ? 
+						  va( "^7Leech^3* ^7(x^3%.0f^7)\n", 
+						      cgs.suddenDeathDrillCount > -1 ? cgs.suddenDeathDrillCount : 999 )
+							  // show the real drill count, or an unlikely max value;	
+						  : "" )
+							 ) );
 
 			shortMsg = _("Building is limited during Sudden Death");
 			break;
