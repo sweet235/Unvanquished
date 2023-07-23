@@ -1430,7 +1430,7 @@ itemBuildError_t G_SuddenDeathBuildCheck( buildable_t buildable, bool build )
 		}
 	}
 
-	if ( buildable == BA_H_DRILL ) // special case for drills, because you can have >1 at SD and it's configurable by cvar.
+	if ( buildable == BA_H_DRILL || buildable == BA_A_LEECH ) // special case for drills, because you can have >1 at SD and it's configurable by cvar.
 	{
 		if ( g_suddenDeathDrillCount.Get() == -1 )
 		{
