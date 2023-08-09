@@ -459,6 +459,7 @@ struct gclient_t
 	int        lastLockWarnTime; // used for the entity locking system
 	int        lastFirebombBuyTime;
 	bool       isDemigod;
+	int        lastGroundFlameDamageTime;
 
 	unlagged_t unlaggedHist[ MAX_UNLAGGED_MARKERS ];
 	unlagged_t unlaggedBackup;
