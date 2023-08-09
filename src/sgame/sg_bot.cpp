@@ -433,6 +433,7 @@ Bot Thinks
 */
 
 static Cvar::Cvar<float> g_bot_jetpackTimeout("g_bot_jetpackTimeout", "time in milliseconds until a jetpack flight is aborted", Cvar::NONE, 10000);
+static Cvar::Cvar<bool> g_bot_jumpOverFire("g_bot_jumpOverFire", "if bots should jump over ground flames", Cvar::NONE, true);
 
 void G_BotThink( gentity_t *self )
 {
@@ -537,6 +538,13 @@ void G_BotThink( gentity_t *self )
 		default:
 			break;
 		}
+	}
+
+	// jump if damaged by ground flames, and if not close to a corner that will
+	// make us turn (we might miss it and thus go back)
+	if ( g_bot_jumpOverFire.Get() && level.time - self->client->lastGroundFlameDamageTime < 200 && !G_BotCloseToPathCorner( self->num() ) )
+	{
+		BotJump( self );
 	}
 
 	// if we were nudged...

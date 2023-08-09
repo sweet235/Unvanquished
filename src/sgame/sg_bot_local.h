@@ -230,6 +230,7 @@ navMeshStatus_t G_BotSetupNav( const NavgenConfig &config, class_t species );
 void G_BotShutdownNav();
 bool G_BotFindRoute( int botClientNum, const botRouteTarget_t *target, bool allowPartial );
 bool G_BotPathNextCorner( int botClientNum, glm::vec3 &result );
+bool G_BotCloseToPathCorner( int botClientNum );
 void G_BotUpdatePath( int botClientNum, const botRouteTarget_t *target, botNavCmd_t *cmd );
 bool G_IsBotOverNavcon( int botClientNum );
 bool G_BotNavTrace( int botClientNum, botTrace_t *botTrace, const glm::vec3& start, const glm::vec3& end );
