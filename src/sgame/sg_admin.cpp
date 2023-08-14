@@ -267,6 +267,12 @@ static const g_admin_cmd_t     g_admin_cmds[] =
 	},
 
 	{
+		"forcebalance",     G_admin_forcebalance,    false, "forcebalance",
+		N_("toogle cvar g_teamForceBalance"),
+		""
+	},
+
+	{
 		"kick",         G_admin_kick,        false, "kick",
 		N_("kick a player with an optional reason"),
 		N_("[^3name|slot#^7] (^5reason^7)")
@@ -2675,6 +2681,13 @@ bool G_admin_setlevel( gentity_t *ent )
 		G_admin_cmdlist( vic );
 	}
 
+	return true;
+}
+
+bool G_admin_forcebalance( gentity_t *ent )
+{
+	g_teamForceBalance.Set( !g_teamForceBalance.Get() );
+	G_admin_action( QQ( N_( "^3forcebalance:^* $1$^* decided that forced team balance is $2$" ) ), "%s %s", ent, g_teamForceBalance.Get() ? "^ION" : "^2OFF" );
 	return true;
 }
 
