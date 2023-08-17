@@ -3384,6 +3384,53 @@ static void Cmd_Tactic_f( gentity_t * ent )
 	}
 }
 
+void Cmd_BotEnemy_f( gentity_t *ent )
+{
+	if ( level.intermissiontime )
+	{
+		return;
+	}
+
+	team_t userTeam = G_Team( ent );
+	Cvar::Cvar<int> &cvar = userTeam == TEAM_ALIENS ? g_bot_aliensenseRange : g_bot_radarRange;
+
+	auto usage = [&] () {
+		ADMP( QQ( N_( "^3botenemy:^* usage: botenemy range [integer]" ) ) );
+	};
+
+	if ( trap_Argc() < 2 || trap_Argc() > 3 )
+	{
+		usage();
+		return;
+	}
+
+	char subCommand[ MAX_STRING_CHARS ];
+	trap_Argv( 1, subCommand, sizeof( subCommand ) );
+	if ( strcmp( subCommand, "range") != 0 )
+	{
+		usage();
+		return;
+	}
+
+	if ( trap_Argc() == 2 )
+	{
+		ADMP( va( "%s %d %.0f", QQ( N_("^3botenemy: ^*attack range is $1$ ($2$ m)") ), cvar.Get(), cvar.Get() * QU_TO_METER ) );
+		return;
+	}
+
+	char distanceStr[ MAX_STRING_CHARS ];
+	trap_Argv( 2, distanceStr, sizeof( distanceStr ) );
+	int distance = 0;
+	if ( !Str::ParseInt( distance, distanceStr ) || distance < 50 || distance > 1500 )
+	{
+		ADMP( QQ( N_( "^3botenemy:^* number must be from 50 to 1500" ) ) );
+		return;
+	}
+
+	cvar.Set( distance );
+	G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 attack range is %d (%.0f m)!", distance, static_cast<float>( distance ) * QU_TO_METER ) );
+}
+
 void Cmd_TeamStatus_f( gentity_t * ent )
 {
 	int builders = 0;
@@ -4394,6 +4441,7 @@ static const commands_t cmds[] =
 	{ "a",               CMD_MESSAGE | CMD_INTERMISSION,      Cmd_AdminMessage_f     },
 	{ "asay",            CMD_MESSAGE | CMD_INTERMISSION,      Cmd_Say_f              },
 	{ "beacon",          CMD_TEAM | CMD_ALIVE,                Cmd_Beacon_f           },
+	{ "botenemy",        CMD_TEAM,                            Cmd_BotEnemy_f         },
 	{ "botequip",        CMD_TEAM,                            Cmd_Bot_Equip_f        },
 	{ "build",           CMD_TEAM | CMD_ALIVE,                Cmd_Build_f            },
 	{ "buy",             CMD_HUMAN | CMD_ALIVE,               Cmd_Buy_f              },
