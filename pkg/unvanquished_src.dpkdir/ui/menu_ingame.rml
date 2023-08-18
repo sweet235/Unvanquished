@@ -11,14 +11,17 @@
 				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: none")
 				   document:GetElementById("bot_equip_menu_human"):SetAttribute("style", "display: none")
 				   document:GetElementById("bot_equip_menu_alien"):SetAttribute("style", "display: none")
+				   document:GetElementById("bot_enemy_menu"):SetAttribute("style", "display: none")
 				elseif team == "1" then
 				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: block")
 				   document:GetElementById("bot_equip_menu_human"):SetAttribute("style", "display: none")
 				   document:GetElementById("bot_equip_menu_alien"):SetAttribute("style", "display: block")
+				   document:GetElementById("bot_enemy_menu"):SetAttribute("style", "display: block")
 				elseif team == "2" then
 				   document:GetElementById("bot_tactic_menu"):SetAttribute("style", "display: block")
 				   document:GetElementById("bot_equip_menu_human"):SetAttribute("style", "display: block")
 				   document:GetElementById("bot_equip_menu_alien"):SetAttribute("style", "display: none")
+				   document:GetElementById("bot_enemy_menu"):SetAttribute("style", "display: block")
 				end
 			end
 		</script>
@@ -92,6 +95,18 @@
 			</row>
 			<row>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip level4\"; hide", event)'><button>Tyrant</button></input>
+			</row>
+		</div>
+
+		<div style="position: absolute; margin: auto; top: 16em; bottom: 0; left: 0em; right: 0; padding: 1em; width: 33em; height: 8em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_enemy_menu">
+			<h1>Bots And Enemies</h1>
+			<h2>Attack Range</h2>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy range 1500\"; hide", event)'><button>High</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy range 1100\"; hide", event)'><button>Medium</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy range 800\"; hide", event)'><button>Small</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy range 500\"; hide", event)'><button>Tiny</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy range\"; hide", event)'><button>STATUS</button></input>
 			</row>
 		</div>
 
