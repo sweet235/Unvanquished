@@ -118,6 +118,10 @@ Util::optional<glm::vec3> direction, int flags, meansOfDeath_t meansOfDeath) {
 				} else {
 					take *= g_friendlyFireHumanMultiplier.Get();
 				}
+				// dont make bots harm users on their team
+				if ( meansOfDeath != MOD_BURN && source->r.svFlags & SVF_BOT && !( entity.oldEnt->r.svFlags & SVF_BOT ) ) {
+					return;
+				}
 			}
 		}
 
