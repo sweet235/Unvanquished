@@ -3393,9 +3393,12 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 
 	team_t userTeam = G_Team( ent );
 	Cvar::Cvar<int> &cvar = userTeam == TEAM_ALIENS ? g_bot_aliensenseRange : g_bot_radarRange;
+	Cvar::Cvar<int> preferredCvar = G_Team( ent ) == TEAM_ALIENS ? g_bot_preferredTargetAliens : g_bot_preferredTargetHumans;
+	std::string preferredName[] = { "default", "players", "attacking-players", "buildables", "attacking-buildables" };
 
 	auto usage = [&] () {
-		ADMP( QQ( N_( "^3botenemy:^* usage: botenemy range [integer]" ) ) );
+		ADMP( QQ( N_( "^3botenemy:^* usage: botenemy range [integer]\n"
+					  "                 botenemy prefer [default | players | attacking-players | buildables | attacking-buildables ]" ) ) );
 	};
 
 	if ( trap_Argc() < 2 || trap_Argc() > 3 )
@@ -3406,29 +3409,69 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 
 	char subCommand[ MAX_STRING_CHARS ];
 	trap_Argv( 1, subCommand, sizeof( subCommand ) );
-	if ( strcmp( subCommand, "range") != 0 )
+	if ( strcmp( subCommand, "range") == 0 )
+	{
+		if ( trap_Argc() != 3 )
+		{
+			ADMP( va( "%s %d %.0f", QQ( N_("^3botenemy: ^*attack range is $1$ ($2$ m)") ), cvar.Get(), cvar.Get() * QU_TO_METER ) );
+			return;
+		}
+
+		char distanceStr[ MAX_STRING_CHARS ];
+		trap_Argv( 2, distanceStr, sizeof( distanceStr ) );
+		int distance = 0;
+		if ( !Str::ParseInt( distance, distanceStr ) || distance < 50 || distance > 1500 )
+		{
+			ADMP( QQ( N_( "^3botenemy:^* number must be from 50 to 1500" ) ) );
+			return;
+		}
+
+		cvar.Set( distance );
+		G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 attack range is %d (%.0f m)!", distance, static_cast<float>( distance ) * QU_TO_METER ) );
+	}
+	else if ( strcmp( subCommand, "prefer") == 0 )
+	{
+		if ( trap_Argc() != 3 )
+		{
+			ADMP( va( "%s %s", QQ( N_("^3botenemy: ^*prefer: $1$") ), preferredName[ preferredCvar.Get() ].c_str() ) );
+			return;
+		}
+
+		char distanceStr[ MAX_STRING_CHARS ];
+		trap_Argv( 2, distanceStr, sizeof( distanceStr ) );
+		if ( strcmp( distanceStr, "default" ) == 0 )
+		{
+			preferredCvar.Set( 0 );
+		}
+		else if ( strcmp( distanceStr, "players" ) == 0 )
+		{
+			preferredCvar.Set( 1 );
+		}
+		else if ( strcmp( distanceStr, "attacking-players" ) == 0 )
+		{
+			preferredCvar.Set( 2 );
+		}
+		else if ( strcmp( distanceStr, "buildables" ) == 0 )
+		{
+			preferredCvar.Set( 3 );
+		}
+		else if ( strcmp( distanceStr, "attacking-buildables" ) == 0 )
+		{
+			preferredCvar.Set( 4 );
+		}
+		else
+		{
+			ADMP( QQ( N_( "^3botenemy:^* argument must be one of: default, players, attacking-players, buildables, attacking-buildables" ) ) );
+			return;
+		}
+
+		G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 prefer: %s!", distanceStr ) );
+	}
+	else
 	{
 		usage();
 		return;
 	}
-
-	if ( trap_Argc() == 2 )
-	{
-		ADMP( va( "%s %d %.0f", QQ( N_("^3botenemy: ^*attack range is $1$ ($2$ m)") ), cvar.Get(), cvar.Get() * QU_TO_METER ) );
-		return;
-	}
-
-	char distanceStr[ MAX_STRING_CHARS ];
-	trap_Argv( 2, distanceStr, sizeof( distanceStr ) );
-	int distance = 0;
-	if ( !Str::ParseInt( distance, distanceStr ) || distance < 50 || distance > 1500 )
-	{
-		ADMP( QQ( N_( "^3botenemy:^* number must be from 50 to 1500" ) ) );
-		return;
-	}
-
-	cvar.Set( distance );
-	G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 attack range is %d (%.0f m)!", distance, static_cast<float>( distance ) * QU_TO_METER ) );
 }
 
 void Cmd_TeamStatus_f( gentity_t * ent )

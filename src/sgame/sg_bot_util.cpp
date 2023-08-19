@@ -508,7 +508,7 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 				enemyScore = 0.5;
 				break;
 		}
-		if ( preferred == 1 )
+		if ( preferred == 1 || preferred == 2 )
 		{
 			enemyScore *= 100.0f;
 		}
@@ -564,7 +564,7 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 				break;
 
 		}
-		if ( preferred == 2 )
+		if ( preferred == 3 || preferred == 4 )
 		{
 			enemyScore *= 100.0f;
 		}
@@ -2523,8 +2523,33 @@ static gentity_t *BotPopEnemy( enemyQueue_t *queue )
 	return nullptr;
 }
 
+void BotMaybeResetGoal( gentity_t *self, gentity_t *enemy )
+{
+	int preferred = G_Team( self ) == TEAM_ALIENS ? g_bot_preferredTargetAliens.Get() : g_bot_preferredTargetHumans.Get();
+	if ( self->botMind->goal.targetsValidEntity()
+		 && G_Team( enemy ) != TEAM_NONE
+		 && !G_OnSameTeam( self, enemy ) )
+	{
+		if ( preferred == 1
+			 && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_PLAYER
+			 && enemy->s.eType == entityType_t::ET_PLAYER )
+		{
+			BotChangeGoalEntity( self, self );
+		}
+		else if ( preferred == 3
+				  && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_BUILDABLE
+				  && enemy->s.eType == entityType_t::ET_BUILDABLE
+				  && enemy->s.modelindex != BA_H_ROCKETPOD )
+		{
+			BotChangeGoalEntity( self, self );
+		}
+	}
+}
+
 void BotPain( gentity_t *self, gentity_t *attacker, int )
 {
+	int preferred = G_Team( self ) == TEAM_ALIENS ? g_bot_preferredTargetAliens.Get() : g_bot_preferredTargetHumans.Get();
+
 	if ( G_Team( attacker ) != TEAM_NONE
 		&& !G_OnSameTeam( self, attacker )
 		&& attacker->s.eType == entityType_t::ET_PLAYER
@@ -2533,13 +2558,21 @@ void BotPain( gentity_t *self, gentity_t *attacker, int )
 
 		BotPushEnemy( &self->botMind->enemyQueue, attacker );
 
-		int preferred = G_Team( self ) == TEAM_ALIENS ? g_bot_preferredTargetAliens.Get() : g_bot_preferredTargetHumans.Get();
 		// reset bot goal if pain comes from preferred target
-		if ( preferred == 1 && self->botMind->goal.targetsValidEntity() && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_PLAYER && attacker->s.eType == entityType_t::ET_PLAYER )
+		if ( ( preferred == 1 || preferred == 2 ) && self->botMind->goal.targetsValidEntity() && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_PLAYER && attacker->s.eType == entityType_t::ET_PLAYER )
 		{
 			BotChangeGoalEntity( self, self );
 		}
-		else if ( preferred == 2 && self->botMind->goal.targetsValidEntity() && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_BUILDABLE && attacker->s.eType == entityType_t::ET_BUILDABLE && attacker->s.modelindex != BA_H_ROCKETPOD )
+	}
+	// if attacked by a buildable
+	else if ( ( preferred == 3 || preferred == 4 )
+		&& G_Team( attacker ) != TEAM_NONE
+		&& !G_OnSameTeam( self, attacker )
+		&& self->botMind->skillSet[BOT_B_PAIN] )
+	{
+		BotPushEnemy( &self->botMind->enemyQueue, attacker );
+
+		if ( self->botMind->goal.targetsValidEntity() && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_BUILDABLE && attacker->s.eType == entityType_t::ET_BUILDABLE && attacker->s.modelindex != BA_H_ROCKETPOD )
 		{
 			BotChangeGoalEntity( self, self );
 		}
@@ -2562,6 +2595,7 @@ void BotSearchForEnemy( gentity_t *self )
 	if ( self->botMind->bestEnemy.ent )
 	{
 		self->botMind->bestEnemy.distance = Distance( self->s.origin, self->botMind->bestEnemy.ent->s.origin );
+		BotMaybeResetGoal( self, enemy );
 	}
 	else
 	{
