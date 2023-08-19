@@ -313,6 +313,8 @@ Cvar::Cvar<bool> g_bot_infiniteFunds("g_bot_infiniteFunds", "give bots unlimited
 Cvar::Cvar<bool> g_bot_infiniteMomentum("g_bot_infiniteMomentum", "allow bots to ignore momentum, but not other restrictions", Cvar::NONE, false);
 Cvar::Cvar<int> g_bot_aliensenseRange("g_bot_aliensenseRange", "custom aliensense range for bots", Cvar::NONE, ALIENSENSE_RANGE);
 Cvar::Cvar<int> g_bot_radarRange("g_bot_radarRange", "custom radar range for bots", Cvar::NONE, ALIENSENSE_RANGE);
+Cvar::Cvar<int> g_bot_preferredTargetAliens("g_bot_preferredTargetAliens", "wheter alien bots will prefer attacking players over attacking buildables: 0 = default, 1 = prefer players, 2 = prefer buildables", Cvar::NONE, 0);
+Cvar::Cvar<int> g_bot_preferredTargetHumans("g_bot_preferredTargetHumans", "wheter human bots will prefer attacking players over attacking buildables: 0 = default, 1 = prefer players, 2 = prefer buildables", Cvar::NONE, 0);
 
 //</bot stuff>
 

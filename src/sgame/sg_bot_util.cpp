@@ -449,6 +449,7 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 {
 	float enemyScore;
 	float distanceScore;
+	int preferred = G_Team( self ) == TEAM_ALIENS ? g_bot_preferredTargetAliens.Get() : g_bot_preferredTargetHumans.Get();
 	distanceScore = Distance( self->s.origin, ent->s.origin );
 
 	if ( ent->client )
@@ -507,6 +508,10 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 				enemyScore = 0.5;
 				break;
 		}
+		if ( preferred == 1 )
+		{
+			enemyScore *= 100.0f;
+		}
 	}
 	else
 	{
@@ -558,6 +563,10 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 				enemyScore = 0.5;
 				break;
 
+		}
+		if ( preferred == 2 )
+		{
+			enemyScore *= 100.0f;
 		}
 	}
 	return enemyScore * 1000 / distanceScore;
@@ -2523,6 +2532,17 @@ void BotPain( gentity_t *self, gentity_t *attacker, int )
 	{
 
 		BotPushEnemy( &self->botMind->enemyQueue, attacker );
+
+		int preferred = G_Team( self ) == TEAM_ALIENS ? g_bot_preferredTargetAliens.Get() : g_bot_preferredTargetHumans.Get();
+		// reset bot goal if pain comes from preferred target
+		if ( preferred == 1 && self->botMind->goal.targetsValidEntity() && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_PLAYER && attacker->s.eType == entityType_t::ET_PLAYER )
+		{
+			BotChangeGoalEntity( self, self );
+		}
+		else if ( preferred == 2 && self->botMind->goal.targetsValidEntity() && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_BUILDABLE && attacker->s.eType == entityType_t::ET_BUILDABLE && attacker->s.modelindex != BA_H_ROCKETPOD )
+		{
+			BotChangeGoalEntity( self, self );
+		}
 	}
 }
 
