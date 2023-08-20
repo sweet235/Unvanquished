@@ -98,7 +98,7 @@
 			</row>
 		</div>
 
-		<div style="position: absolute; margin: auto; top: 16em; bottom: 0; left: 0em; right: 0; padding: 1em; width: 33em; height: 8em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_enemy_menu">
+		<div style="position: absolute; margin: auto; top: 19em; bottom: 0; left: 0em; right: 0; padding: 1em; width: 33em; height: 14em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_enemy_menu">
 			<h1>Bots And Enemies</h1>
 			<h2>Attack Range</h2>
 			<row>
@@ -107,6 +107,13 @@
 				<input type="button" onclick='Events.pushevent("execForm \"botenemy range 800\"; hide", event)'><button>Small</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botenemy range 500\"; hide", event)'><button>Tiny</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botenemy range\"; hide", event)'><button>STATUS</button></input>
+			</row>
+			<h2>Prefer</h2>
+			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy prefer buildables\"; hide", event)'><button>Buildables</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy prefer players\"; hide", event)'><button>Players</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy prefer default\"; hide", event)'><button>Default</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botenemy prefer\"; hide", event)'><button>STATUS</button></input>
 			</row>
 		</div>
 
