@@ -433,7 +433,7 @@ Bot Thinks
 */
 
 static Cvar::Cvar<float> g_bot_jetpackTimeout("g_bot_jetpackTimeout", "time in milliseconds until a jetpack flight is aborted", Cvar::NONE, 10000);
-static Cvar::Cvar<bool> g_bot_jumpOverFire("g_bot_jumpOverFire", "if bots should jump over ground flames", Cvar::NONE, true);
+static Cvar::Cvar<bool> g_bot_jumpOverFire("g_bot_jumpOverFire", "whether bots should jump over ground flames", Cvar::NONE, true);
 
 void G_BotThink( gentity_t *self )
 {
