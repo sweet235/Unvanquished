@@ -1557,7 +1557,7 @@ static AINodeStatus_t BotActionReachHealH( gentity_t *self )
 	auto const& goal = self->botMind->goal;
 	const gentity_t * medistation = goal.getTargetedEntity();
 
-	glm::vec3 targetPos = goal.getPos();
+	glm::vec3 targetPos = goal.getPosCapped( self );
 	glm::vec3 myPos = VEC2GLM( self->s.origin );
 	targetPos[2] += BG_BuildableModelConfig( BA_H_MEDISTAT )->maxs[2];
 	myPos[2] += self->r.mins[2]; //mins is negative
