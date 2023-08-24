@@ -1692,7 +1692,7 @@ static AINodeStatus_t BotActionReachHealH( gentity_t *self )
 		return STATUS_FAILURE;
 	}
 
-	glm::vec3 targetPos = goal.getPos();
+	glm::vec3 targetPos = goal.getPosCapped( self );
 	glm::vec3 myPos = VEC2GLM( self->s.origin );
 	targetPos[2] += BG_BuildableModelConfig( BA_H_MEDISTAT )->maxs[2];
 	myPos[2] += self->r.mins[2]; //mins is negative
