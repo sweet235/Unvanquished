@@ -1213,7 +1213,7 @@ void BotTargetToRouteTarget( const gentity_t *self, botTarget_t target, botRoute
 
 	glm::vec3 mins, maxs;
 
-	routeTarget->setPos( target.getPos() );
+	routeTarget->setPos( target.getPosCapped( self ) );
 	BotTargetGetBoundingBox( target, mins, maxs, routeTarget );
 
 	// FIXME: shouldn't we find the true center instead?
@@ -2753,6 +2753,27 @@ glm::vec3 botTarget_t::getPos() const
 	if ( type == targetType::ENTITY && ent )
 	{
 		return VEC2GLM( ent->s.origin );
+	}
+	if ( type == targetType::COORDS )
+	{
+		return coord;
+	}
+	Log::Warn("Bot: couldn't get position of target");
+	return glm::vec3();
+}
+
+Cvar::Cvar<float> g_bot_humanTargetMinZ("g_bot_humanTargetMinZ", "cap human bot's human buildable target's z coordinates at this minimum", Cvar::NONE, -999999.f);
+
+glm::vec3 botTarget_t::getPosCapped( const gentity_t *self ) const
+{
+	if ( type == targetType::ENTITY && ent )
+	{
+		glm::vec3 result = VEC2GLM( ent->s.origin );
+		if ( G_Team( self ) == TEAM_HUMANS && G_Team( ent.get() ) == TEAM_HUMANS && result.z < g_bot_humanTargetMinZ.Get() )
+		{
+			result.z = g_bot_humanTargetMinZ.Get();
+		}
+		return result;
 	}
 	if ( type == targetType::COORDS )
 	{

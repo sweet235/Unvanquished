@@ -354,7 +354,7 @@ bool BotPathIsWalkable( const gentity_t *self, botTarget_t target )
 	glm::vec3 viewNormal = BG_GetClientNormal( &self->client->ps );
 	glm::vec3 selfPos = VEC2GLM( self->s.origin ) + self->r.mins[2] * viewNormal;
 
-	if ( !G_BotNavTrace( self->s.number, &trace, selfPos, target.getPos() ) )
+	if ( !G_BotNavTrace( self->s.number, &trace, selfPos, target.getPosCapped( self ) ) )
 	{
 		return false;
 	}
