@@ -71,6 +71,7 @@ public:
 	// note if you don't check with "isValid" first, you may
 	// have garbage as a result
 	glm::vec3 getPos() const;
+	glm::vec3 getPosCapped( const gentity_t *ent ) const;
 private:
 	GentityConstRef ent;
 	glm::vec3 coord;
