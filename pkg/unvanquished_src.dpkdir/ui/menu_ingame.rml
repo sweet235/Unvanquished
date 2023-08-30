@@ -74,6 +74,7 @@
 				<input type="button" onclick='Events.pushevent("execForm \"botequip bsuit\"; hide", event)'><button>Battlesuit</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip grenade\"; hide", event)'><button>Grenade</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip firebomb\"; hide", event)'><button>Firebomb</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip ckit\"; hide", event)' ><button>Constr. Kit</button></input>
 			</row>
 		</div>
 
