@@ -3164,6 +3164,7 @@ static void tacticSquadCommand( gentity_t * ent, char squadTag, char * behavior 
 }
 
 static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsHumans{
+	{"ckit", &g_bot_ckit},
 	{"psaw", &g_bot_painsaw},
 	{"shotgun", &g_bot_shotgun},
 	{"lgun", &g_bot_lasgun},
@@ -3185,7 +3186,7 @@ static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsAliens{
 	{"level3upg", &g_bot_level3upg},
 	{"level4", &g_bot_level4},
 };
-std::vector<std::string> botEquipHumanKeys = { "psaw", "shotgun", "lgun", "mdriver", "chaingun", "prifle", "flamer", "lcannon", "bsuit", "firebomb", "grenade", "radar" };
+std::vector<std::string> botEquipHumanKeys = { "ckit", "psaw", "shotgun", "lgun", "mdriver", "chaingun", "prifle", "flamer", "lcannon", "bsuit", "firebomb", "grenade", "radar" };
 std::vector<std::string> botEquipAlienKeys = { "level1", "level2", "level2upg", "level3", "level3upg", "level4" };
 
 static void botEquipStatus( gentity_t * ent, std::map<std::string, Cvar::Cvar<bool> *> &cvarsMap, std::vector<std::string> &keys )
