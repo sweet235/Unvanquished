@@ -386,4 +386,7 @@ extern int   MEDKIT_STARTUP_SPEED;
 
 #define MISSILE_PRESTEP_TIME 50
 
+extern int   BIOKIT_INTERVAL;
+extern float BIOKIT_MODIFIER;
+
 #endif // G_GAMEPLAY_H_

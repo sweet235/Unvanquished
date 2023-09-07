@@ -1506,6 +1506,7 @@ static void SetBehaviorTreeDefines()
 	D( UP_BATTLESUIT );
 	D( UP_RADAR );
 	D( UP_JETPACK );
+	D( UP_BIOKIT );
 	D( UP_GRENADE );
 	D( UP_FIREBOMB );
 	D( UP_MEDKIT );
