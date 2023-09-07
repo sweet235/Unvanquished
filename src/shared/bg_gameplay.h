@@ -391,4 +391,7 @@ extern int   MEDKIT_STARTUP_SPEED;
 #define MIN_WALK_NORMAL   0.7f // can't walk on very steep slopes
 #define STEPSIZE          18
 
+extern int   BIOKIT_INTERVAL;
+extern float BIOKIT_MODIFIER;
+
 #endif // G_GAMEPLAY_H_
