@@ -959,6 +959,14 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 	team_t    team = G_Team( self );
 	bool  hasRadar = ( team == TEAM_ALIENS ) ||
 	                     ( team == TEAM_HUMANS && BG_InventoryContainsUpgrade( UP_RADAR, self->client->ps.stats ) );
+	auto inCombat = [&] ( gentity_t *ent )
+	{
+		if ( !ent || !ent->client )
+		{
+			return false;
+		}
+		return level.time - ent->client->lastCombatTime < 3000;
+	};
 
 	for ( target = g_entities; target < &g_entities[level.num_entities]; target++ )
 	{
@@ -976,8 +984,10 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 		}
 
 		glm::vec3 vorigin = VEC2GLM( target->s.origin );
+		bool targetInCombat = inCombat( target );
 		if ( target->s.eType == entityType_t::ET_PLAYER && self->client->pers.team == TEAM_HUMANS
-		    && BotAimAngle( self, vorigin ) > g_bot_fov.Get() / 2 )
+		    && BotAimAngle( self, vorigin ) > g_bot_fov.Get() / 2
+			 && !targetInCombat )
 		{
 			continue;
 		}
@@ -995,13 +1005,13 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 			bestVisibleEnemyScore = newScore;
 			bestVisibleEnemy = target;
 		}
-		else if ( newScore > bestInvisibleEnemyScore && hasRadar )
+		else if ( newScore > bestInvisibleEnemyScore && ( hasRadar || targetInCombat ) )
 		{
 			bestInvisibleEnemyScore = newScore;
 			bestInvisibleEnemy = target;
 		}
 	}
-	if ( bestVisibleEnemy || !hasRadar )
+	if ( bestVisibleEnemy || ( !hasRadar && !inCombat( bestVisibleEnemy ) ) )
 	{
 		return bestVisibleEnemy;
 	}
