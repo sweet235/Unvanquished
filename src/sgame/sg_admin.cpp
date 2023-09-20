@@ -6678,6 +6678,10 @@ bool G_admin_listbotsShort( gentity_t *ent )
 		ADMBP( va( "%zu %s", ent - g_entities, G_BotToStringShort( ent ).c_str() ) );
 	}
 	ADMBP_end();
+	if ( ent && ent->client->pers.team != TEAM_NONE )
+	{
+		G_admin_action( QQ( N_("^3listbots:^* $1$^* requested a list of the current bot status") ), "%s", ent );
+	}
 	return true;
 }
 
@@ -6695,6 +6699,10 @@ bool G_admin_listbots( gentity_t *ent )
 		ADMBP( va( "%i %s", i, G_BotToString( &g_entities[ i ] ).c_str() ) );
 	}
 	ADMBP_end();
+	if ( ent && ent->client->pers.team != TEAM_NONE )
+	{
+		G_admin_action( QQ( N_("^3listbots:^* $1$^* requested a list of the current bot status") ), "%s", ent );
+	}
 	return true;
 }
 
