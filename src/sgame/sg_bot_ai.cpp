@@ -872,15 +872,55 @@ AINodeStatus_t BotActionSay( gentity_t *self, AIGenericNode_t *node )
 	return STATUS_SUCCESS;
 }
 
+static Cvar::Cvar<int>  g_bot_offmeshRangeBuilder("g_bot_offmeshRangeBuilder", "how far an offmesh target alien builder will pick, -1 = use bite range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel0("g_bot_offmeshRangeLevel0", "how far an offmesh target alien level0 will pick, -1 = use claw range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel1("g_bot_offmeshRangeLevel1", "how far an offmesh target alien level1 will pick, -1 = use claw range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel2("g_bot_offmeshRangeLevel2", "how far an offmesh target alien level2 will pick, -1 = use claw range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel2Upg("g_bot_offmeshRangeLevel2Upg", "how far an offmesh target alien level2upg will pick, -1 = use zap range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel3("g_bot_offmeshRangeLevel3", "how far an offmesh target alien level3 will pick, -1 = use claw range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel3Upg("g_bot_offmeshRangeLevel3Upg", "how far an offmesh target alien level3upg will pick, -1 = use claw range", Cvar::NONE, -1);
+static Cvar::Cvar<int>  g_bot_offmeshRangeLevel4("g_bot_offmeshRangeLevel4", "how far an offmesh target alien level4 will pick, -1 = use claw range", Cvar::NONE, -1);
+
 // Check if a human bot should switch to blaster to attack an offmesh target.
 // TODO: Add different ranges for buildings vs moving targets.
 //       If the target can move, we could allow a higher range for spready guns.
 // This function has a small overlap with BotTargetInAttackRange.
-static bool TargetInOffmeshAttackRange( gentity_t *self )
+bool BotTargetInOffmeshAttackRange( gentity_t *self, botTarget_t target )
 {
-	float distSquare = DistanceToGoalSquared( self );
+	float distSquare = glm::distance2( VEC2GLM( self->s.origin ), VEC2GLM( target.getTargetedEntity()->s.origin ) );
+
+	auto limitSquare = [&] ( Cvar::Cvar<int> &cvar, float clawRange )
+	{
+		int val = cvar.Get();
+		return val < 0 ? Square( clawRange ) : Square( static_cast<float>( val ) );
+	};
+
 	switch ( BG_PrimaryWeapon( self->client->ps.stats ) )
 	{
+	case WP_ABUILD:
+	case WP_ABUILD2:
+		return distSquare < limitSquare( g_bot_offmeshRangeBuilder, ABUILDER_CLAW_RANGE );
+	case WP_ALEVEL0:
+		return distSquare < limitSquare( g_bot_offmeshRangeLevel0, LEVEL0_BITE_RANGE );
+	case WP_ALEVEL1:
+		return distSquare < limitSquare( g_bot_offmeshRangeLevel1, LEVEL1_CLAW_RANGE );
+	case WP_ALEVEL2:
+		return distSquare < limitSquare( g_bot_offmeshRangeLevel2, LEVEL2_CLAW_RANGE );
+	case WP_ALEVEL2_UPG:
+		return distSquare < limitSquare( g_bot_offmeshRangeLevel2Upg, LEVEL2_AREAZAP_RANGE );
+	case WP_ALEVEL3:
+		return distSquare < limitSquare( g_bot_offmeshRangeLevel3, LEVEL3_CLAW_RANGE );
+	case WP_ALEVEL3_UPG:
+		if ( self->client->ps.ammo > 0 )
+		{
+			return distSquare < Square( 900 );
+		}
+		else
+		{
+			return distSquare < limitSquare( g_bot_offmeshRangeLevel3Upg, LEVEL3_CLAW_RANGE );
+		}
+	case WP_ALEVEL4:
+		return distSquare < limitSquare( g_bot_offmeshRangeLevel4, LEVEL4_CLAW_RANGE );
 	case WP_HBUILD:
 	case WP_PAIN_SAW:
 		return false;
@@ -906,6 +946,13 @@ static void BotActivateJetpack( gentity_t *self )
 		self->botMind->cmdBuffer.upmove = 127;
 	}
 }
+
+static bool TargetInOffmeshAttackRange( gentity_t *self )
+{
+	return BotTargetInOffmeshAttackRange( self, self->botMind->goal );
+}
+
+bool BotWalkIfStaminaLow( gentity_t *self );
 
 // TODO: Move decision making out of these actions and into the rest of the behavior tree
 AINodeStatus_t BotActionFight( gentity_t *self, AIGenericNode_t *node )
@@ -996,19 +1043,30 @@ AINodeStatus_t BotActionFight( gentity_t *self, AIGenericNode_t *node )
 	if ( mind->hasOffmeshGoal )
 	{
 		// The target is visible, but not on the navmesh
+		team_t team = G_Team( self );
 		ASSERT( G_Team( self ) == TEAM_HUMANS );
-		if ( !BotTargetIsVisible( self, self->botMind->goal, MASK_SHOT ) )
+		if ( team == TEAM_HUMANS )
 		{
-			return STATUS_SUCCESS;
+			if ( !BotTargetIsVisible( self, self->botMind->goal, MASK_SHOT ) )
+			{
+				return STATUS_SUCCESS;
+			}
+			bool inRange = TargetInOffmeshAttackRange( self );
+			if ( !inRange && BG_GetPlayerWeapon( &self->client->ps ) != WP_BLASTER )
+			{
+				G_ForceWeaponChange( self, WP_BLASTER );
+			}
+			else if ( inRange && couldChangeToPrimary )
+			{
+				G_ForceWeaponChange( self, WP_NONE );
+			}
 		}
-		bool inRange = TargetInOffmeshAttackRange( self );
-		if ( !inRange && BG_GetPlayerWeapon( &self->client->ps ) != WP_BLASTER )
+		else if ( team == TEAM_ALIENS )
 		{
-			G_ForceWeaponChange( self, WP_BLASTER );
-		}
-		else if ( inRange && couldChangeToPrimary )
-		{
-			G_ForceWeaponChange( self, WP_NONE );
+			if ( !BotTargetInOffmeshAttackRange( self, self->botMind->goal ) )
+			{
+				return STATUS_SUCCESS;
+			}
 		}
 
 		// check if the target has moved onto the navmesh

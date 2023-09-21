@@ -66,6 +66,7 @@ void BotTargetToRouteTarget( const gentity_t *self, botTarget_t target, botRoute
 botTarget_t BotGetRoamTarget( const gentity_t *self );
 botTarget_t BotGetRetreatTarget( const gentity_t *self );
 botTarget_t BotGetRushTarget( const gentity_t *self );
+bool BotTargetInOffmeshAttackRange( gentity_t *self, botTarget_t target );
 
 // logic functions
 float    BotGetHealScore( gentity_t *self );
