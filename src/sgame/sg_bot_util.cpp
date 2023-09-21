@@ -1228,6 +1228,16 @@ bool BotChangeGoal( gentity_t *self, botTarget_t target )
 			self->botMind->hasOffmeshGoal = true;
 			return true;
 		}
+		else if ( g_bot_offmeshAttack.Get() && G_Team( self ) == TEAM_ALIENS
+				  && G_Team( target.getTargetedEntity() ) == TEAM_HUMANS
+				  && BotTargetInOffmeshAttackRange( self, target )
+				  && BotTargetIsVisible( self, target, MASK_SHOT ) )
+		{
+			self->botMind->goal = target;
+			self->botMind->m_nav.directPathToGoal = false;
+			self->botMind->hasOffmeshGoal = true;
+			return true;
+		}
 		return false;
 	}
 
