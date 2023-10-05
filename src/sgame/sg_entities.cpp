@@ -594,8 +594,8 @@ gentity_t *G_ResolveEntityKeyword( gentity_t *self, char *keyword )
 		resolution = self;
 	else if (!Q_stricmp(keyword, "$parent"))
 		resolution = self->parent;
-	else if (!Q_stricmp(keyword, "$target"))
-		resolution = self->target ? self->target.entity : nullptr;
+	else if (!Q_stricmp(keyword, "$target") && self->target)
+		resolution = self->target.get();
 	//TODO $tracker for entities, that currently target, track or aim for this entity, is the reverse to "target"
 
 	if(!resolution || !resolution->inuse)

@@ -132,15 +132,32 @@ class Entity;
 // For a player entity, we increment the generation number when it spawns or dies. It does
 // not increment upon evolve/armor change, although the CBSE entity is reallocated in that case.
 template<typename T>
-struct GentityRef_impl
+class GentityRef_impl
 {
 	T entity;
-	unsigned generation;
+	unsigned generation = UINT_MAX;
+public:
 
-	GentityRef_impl() = default; // uninitialized!
-	GentityRef_impl(T ent) { *this = ent; }
+	GentityRef_impl( void ) = default;
+	~GentityRef_impl( void ) = default;
 
-	GentityRef_impl<T>& operator=(T ent) {
+	GentityRef_impl( GentityRef_impl const& ) = default;
+	GentityRef_impl( GentityRef_impl && ) = default;
+
+	GentityRef_impl& operator=( GentityRef_impl const& ) = default;
+	GentityRef_impl& operator=( GentityRef_impl && ) = default;
+
+	GentityRef_impl(T const& ent)
+	:entity( ent )
+	{
+		if ( ent )
+		{
+			generation = ent->generation;
+		}
+	}
+
+	GentityRef_impl<T>& operator=(T ent)
+	{
 		entity = ent;
 		if (ent) {
 			generation = ent->generation;
@@ -148,18 +165,18 @@ struct GentityRef_impl
 		return *this;
 	}
 
-	operator bool() const {
+	operator bool() const
+	{
 		return entity != nullptr && entity->generation == generation;
 	}
 
-	T get() const {
-		if (!*this) {
-			return nullptr;
-		}
+	T get() const
+	{
 		return entity;
 	}
 
-	T operator->() const {
+	T operator->() const
+	{
 		ASSERT(*this);
 		return entity;
 	}
