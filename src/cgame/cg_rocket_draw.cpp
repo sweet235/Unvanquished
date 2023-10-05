@@ -1960,6 +1960,116 @@ private:
 	int showTime_ = -1;
 };
 
+class BaseStatusElement : public HudElement
+{
+public:
+	BaseStatusElement( const Rml::String& tag ) :
+			HudElement( tag, ELEMENT_GAME ),
+			lastCode_( -1 ),
+			lastTeam_( TEAM_NONE )
+	{}
+
+	void DoOnUpdate() override
+	{
+		team_t team = CG_MyTeam();
+		int code = cg.snap->ps.persistant[ PERS_BASESTATUS ];
+
+		if ( code != lastCode_ || team != lastTeam_ )
+		{
+			const char* mainBuildingStr;
+			const char* spawnPlrStr;
+			const char* vitalityStr;
+			const char* text;
+			Color::Color color;
+
+			bool noSpawn = code & BaseStatus::NO_SPAWN;
+			bool noMain = code & BaseStatus::NO_MAIN;
+			bool mainBuilding = code & BaseStatus::MAIN_BUILDING;
+
+			int timeLeft = code & BaseStatus::TIME_LEFT_MASK;
+			int mins = timeLeft / 60;
+			int secs = timeLeft % 60;
+
+			switch ( team )
+			{
+				case TEAM_ALIENS:
+					mainBuildingStr = "Overmind";
+					spawnPlrStr = "Eggs";
+					vitalityStr = "alive";
+					break;
+
+				case TEAM_HUMANS:
+					mainBuildingStr = "Reactor";
+					spawnPlrStr = "Telenodes";
+					vitalityStr = "online";
+					break;
+
+				default:
+					SetInnerRML("");
+					lastCode_ = code;
+					lastTeam_ = team;
+					return;
+			}
+
+			if ( noSpawn && !noMain && !mainBuilding )
+			{
+				text = va("There are no %s!", spawnPlrStr);
+				color = Color::Red;
+			}
+			else if ( noSpawn && noMain )
+			{
+				text = va(
+					"There are no %s and no %s!",
+					spawnPlrStr, mainBuildingStr
+				);
+				color = Color::Red;
+			}
+			else if ( noSpawn && mainBuilding )
+			{
+				text = va(
+					"%s %s in %02d:%02d with no %s",
+					mainBuildingStr, vitalityStr, mins, secs, spawnPlrStr
+				);
+				color = Color::Red;
+			}
+			else if ( !noSpawn && noMain )
+			{
+				text = va("There is no %s!", mainBuildingStr);
+				color = Color::Orange;
+			}
+			else if ( !noSpawn && mainBuilding )
+			{
+				text = va("%s %s in %02d:%02d",
+					mainBuildingStr, vitalityStr, mins, secs
+				);
+				color = Color::Yellow;
+			}
+			else
+			{
+				text = nullptr;
+			}
+
+			if ( text )
+			{
+				SetInnerRML(CG_Rocket_QuakeToRML(va(
+					"%s%s", Color::ToString(color).c_str(), text
+				)));
+			}
+			else
+			{
+				SetInnerRML("");
+			}
+
+			lastCode_ = code;
+			lastTeam_ = team;
+		}
+	}
+
+private:
+	int lastCode_;
+	team_t lastTeam_;
+};
+
 class BeaconAgeElement : public TextHudElement
 {
 public:
@@ -2221,12 +2331,14 @@ private:
 	Rml::String owner_;
 };
 
-class PredictedMineEfficiencyElement : public HudElement
+class BuildablePredictionElement : public HudElement
 {
 public:
-	PredictedMineEfficiencyElement( const Rml::String& tag ) :
+	BuildablePredictionElement( const Rml::String& tag ) :
 			HudElement( tag, ELEMENT_BOTH, false ),
 			shouldBeVisible_( false ),
+			showMiningPrediction_( false ),
+			lastBuildTime_( -1 ),
 			lastDeltaEfficiencyPct_( -999 ),
 			lastDeltaBudget_( -999 ),
 			pluralSuffix_{ { BA_A_LEECH, "es" }, { BA_H_DRILL, "s" } }
@@ -2238,20 +2350,17 @@ public:
 	{
 		playerState_t  *ps = &cg.snap->ps;
 		buildable_t   buildable = ( buildable_t )( ps->stats[ STAT_BUILDABLE ] & SB_BUILDABLE_MASK );
+		bool planningMiner = buildable == BA_H_DRILL || buildable == BA_A_LEECH;
 
-		if ( buildable != BA_H_DRILL && buildable != BA_A_LEECH )
+		if ( buildable == BA_NONE )
 		{
 			shouldBeVisible_ = false;
 			if ( IsVisible() )
 			{
 				SetProperty( Rml::PropertyId::Display,
 						Rml::Property( Rml::Style::Display::None ) );
-				SetInnerRML( "" );
-
-				// Pick impossible value
-				lastDeltaEfficiencyPct_ = -999;
-				lastDeltaBudget_        = -999;
 			}
+			lastBuildTime_ = -1;
 		}
 		else
 		{
@@ -2261,6 +2370,20 @@ public:
 				SetProperty( Rml::PropertyId::Display,
 						Rml::Property( Rml::Style::Display::Block ) );
 			}
+		}
+
+		if ( planningMiner )
+		{
+			showMiningPrediction_ = true;
+		}
+		else
+		{
+			showMiningPrediction_ = false;
+
+			// Pick impossible value to trigger an update as soon as a miner is
+			// selected.
+			lastDeltaEfficiencyPct_ = -999;
+			lastDeltaBudget_        = -999;
 		}
 
 		PopulateText();
@@ -2281,57 +2404,105 @@ public:
 			// between -128 and 127.
 			float deltaEfficiency    = (float)(signed char)(ps->stats[STAT_PREDICTION] & 0xff) / (float)0x7f;
 			int   deltaBudget        = (int)(signed char)(ps->stats[STAT_PREDICTION] >> 8);
-
 			int   deltaEfficiencyPct = (int)(deltaEfficiency * 100.0f);
 
-			if ( deltaEfficiencyPct != lastDeltaEfficiencyPct_ ||
+			// Predict time for construction.
+			int buildTime = static_cast<int>( roundf( BG_Buildable(buildable)->buildTime / 1000.0f ) );
+
+			if ( buildTime != lastBuildTime_ ||
+			     deltaEfficiencyPct != lastDeltaEfficiencyPct_ ||
 			     deltaBudget        != lastDeltaBudget_ )
 			{
-				if        ( deltaBudget < 0 ) {
-					color = Color::Red;
-					// Icon U+E000
-					msg = va( "<span class='material-icon error'>\xee\x80\x80</span> You are losing build points!"
-					          " Build the %s%s further apart for greater efficiency.",
-					          BG_Buildable( buildable )->humanName, pluralSuffix_[ buildable ].c_str() );
-				} else if ( deltaBudget < cgs.buildPointBudgetPerMiner / 10 ) {
-					color = Color::Orange;
-					// Icon U+E002
-					msg = va( "<span class='material-icon warning'>\xee\x80\x82</span> Minimal build point gain."
-					          " Build the %s%s further apart for greater efficiency.",
-					          BG_Buildable( buildable )->humanName, pluralSuffix_[ buildable ].c_str() );
-				} else if ( deltaBudget < cgs.buildPointBudgetPerMiner / 2 ) {
-					color = Color::Yellow;
-					// Icon U+E002
-					msg = va( "<span class='material-icon warning'>\xee\x80\x82</span> Subpar build point gain."
-					          " Build the %s%s further apart for greater efficiency.",
-					          BG_Buildable( buildable )->humanName, pluralSuffix_[ buildable ].c_str() );
-				} else {
-					color = Color::Green;
+				char buildTimeStr[64];
+
+				{
+					if ( buildTime < 0 )
+					{
+						buildTime = 0;
+					}
+
+					if      ( buildTime < 20 ) color = Color::Green;
+					else if ( buildTime < 40 ) color = Color::Yellow;
+					else if ( buildTime < 60 ) color = Color::Orange;
+					else                       color = Color::Red;
+
+					int min = buildTime / 60;
+					int sec = buildTime % 60;
+
+					if ( min > 99 )
+					{
+						min = 99;
+						sec = 59;
+					}
+
+					Q_strncpyz(buildTimeStr, CG_Rocket_QuakeToRML(va(
+						"%s%02d:%02d", Color::ToString(color).c_str(), min, sec
+					)), 64);
 				}
 
-				char deltaEfficiencyPctStr[64];
-				char deltaBudgetStr[64];
+				if ( showMiningPrediction_ )
+				{
+					if        ( deltaBudget < 0 ) {
+						color = Color::Red;
+						// Icon U+E000
+						msg = va( "<span class='material-icon error'>\xee\x80\x80</span> You are losing build points!"
+								" Build the %s%s further apart for greater efficiency.",
+								BG_Buildable( buildable )->humanName, pluralSuffix_[ buildable ].c_str() );
+					} else if ( deltaBudget < cgs.buildPointBudgetPerMiner / 10 ) {
+						color = Color::Orange;
+						// Icon U+E002
+						msg = va( "<span class='material-icon warning'>\xee\x80\x82</span> Minimal build point gain."
+								" Build the %s%s further apart for greater efficiency.",
+								BG_Buildable( buildable )->humanName, pluralSuffix_[ buildable ].c_str() );
+					} else if ( deltaBudget < cgs.buildPointBudgetPerMiner / 2 ) {
+						color = Color::Yellow;
+						// Icon U+E002
+						msg = va( "<span class='material-icon warning'>\xee\x80\x82</span> Subpar build point gain."
+								" Build the %s%s further apart for greater efficiency.",
+								BG_Buildable( buildable )->humanName, pluralSuffix_[ buildable ].c_str() );
+					} else {
+						color = Color::Green;
+					}
 
-				Q_strncpyz(deltaEfficiencyPctStr, CG_Rocket_QuakeToRML(va(
-					"%s%+d%%", Color::ToString(color).c_str(), deltaEfficiencyPct
-				)), 64);
+					char deltaEfficiencyPctStr[64];
+					char deltaBudgetStr[64];
 
-				Q_strncpyz(deltaBudgetStr, CG_Rocket_QuakeToRML(va(
-					"%s%+d", Color::ToString(color).c_str(), deltaBudget
-				)), 64);
+					Q_strncpyz(deltaEfficiencyPctStr, CG_Rocket_QuakeToRML(va(
+						"%s%+d%%", Color::ToString(color).c_str(), deltaEfficiencyPct
+					)), 64);
 
-				SetInnerRML(va(
-					"%s EFFICIENCY<br/>%s BUILD POINTS%s%s",
-					deltaEfficiencyPctStr, deltaBudgetStr, msg ? "<br/>" : "", msg ? msg : ""
-				));
+					Q_strncpyz(deltaBudgetStr, CG_Rocket_QuakeToRML(va(
+						"%s%+d", Color::ToString(color).c_str(), deltaBudget
+					)), 64);
 
+					SetInnerRML(va(
+						"%s BUILD TIME<br/>%s EFFICIENCY<br/>%s BUILD POINTS%s%s",
+						buildTimeStr,
+						deltaEfficiencyPctStr,
+						deltaBudgetStr,
+						msg ? "<br/>" : "",
+						msg ? msg : ""
+					));
+				}
+				else
+				{
+					SetInnerRML(va("%s BUILD TIME", buildTimeStr));
+				}
+
+				lastBuildTime_          = buildTime;
 				lastDeltaEfficiencyPct_ = deltaEfficiencyPct;
 				lastDeltaBudget_        = deltaBudget;
 			}
 		}
+		else
+		{
+			SetInnerRML("");
+		}
 	}
 private:
 	bool shouldBeVisible_;
+	bool showMiningPrediction_;
+	int  lastBuildTime_;
 	int  lastDeltaEfficiencyPct_;
 	int  lastDeltaBudget_;
 	std::unordered_map<int, std::string> pluralSuffix_;
@@ -3835,13 +4006,14 @@ void CG_Rocket_RegisterElements()
 	RegisterElement<LevelshotElement>( "levelshot" );
 	RegisterElement<LevelshotLoadingElement>( "levelshot_loading" );
 	RegisterElement<CenterPrintElement>( "center_print" );
+	RegisterElement<BaseStatusElement>( "base_status" );
 	RegisterElement<BeaconAgeElement>( "beacon_age" );
 	RegisterElement<BeaconDistanceElement>( "beacon_distance" );
 	RegisterElement<BeaconIconElement>( "beacon_icon" );
 	RegisterElement<BeaconInfoElement>( "beacon_info" );
 	RegisterElement<BeaconNameElement>( "beacon_name" );
 	RegisterElement<BeaconOwnerElement>( "beacon_owner" );
-	RegisterElement<PredictedMineEfficiencyElement>( "predictedMineEfficiency" );
+	RegisterElement<BuildablePredictionElement>( "build_prediction" );
 	RegisterElement<BarbsHudElement>( "barbs" );
 	RegisterElement<WebElement>( "web" );
 	RegisterElement<TranslateElement>( "translate" );

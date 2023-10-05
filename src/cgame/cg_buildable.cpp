@@ -1500,7 +1500,7 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
 	float         healthFrac, mineEfficiencyFrac = 0.0f;
 	int           health = CG_Health(*es);
 	float         x, y;
-	bool          powered, marked, showMineEfficiency;
+	bool          powered, marked, spawned, showMineEfficiency;
 	trace_t       tr;
 	float         d;
 	buildStat_t   *bs;
@@ -1692,7 +1692,8 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
 		pad   = bs->healthPadding * scale;
 
 		powered = es->eFlags & EF_B_POWERED;
-		marked = es->eFlags & EF_B_MARKED;
+		marked  = es->eFlags & EF_B_MARKED;
+		spawned = es->eFlags & EF_B_SPAWNED;
 
 		picH *= scale;
 		picW *= scale;
@@ -1809,7 +1810,8 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
 			CG_DrawPic( mX, subY, subH, subH, bs->markedShader );
 		}
 
-		// show hp
+		// show hp or time to completion
+		if ( spawned )
 		{
 			float nX;
 			int   healthMax;
@@ -1843,6 +1845,13 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
 			}
 
 			CG_DrawField( nX, subY, 4, subH, subH, healthPoints );
+		}
+		else
+		{
+			int timeLeft = es->time + attr->buildTime - cg.time;
+			float nX = picX + ( picW * 0.5f ) - 2.0f - ( ( subH * 5 ) * 0.5f );
+
+			CG_DrawTime( nX, subY, subH, subH, timeLeft );
 		}
 
 		trap_R_ClearColor();
@@ -2414,4 +2423,17 @@ float CG_DistanceToBase()
 	if (!ent)
 		return 1e+37f; // in accordance to sgame
 	return Distance(cg.predictedPlayerEntity.lerpOrigin, ent->lerpOrigin);
+}
+
+// Returns the time a buildable will take to be completed
+// This is because those commits are cherry-picked from an
+// experiment with buildtimes, which is still ongoing, trying
+// to reduce git conflicts here.
+int CG_GetBuildDuration( const centity_t *cent )
+{
+	const entityState_t *es = &cent->currentState;
+
+	// Get settings
+	int baseDuration = BG_Buildable(es->modelindex)->buildTime;
+	return baseDuration;
 }

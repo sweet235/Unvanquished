@@ -1499,7 +1499,7 @@ struct cgMedia_t
 	qhandle_t scannerBlipBldgShader;
 	qhandle_t scannerLineShader;
 
-	qhandle_t numberShaders[ 11 ];
+	qhandle_t numberShaders[ 12 ];  // 0123456789-:
 
 	qhandle_t shadowMarkShader;
 	qhandle_t wakeMarkShader;
@@ -1980,6 +1980,7 @@ void CG_DrawActive();
 void       CG_RunMenuScript( char **args );
 void       CG_ResetPainBlend();
 void       CG_DrawField( float x, float y, int width, float cw, float ch, int value );
+void       CG_DrawTime( float x, float y, float cw, float ch, int ms );
 
 //
 // cg_players.c
@@ -2010,6 +2011,7 @@ void     CG_HumanBuildableExplosion( buildable_t buildable, vec3_t origin, vec3_
 void     CG_AlienBuildableExplosion( vec3_t origin, vec3_t dir );
 const centity_t *CG_LookupMainBuildable();
 float    CG_DistanceToBase();
+int      CG_GetBuildDuration( const centity_t *cent );
 
 //
 // cg_animation.c
