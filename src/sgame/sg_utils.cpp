@@ -1012,7 +1012,7 @@ bool gentity_t::Damage( float amount, gentity_t* source,
 	// Since this is definitely reasonable, let's return false
 	// if the entity can not take damages.
 	// And to take damages, imply you have a health pool.
-	if ( config.health == 0 )
+	if ( config.health == 0 || health <= 0 )
 	{
 		return false;
 	}
@@ -1022,9 +1022,12 @@ bool gentity_t::Damage( float amount, gentity_t* source,
 		pain( this, source, amount );
 	}
 	health -= amount;
+	bool lethal = false;
 	if ( health <= 0 && die )
 	{
-		die( this, nullptr, source, 0 );
+		die( this, nullptr, source, MOD_UNKNOWN );
+		lethal = true;
 	}
+	CombatFeedback::HitNotify( source, this, {}, amount, meansOfDeath, lethal );
 	return true;
 }
