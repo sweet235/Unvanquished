@@ -1259,6 +1259,11 @@ static Cvar::Cvar<bool> g_bot_extinguishFire("g_bot_extinguishFire", "whether al
 static Cvar::Cvar<int> g_bot_buildNumEggs("g_bot_buildNumEggs", "how many eggs bots should build", Cvar::NONE, 6);
 static Cvar::Cvar<int> g_bot_buildNumTelenodes("g_bot_buildNumTelenodes", "how many telenodes bots should build", Cvar::NONE, 3);
 static Cvar::Cvar<float> g_bot_buildProbRocketPod("g_bot_buildProbRocketPod", "probability of a bot building a rocket pod instead of a machine gun turret", Cvar::NONE, 0.2);
+static Cvar::Cvar<float> g_bot_buildProbArmoury("g_bot_buildProbArmoury", "probability of a bot building an armoury instead of a machine gun turret", Cvar::NONE, 0.0);
+static Cvar::Cvar<float> g_bot_buildProbMedistat("g_bot_buildProbMedistat", "probability of a bot building an medistation instead of a machine gun turret", Cvar::NONE, 0.0);
+static Cvar::Cvar<float> g_bot_buildProbTelenode("g_bot_buildProbTelenode", "probability of a bot building a telenode instead of a machine gun turret", Cvar::NONE, 0.0);
+static Cvar::Cvar<float> g_bot_buildProbEgg("g_bot_buildProbEgg", "probability of a bot building an egg instead of an acid tube", Cvar::NONE, 0.0);
+static Cvar::Cvar<float> g_bot_buildProbBooster("g_bot_buildProbBooster", "probability of a bot building a booster instead of an acid tube", Cvar::NONE, 0.0);
 
 static bool isBuilder( gentity_t *self )
 {
@@ -1296,8 +1301,20 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		else if ( !G_IsSuddenDeath() )
 		{
 			toBuild = BA_H_MGTURRET;
-			if ( BG_BuildableUnlocked( BA_H_ROCKETPOD ) &&
-				rand() < ( RAND_MAX + 1U ) * g_bot_buildProbRocketPod.Get() )
+			int r = rand();
+			if ( r < RAND_MAX * ( g_bot_buildProbArmoury.Get() ) )
+			{
+				toBuild = BA_H_ARMOURY;
+			}
+			else if ( r < RAND_MAX * ( g_bot_buildProbArmoury.Get() + g_bot_buildProbMedistat.Get() ) )
+			{
+				toBuild = BA_H_MEDISTAT;
+			}
+			else if ( r < RAND_MAX * ( g_bot_buildProbArmoury.Get() + g_bot_buildProbMedistat.Get() + g_bot_buildProbTelenode.Get() ) )
+			{
+				toBuild = BA_H_SPAWN;
+			}
+			else if ( BG_BuildableUnlocked( BA_H_ROCKETPOD ) && r < RAND_MAX * ( g_bot_buildProbArmoury.Get() + g_bot_buildProbMedistat.Get() + g_bot_buildProbTelenode.Get() + g_bot_buildProbRocketPod.Get() ) )
 			{
 				toBuild = BA_H_ROCKETPOD;
 			}
@@ -1328,6 +1345,15 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		else if ( !G_IsSuddenDeath() )
 		{
 			toBuild = BA_A_ACIDTUBE;
+			int r = rand();
+			if ( r < RAND_MAX * g_bot_buildProbEgg.Get() )
+			{
+				toBuild = BA_A_SPAWN;
+			}
+			else if ( BG_BuildableUnlocked( BA_A_BOOSTER ) && r < RAND_MAX * ( g_bot_buildProbEgg.Get() + g_bot_buildProbBooster.Get() ) )
+			{
+				toBuild = BA_A_BOOSTER;
+			}
 		}
 	}
 	return toBuild;
