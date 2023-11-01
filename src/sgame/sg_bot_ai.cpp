@@ -1281,7 +1281,7 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_H_DRILL;
 		}
-		else if ( level.team[ G_Team( self ) ].numSpawns < g_bot_buildNumTelenodes.Get() )
+		else if ( !G_IsSuddenDeath() && level.team[ G_Team( self ) ].numSpawns < g_bot_buildNumTelenodes.Get() )
 		{
 			toBuild = BA_H_SPAWN;
 		}
@@ -1293,7 +1293,7 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_H_MEDISTAT;
 		}
-		else
+		else if ( !G_IsSuddenDeath() )
 		{
 			toBuild = BA_H_MGTURRET;
 			if ( BG_BuildableUnlocked( BA_H_ROCKETPOD ) &&
@@ -1313,7 +1313,7 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_A_LEECH;
 		}
-		else if ( level.team[ G_Team( self ) ].numSpawns < g_bot_buildNumEggs.Get() / 2 )
+		else if ( !G_IsSuddenDeath() && level.team[ G_Team( self ) ].numSpawns < g_bot_buildNumEggs.Get() / 2 )
 		{
 			toBuild = BA_A_SPAWN;
 		}
@@ -1321,11 +1321,11 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_A_BOOSTER;
 		}
-		else if ( level.team[ G_Team( self ) ].numSpawns < g_bot_buildNumEggs.Get() )
+		else if ( !G_IsSuddenDeath() && level.team[ G_Team( self ) ].numSpawns < g_bot_buildNumEggs.Get() )
 		{
 			toBuild = BA_A_SPAWN;
 		}
-		else
+		else if ( !G_IsSuddenDeath() )
 		{
 			toBuild = BA_A_ACIDTUBE;
 		}
