@@ -1279,6 +1279,11 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int /*distan
 	minNormal = BG_Buildable( buildable )->minNormal;
 	invert = BG_Buildable( buildable )->invertNormal;
 
+	if ( ( ent->r.svFlags & SVF_BOT ) && level.team[ G_Team( ent ) ].lastBuildTime == level.time )
+	{
+		reason = IBE_DISABLED;
+	}
+
 	// Can we build at this angle?
 	if ( !( normal[ 2 ] >= minNormal || ( invert && normal[ 2 ] <= -minNormal ) ) )
 	{
@@ -1446,6 +1451,11 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int /*distan
 	if ( reason == IBE_NONE )
 	{
 		reason = G_SuddenDeathBuildCheck( buildable, false );
+	}
+
+	if ( reason == IBE_NONE )
+	{
+		level.team[ G_Team( ent ) ].lastBuildTime = level.time;
 	}
 
 	return reason;
