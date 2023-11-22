@@ -1357,6 +1357,8 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 	return toBuild;
 }
 
+static Cvar::Cvar<float> g_bot_buildMinNormal("g_bot_buildMinNormal", "minimal normal for a building to be contructed by a bot (number below -1: disabled)", Cvar::NONE, -2.0f);
+
 static bool build( gentity_t *self, buildable_t toBuild )
 {
 	if ( toBuild == BA_NONE )
@@ -1377,10 +1379,31 @@ static bool build( gentity_t *self, buildable_t toBuild )
 	}
 
 	self->client->ps.stats[ STAT_BUILDABLE ] = toBuild;
-	if ( self->client->ps.stats[ STAT_MISC ] == 0 )
+
+	if ( self->client->ps.stats[ STAT_MISC ] != 0 )
 	{
-		BotFireWeapon( WPM_PRIMARY, &self->botMind->cmdBuffer );
+		return false;
 	}
+
+	// check the slope of the surface we want to build on
+	vec3_t normal, forward, aimDir;
+	BG_GetClientNormal( &self->client->ps, normal );
+	AngleVectors( self->client->ps.viewangles, aimDir, nullptr, nullptr );
+	ProjectPointOnPlane( forward, aimDir, normal);
+	vec3_t mins, maxs;
+	vec3_t entity_origin;
+	vec3_t angles;
+	trace_t tr1;
+	playerState_t *ps = &self->client->ps;
+	BG_BuildableBoundingBox( toBuild, mins, maxs );
+	BG_PositionBuildableRelativeToPlayer( ps, mins, maxs, trap_Trace, entity_origin, angles, &tr1 );
+
+	if ( tr1.plane.normal[ 2 ] < g_bot_buildMinNormal.Get() )
+	{
+		return false;
+	}
+
+	BotFireWeapon( WPM_PRIMARY, &self->botMind->cmdBuffer );
 	return true;
 }
 
