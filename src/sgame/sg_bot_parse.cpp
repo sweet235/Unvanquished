@@ -1085,6 +1085,7 @@ static const struct AIActionMap_s
 	{ "aimAtGoal",         BotActionAimAtGoal,         0, 0 },
 	{ "alternateStrafe",   BotActionAlternateStrafe,   0, 0 },
 	{ "blackboardNoteTransient", BotActionBlackboardNoteTransient, 1, 1 },
+	{ "buildHere",         BotActionBuildHere,         1, 1 },
 	{ "buildNowChosenBuildable", BotActionBuildNowChosenBuildable, 0, 0 },
 	{ "buy",               BotActionBuy,               1, 4 },
 	{ "buyPrimary",        BotActionBuyPrimary,        1, 1 },
