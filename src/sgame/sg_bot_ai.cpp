@@ -1419,6 +1419,48 @@ AINodeStatus_t BotActionBuildNowChosenBuildable( gentity_t *self, AIGenericNode_
 	return build( self, BotChooseBuildableToBuild( self ) ) ? STATUS_SUCCESS : STATUS_FAILURE;
 }
 
+AINodeStatus_t BotActionBuildHere( gentity_t *self, AIGenericNode_t *node )
+{
+	AIActionNode_t *a = ( AIActionNode_t * ) node;
+	float radius = AIUnBoxFloat( a->params[ 0 ] );
+
+	if ( !self->botMind->userSpecifiedPosition )
+	{
+		return STATUS_FAILURE;
+	}
+
+	glm::vec3 userSpecifiedPosition = *self->botMind->userSpecifiedPosition;
+
+	if ( node != self->botMind->currentNode )
+	{
+		glm::vec3 point;
+
+		if ( !BotFindRandomPointInRadius( self->s.number, userSpecifiedPosition, point, radius ) )
+		{
+			return STATUS_FAILURE;
+		}
+
+		if ( !BotChangeGoalPos( self, point ) )
+		{
+			return STATUS_FAILURE;
+		}
+		self->botMind->currentNode = node;
+	}
+
+	// on our way to the target position, we might be more than `radius` away from `ent`
+	if ( glm::distance2( VEC2GLM( self->s.origin ), userSpecifiedPosition ) <= Square ( radius ) )
+	{
+		build( self, BotChooseBuildableToBuild( self ) );
+	}
+
+	if ( GoalInRange( self, BotGetGoalRadius( self ) ) )
+	{
+		return STATUS_SUCCESS;
+	}
+
+	return BotMoveToGoal( self ) ? STATUS_RUNNING : STATUS_FAILURE;
+}
+
 AINodeStatus_t BotActionResetMyTimer( gentity_t *self, AIGenericNode_t * )
 {
 	self->botMind->myTimer = level.time;
