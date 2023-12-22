@@ -68,6 +68,8 @@
 				<input type="button" onclick='Events.pushevent("execForm \"botequip psaw\"; hide", event)'><button>Painsaw</button></input>
 			</row>
 			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip build\"; hide", event)' ><button>Build</button></input>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip repair\"; hide", event)' ><button>Repair</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip lcannon\"; hide", event)'><button>Lucifer Cannon</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip prifle\"; hide", event)'><button>Pulse Rifle</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip flamer\"; hide", event)'><button>Flame- thrower</button></input>
@@ -77,7 +79,6 @@
 				<input type="button" onclick='Events.pushevent("execForm \"botequip bsuit\"; hide", event)'><button>Battlesuit</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip grenade\"; hide", event)'><button>Grenade</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip firebomb\"; hide", event)'><button>Firebomb</button></input>
-				<input type="button" onclick='Events.pushevent("execForm \"botequip ckit\"; hide", event)' ><button>Constr. Kit</button></input>
 			</row>
 		</div>
 
@@ -94,6 +95,7 @@
 				<input type="button" onclick='Events.pushevent("execForm \"botequip level1\"; hide", event)'><button>Mantis</button></input>
 			</row>
 			<row>
+				<input type="button" onclick='Events.pushevent("execForm \"botequip build\"; hide", event)' ><button>Build</button></input>
 				<input type="button" onclick='Events.pushevent("execForm \"botequip level4\"; hide", event)'><button>Tyrant</button></input>
 			</row>
 		</div>
