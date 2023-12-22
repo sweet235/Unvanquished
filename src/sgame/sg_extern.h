@@ -230,4 +230,8 @@ extern Cvar::Cvar<int> g_bot_radarRange;
 extern Cvar::Modified<Cvar::Cvar<int>> g_bot_defaultFill;
 extern Cvar::Cvar<bool> g_bot_navmeshReduceTypes;
 
+extern Cvar::Cvar<bool> g_bot_buildAliens;
+extern Cvar::Cvar<bool> g_bot_buildHumans;
+extern Cvar::Cvar<bool> g_bot_repair;
+
 #endif // SG_EXTERN_H_
