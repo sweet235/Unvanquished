@@ -232,4 +232,8 @@ extern Cvar::Cvar<bool> g_bot_navmeshReduceTypes;
 extern Cvar::Cvar<int> g_bot_preferredTargetAliens;
 extern Cvar::Cvar<int> g_bot_preferredTargetHumans;
 
+extern Cvar::Cvar<bool> g_bot_buildAliens;
+extern Cvar::Cvar<bool> g_bot_buildHumans;
+extern Cvar::Cvar<bool> g_bot_repair;
+
 #endif // SG_EXTERN_H_
