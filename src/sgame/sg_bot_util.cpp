@@ -528,7 +528,7 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 				enemyScore = 0.7;
 				break;
 			case BA_H_SPAWN:
-				enemyScore = 0.9;
+				enemyScore = 0.4;
 				break;
 			case BA_H_ARMOURY:
 				enemyScore = 0.8;
@@ -540,7 +540,7 @@ float BotGetEnemyPriority( gentity_t *self, gentity_t *ent )
 				enemyScore = 0.7;
 				break;
 			case BA_A_SPAWN:
-				enemyScore = 0.9;
+				enemyScore = 0.4;
 				break;
 			case BA_A_OVERMIND:
 				enemyScore = 0.5;
