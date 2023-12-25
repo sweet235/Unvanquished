@@ -66,6 +66,7 @@
 		ui/callvote_maxminers.rml
 		ui/callvote_minerbp.rml
 		ui/callvote_ff.rml
+		ui/callvote_map_custom.rml
 	}
 	cursor ui/assets/cursor
 }
