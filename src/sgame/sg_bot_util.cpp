@@ -1078,6 +1078,22 @@ botTarget_t BotGetRushTarget( const gentity_t *self )
 		{
 			rushTarget = self->botMind->closestBuildings[BA_A_OVERMIND].ent;
 		}
+		else if ( self->botMind->closestBuildings[BA_A_BOOSTER].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_A_BOOSTER].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_A_ACIDTUBE].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_A_ACIDTUBE].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_A_HIVE].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_A_HIVE].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_A_SPIKER].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_A_SPIKER].ent;
+		}
 	}
 	else    //team aliens
 	{
@@ -1088,6 +1104,22 @@ botTarget_t BotGetRushTarget( const gentity_t *self )
 		else if ( self->botMind->closestBuildings[BA_H_REACTOR].ent )
 		{
 			rushTarget = self->botMind->closestBuildings[BA_H_REACTOR].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_H_ARMOURY].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_H_ARMOURY].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_H_MEDISTAT].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_H_MEDISTAT].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_H_MGTURRET].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_H_MGTURRET].ent;
+		}
+		else if ( self->botMind->closestBuildings[BA_H_ROCKETPOD].ent )
+		{
+			rushTarget = self->botMind->closestBuildings[BA_H_ROCKETPOD].ent;
 		}
 	}
 	target = rushTarget;
