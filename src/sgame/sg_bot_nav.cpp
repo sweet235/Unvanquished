@@ -925,6 +925,8 @@ void BotMoveUpward( gentity_t *self, glm::vec3 nextCorner )
 	case PCL_ALIEN_LEVEL2:
 	case PCL_ALIEN_LEVEL2_UPG:
 		{
+			BotAimAtLocation( self, nextCorner );
+			BotMoveInDir( self, MOVE_FORWARD );
 			BotJump( self );
 			break;
 		}
