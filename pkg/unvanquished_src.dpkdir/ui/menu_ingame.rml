@@ -133,7 +133,6 @@
 						<button-menu style="width:87%"  onclick='Events.pushcmd("exec team spec; hide ingame_menu")'><translate>Spectate</translate></button-menu>
 						<button-menu style="width:87%" onclick='Events.pushcmd("show options_democracy")'><translate>Democracy</translate></button-menu>
 					</indent>
-
 					<if cvar="sv_running" condition="==" value="1">
 						<h1><translate>Host menu</translate></h1>
 						<indent>
