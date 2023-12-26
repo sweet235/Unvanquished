@@ -230,6 +230,19 @@ Scoring functions for logic
 =======================
 */
 
+static Cvar::Cvar<float> g_bot_verticalDistanceFactorAliens("g_bot_verticalDistanceFactorAliens", "1 = normal, >1 = lower influence, <1 = undefined", Cvar::NONE, 1.f);
+static Cvar::Cvar<float> g_bot_verticalDistanceFactorHumans("g_bot_verticalDistanceFactorHumans", "1 = normal, >1 = lower influence, <1 = undefined", Cvar::NONE, 1.f);
+
+static float BotCustomMetricDistanceSquared( gentity_t *self, gentity_t *target )
+{
+	float factor = G_Team( self ) == TEAM_ALIENS ? g_bot_verticalDistanceFactorAliens.Get() : g_bot_verticalDistanceFactorHumans.Get();
+	glm::vec3 aPos = VEC2GLM( self->s.origin );
+	glm::vec3 bPos = VEC2GLM( target->s.origin );
+	aPos.z *= factor;
+	bPos.z *= factor;
+	return glm::distance2( aPos, bPos );
+}
+
 botEntityAndDistance_t BotGetHealTarget( const gentity_t *self )
 {
 	if ( G_Team( self ) == TEAM_HUMANS )
@@ -990,7 +1003,7 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 		}
 
 		int maxRange = G_Team( self ) == TEAM_ALIENS ? g_bot_aliensenseRange.Get() : g_bot_radarRange.Get();
-		if ( DistanceSquared( self->s.origin, target->s.origin ) > Square( maxRange ) )
+		if ( BotCustomMetricDistanceSquared( self, target ) > Square( maxRange ) )
 		{
 			continue;
 		}
