@@ -230,8 +230,8 @@ Scoring functions for logic
 =======================
 */
 
-static Cvar::Cvar<float> g_bot_verticalDistanceFactorAliens("g_bot_verticalDistanceFactorAliens", "1 = normal, >1 = lower influence, <1 = undefined", Cvar::NONE, 1.f);
-static Cvar::Cvar<float> g_bot_verticalDistanceFactorHumans("g_bot_verticalDistanceFactorHumans", "1 = normal, >1 = lower influence, <1 = undefined", Cvar::NONE, 1.f);
+Cvar::Cvar<float> g_bot_verticalDistanceFactorAliens("g_bot_verticalDistanceFactorAliens", "1 = normal, >1 = lower influence, <1 = undefined", Cvar::NONE, 1.f);
+Cvar::Cvar<float> g_bot_verticalDistanceFactorHumans("g_bot_verticalDistanceFactorHumans", "1 = normal, >1 = lower influence, <1 = undefined", Cvar::NONE, 1.f);
 
 static float BotCustomMetricDistanceSquared( gentity_t *self, gentity_t *target )
 {
