@@ -234,4 +234,7 @@ extern Cvar::Cvar<bool> g_bot_buildAliens;
 extern Cvar::Cvar<bool> g_bot_buildHumans;
 extern Cvar::Cvar<bool> g_bot_repair;
 
+extern Cvar::Cvar<float> g_bot_verticalDistanceFactorAliens;
+extern Cvar::Cvar<float> g_bot_verticalDistanceFactorHumans;
+
 #endif // SG_EXTERN_H_

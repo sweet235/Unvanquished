@@ -3387,8 +3387,11 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 	team_t userTeam = G_Team( ent );
 	Cvar::Cvar<int> &cvar = userTeam == TEAM_ALIENS ? g_bot_aliensenseRange : g_bot_radarRange;
 
+	Cvar::Cvar<float> &verticalCvar = userTeam == TEAM_ALIENS ? g_bot_verticalDistanceFactorAliens : g_bot_verticalDistanceFactorHumans;
+
 	auto usage = [&] () {
-		ADMP( QQ( N_( "^3botenemy:^* usage: botenemy range [integer]" ) ) );
+		ADMP( QQ( N_( "^3botenemy:^* usage: botenemy range [integer]\n"
+					  "                 botenemy vertical [floating point number]\n" ) ) );
 	};
 
 	if ( trap_Argc() < 2 || trap_Argc() > 3 )
@@ -3403,6 +3406,26 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 	{
 		usage();
 		return;
+	}
+	else if ( strcmp( subCommand, "vertical") == 0 )
+	{
+		if ( trap_Argc() != 3 )
+		{
+			ADMP( va( "%s %.2f %.0f %.0f", QQ( N_("^3botenemy: ^*vertical influence is $1$ (vertical range $2$ = $3$ m)") ), 1 / verticalCvar.Get(), static_cast<float>( cvar.Get() ) / verticalCvar.Get(), static_cast<float>( cvar.Get() ) / verticalCvar.Get() * QU_TO_METER ) );
+			return;
+		}
+
+		char influenceStr[ MAX_STRING_CHARS ];
+		trap_Argv( 2, influenceStr, sizeof( influenceStr ) );
+		float influence = 1.f;
+		if ( !Cvar::ParseCvarValue( influenceStr, influence ) || influence > 1 || influence < 0.2 )
+		{
+			ADMP( QQ( N_( "^3botenemy:^* number must be from 0.2 to 1" ) ) );
+			return;
+		}
+
+		verticalCvar.Set( 1 / influence );
+		G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 vertical influence %.2f! (vertical range %.0f = %.0f m)", influence, static_cast<float>( cvar.Get() ) * influence, static_cast<float>( cvar.Get() ) * influence * QU_TO_METER ) );
 	}
 
 	if ( trap_Argc() == 2 )
