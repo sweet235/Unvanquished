@@ -1475,6 +1475,12 @@ AINodeStatus_t BotActionBlackboardNoteTransient( gentity_t *self, AIGenericNode_
 	return STATUS_SUCCESS;
 }
 
+AINodeStatus_t BotActionSetAimWithUserSpecifiedClient( gentity_t *self, AIGenericNode_t * )
+{
+	self->botMind->aimsWithUserSpecifiedClient = true;
+	return STATUS_SUCCESS;
+}
+
 AINodeStatus_t BotActionRush( gentity_t *self, AIGenericNode_t *node )
 {
 	if ( self->botMind->currentNode != node )

@@ -161,6 +161,12 @@ Util::optional<glm::vec3> direction, int flags, meansOfDeath_t meansOfDeath) {
 		}
 	}
 
+	if ( source && source->client && entity.oldEnt != source )
+	{
+		source->client->lastDamagedEntityNum = entity.oldEnt->num();
+		source->client->lastDamagedEntityTime = level.time;
+	}
+
 	if (client) {
 		// Save damage w/o armor modifier.
 		client->damage_received += (int)(amount + 0.5f);
