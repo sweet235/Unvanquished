@@ -984,6 +984,19 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 		return level.time - ent->client->lastCombatTime < 3000;
 	};
 
+	if ( self->botMind->aimsWithUserSpecifiedClient && self->botMind->userSpecifiedClientNum )
+	{
+		int followingClientNum = *self->botMind->userSpecifiedClientNum;
+		gentity_t *followingClient = &g_entities[ followingClientNum ];
+		int deltaTime = level.time - followingClient->client->lastDamagedEntityTime;
+		gentity_t *lastDamagedEnt = &g_entities[ followingClient->client->lastDamagedEntityNum ];
+		if ( BotEntityIsValidEnemyTarget( self, lastDamagedEnt )
+			 && deltaTime < 2000 )
+		{
+			return lastDamagedEnt;
+		}
+	}
+
 	for ( target = g_entities; target < &g_entities[level.num_entities]; target++ )
 	{
 		float newScore;
