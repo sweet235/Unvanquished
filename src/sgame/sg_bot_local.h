@@ -207,6 +207,8 @@ public:
 		// The bot's "output" (movement and attacks)
 		usercmd_t cmdBuffer;
 
+	bool aimsWithUserSpecifiedClient;
+
 private:
 		bool wantSprinting = false;
 public:
