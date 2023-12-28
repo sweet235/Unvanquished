@@ -1110,6 +1110,7 @@ static const struct AIActionMap_s
 	{ "roamInRadius",      BotActionRoamInRadius,      2, 2 },
 	{ "rush",              BotActionRush,              0, 0 },
 	{ "say",               BotActionSay,               1, 2 },
+	{ "setAimWithUserSpecifiedClient", BotActionSetAimWithUserSpecifiedClient, 0, 0 },
 	{ "stayHere",          BotActionStayHere,          1, 1 },
 	{ "strafeDodge",       BotActionStrafeDodge,       0, 0 },
 	{ "suicide",           BotActionSuicide,           0, 0 },

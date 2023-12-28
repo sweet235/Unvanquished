@@ -227,6 +227,7 @@ bool G_BotSetBehavior( botMemory_t *botMind, Str::StringRef behavior )
 	botMind->currentNode = nullptr;
 	botMind->clearNav();
 	BotResetEnemyQueue( &botMind->enemyQueue );
+	botMind->aimsWithUserSpecifiedClient = false;
 
 	botMind->behaviorTree = ReadBehaviorTree( behavior.c_str(), &treeList );
 

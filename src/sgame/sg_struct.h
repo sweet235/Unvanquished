@@ -460,6 +460,8 @@ struct gclient_t
 	int        lastFirebombBuyTime;
 	bool       isDemigod;
 	int        lastGroundFlameDamageTime;
+	int        lastDamagedEntityNum;
+	int        lastDamagedEntityTime;
 
 	unlagged_t unlaggedHist[ MAX_UNLAGGED_MARKERS ];
 	unlagged_t unlaggedBackup;
