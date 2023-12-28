@@ -222,6 +222,7 @@ bool G_BotSetBehavior( botMemory_t *botMind, Str::StringRef behavior )
 	G_Bot_ResetBehaviorState( *botMind );
 	botMind->blackboardTransient = 0;
 	botMind->myTimer = level.time;
+	botMind->aimsWithUserSpecifiedClient = false;
 
 	botMind->behaviorTree = ReadBehaviorTree( behavior.c_str(), &treeList );
 
