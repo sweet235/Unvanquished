@@ -1462,7 +1462,7 @@ static bool build( gentity_t *self, buildable_t toBuild )
 	}
 
 	if ( BG_Buildable( toBuild )->buildPoints > 0
-		 && G_GetFreeBudget( G_Team( self ) ) < BG_Buildable( toBuild )->buildPoints )
+		 && G_GetSpendableBudget( G_Team( self ) ) < BG_Buildable( toBuild )->buildPoints )
 	{
 		return false;
 	}
