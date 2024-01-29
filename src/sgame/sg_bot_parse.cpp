@@ -404,12 +404,14 @@ static AIValue_t stuckTime( gentity_t *self, const AIValue_t* )
 	return AIBoxInt( level.time - self->botMind->stuckTime );
 }
 
-static Cvar::Cvar<int> g_bot_unusedBPPerMinute("g_bot_unusedBPPerMinute", "reduce the BP used by bots by this amount per minute of game time", Cvar::NONE, 0);
+static Cvar::Cvar<int> g_bot_unusedBPPerMinuteAliens("g_bot_unusedBPPerMinuteAliens", "reduce the BP used by alien bots by this amount per minute of game time", Cvar::NONE, 0);
+static Cvar::Cvar<int> g_bot_unusedBPPerMinuteHumans("g_bot_unusedBPPerMinuteHumans", "reduce the BP used by human bots by this amount per minute of game time", Cvar::NONE, 0);
 
 static AIValue_t usableBuildPoints( gentity_t *self, const AIValue_t* )
 {
 	team_t team = G_Team( self );
-	int unused = ( static_cast<uint64_t>( level.matchTime ) * static_cast<uint64_t> ( g_bot_unusedBPPerMinute.Get() ) ) >> 16;
+	int unusedByCvar = team == TEAM_ALIENS ? g_bot_unusedBPPerMinuteAliens.Get() : g_bot_unusedBPPerMinuteHumans.Get();
+	int unused = ( static_cast<uint64_t>( level.matchTime ) * static_cast<uint64_t> ( unusedByCvar ) ) >> 16;
 	if ( level.team[team].spentBudget + unused > level.team[team].totalBudget )
 	{
 		return AIBoxInt( 0 );
