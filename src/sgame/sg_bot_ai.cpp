@@ -1289,6 +1289,7 @@ static Cvar::Cvar<float> g_bot_buildProbMedistat("g_bot_buildProbMedistat", "pro
 static Cvar::Cvar<float> g_bot_buildProbTelenode("g_bot_buildProbTelenode", "probability of a bot building a telenode instead of a machine gun turret", Cvar::NONE, 0.0);
 static Cvar::Cvar<float> g_bot_buildProbEgg("g_bot_buildProbEgg", "probability of a bot building an egg instead of an acid tube", Cvar::NONE, 0.0);
 static Cvar::Cvar<float> g_bot_buildProbBooster("g_bot_buildProbBooster", "probability of a bot building a booster instead of an acid tube", Cvar::NONE, 0.0);
+static Cvar::Cvar<int> g_bot_buildOutpostDistance("g_bot_buildOutpostDistance", "make bots build supply buildings at outposts", Cvar::NONE, 99999);
 
 static bool isBuilder( gentity_t *self )
 {
@@ -1300,6 +1301,11 @@ static bool isBuilder( gentity_t *self )
 
 buildable_t BotChooseBuildableToBuild( gentity_t *self )
 {
+	auto notAtOutpost = [&] ( const gentity_t *closest )
+	{
+		float dist2 = glm::distance2( VEC2GLM( self->s.origin ), VEC2GLM( closest->s.origin ) );
+		return dist2 > Square( g_bot_buildOutpostDistance.Get() );
+	};
 	buildable_t toBuild = BA_NONE;
 	if ( G_Team( self ) == TEAM_HUMANS )
 	{
@@ -1320,6 +1326,18 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 			toBuild = BA_H_ARMOURY;
 		}
 		else if ( level.numBuildablesEstimate[ BA_H_MEDISTAT ] == 0 )
+		{
+			toBuild = BA_H_MEDISTAT;
+		}
+		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_ARMOURY ].ent && notAtOutpost( self->botMind->closestBuildings[ BA_H_ARMOURY ].ent ) )
+		{
+			toBuild = BA_H_ARMOURY;
+		}
+		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_SPAWN ].ent && notAtOutpost( self->botMind->closestBuildings[ BA_H_SPAWN ].ent ) )
+		{
+			toBuild = BA_H_SPAWN;
+		}
+		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_MEDISTAT ].ent && notAtOutpost( self->botMind->closestBuildings[ BA_H_MEDISTAT ].ent ) )
 		{
 			toBuild = BA_H_MEDISTAT;
 		}
