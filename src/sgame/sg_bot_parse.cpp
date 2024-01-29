@@ -433,7 +433,7 @@ static AIValue_t usableBuildPoints( gentity_t *self, const AIValue_t* )
 	{
 		return AIBoxInt( 0 );
 	}
-	int buildPoints = G_GetFreeBudget( team );
+	int buildPoints = G_GetSpendableBudget( team );
 	if ( team == TEAM_ALIENS && !BG_BuildableUnlocked( BA_A_BOOSTER ) )
 	{
 		// save build points to build a booster as soon as unlocked
