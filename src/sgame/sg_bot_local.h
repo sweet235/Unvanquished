@@ -170,6 +170,10 @@ struct botMemory_t
 
 		botTarget_t goal;
 
+	// For allied buildable types: closest alive and active buildable
+	// For enemy buildable types: closest alive buildable with a tag beacon
+	botEntityAndDistance_t closestMaybeUnsuableBuildings[ BA_NUM_BUILDABLES ];
+
 		int myTimer;
 
 private:
