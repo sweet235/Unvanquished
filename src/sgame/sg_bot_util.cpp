@@ -854,6 +854,8 @@ void BotFindClosestBuildings( gentity_t *self )
 	{
 		self->botMind->closestBuildings[ i ].ent = nullptr;
 		self->botMind->closestBuildings[ i ].distance = std::numeric_limits<float>::max();
+		self->botMind->closestMaybeUnsuableBuildings[ i ].ent = nullptr;
+		self->botMind->closestMaybeUnsuableBuildings[ i ].distance = std::numeric_limits<float>::max();
 	}
 
 	auto alliedTag = G_Team( self ) == TEAM_ALIENS ? &gentity_t::alienTag : &gentity_t::humanTag;
@@ -879,12 +881,13 @@ void BotFindClosestBuildings( gentity_t *self )
 			continue;
 		}
 
+		bool isUsable = true;
 		if ( G_OnSameTeam( self, testEnt ) )
 		{
 			// skip buildings that are currently building or aren't powered
 			if ( !testEnt->powered || !testEnt->spawned )
 			{
-				continue;
+				isUsable = false;
 			}
 		}
 		else
@@ -902,10 +905,17 @@ void BotFindClosestBuildings( gentity_t *self )
 
 		ent = &self->botMind->closestBuildings[ testEnt->s.modelindex ];
 
-		if ( newDist < ent->distance )
+		if ( isUsable && newDist < ent->distance )
 		{
 			ent->ent = testEnt;
 			ent->distance = newDist;
+		}
+
+		botEntityAndDistance_t *ment = &self->botMind->closestMaybeUnsuableBuildings[ testEnt->s.modelindex ];
+		if ( newDist < ment->distance )
+		{
+			ment->ent = testEnt;
+			ment->distance = newDist;
 		}
 	}
 }
