@@ -1329,15 +1329,15 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_H_MEDISTAT;
 		}
-		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_ARMOURY ].ent && notAtOutpost( self->botMind->closestBuildings[ BA_H_ARMOURY ].ent ) )
+		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_ARMOURY ].ent && notAtOutpost( self->botMind->closestMaybeUnsuableBuildings[ BA_H_ARMOURY ].ent ) )
 		{
 			toBuild = BA_H_ARMOURY;
 		}
-		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_SPAWN ].ent && notAtOutpost( self->botMind->closestBuildings[ BA_H_SPAWN ].ent ) )
+		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_SPAWN ].ent && notAtOutpost( self->botMind->closestMaybeUnsuableBuildings[ BA_H_SPAWN ].ent ) )
 		{
 			toBuild = BA_H_SPAWN;
 		}
-		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_MEDISTAT ].ent && notAtOutpost( self->botMind->closestBuildings[ BA_H_MEDISTAT ].ent ) )
+		else if ( !G_IsSuddenDeath() && self->botMind->closestBuildings[ BA_H_MEDISTAT ].ent && notAtOutpost( self->botMind->closestMaybeUnsuableBuildings[ BA_H_MEDISTAT ].ent ) )
 		{
 			toBuild = BA_H_MEDISTAT;
 		}
