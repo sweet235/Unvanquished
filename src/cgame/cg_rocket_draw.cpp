@@ -800,8 +800,9 @@ public:
 				}
 
 				const float scale = cg_crosshairOutlineScale.Get();
-				const float outlineWidth = w + scale * cgs.aspectScale;
-				const float outlineHeight = h + scale;
+				const float outlineHeight = wi->crossHairSizeNoBorder * scale * ( wi->crossHairSize / wi->crossHairSizeNoBorder )
+									 * cg_crosshairSize.Get();
+				const float outlineWidth = outlineHeight * cgs.aspectScale;
 				const float outlineX = rect.x + ( rect.w / 2 ) - ( outlineWidth / 2 );
 				const float outlineY = rect.y + ( rect.h / 2 ) - ( outlineHeight / 2 );
 

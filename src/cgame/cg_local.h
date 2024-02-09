@@ -974,6 +974,7 @@ struct weaponInfo_t
 	qhandle_t        crossHair;
 	qhandle_t        crossHairIndicator;
 	int              crossHairSize;
+	float            crossHairSizeNoBorder; // For crosshair outlines
 
 	sfxHandle_t      readySound;
 
