@@ -959,8 +959,8 @@ static bool CG_ParseWeaponFile( const char *filename, int weapon, weaponInfo_t *
 		return false;
 	}
 
-	if ( wi->crossHairSizeNoBorder == 0.0f ) {
-		Log::Warn( "weapon crossHairSizeNoBorder not set or is 0, setting to crossHairSize" );
+	if ( wi->crossHairSizeNoBorder == 0.0f && wi->crossHair ) {
+		Log::Warn( "weapon %s crossHairSizeNoBorder not set or is 0, setting to crossHairSize", filename );
 		wi->crossHairSizeNoBorder = wi->crossHairSize;
 	}
 
