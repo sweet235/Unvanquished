@@ -1808,6 +1808,7 @@ extern Cvar::Cvar<float> cg_crosshairColorBlue;
 extern Cvar::Cvar<float> cg_crosshairColorAlpha;
 extern Cvar::Range<Cvar::Cvar<int>> cg_crosshairOutlineStyle;
 extern Cvar::Cvar<float> cg_crosshairOutlineScale;
+extern Cvar::Cvar<float> cg_crosshairOutlineOffset;
 extern Cvar::Cvar<float> cg_crosshairOutlineColorRed;
 extern Cvar::Cvar<float> cg_crosshairOutlineColorGreen;
 extern Cvar::Cvar<float> cg_crosshairOutlineColorBlue;
