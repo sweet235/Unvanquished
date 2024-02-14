@@ -1997,6 +1997,10 @@ void BotClassMovement( gentity_t *self, bool inAttackRange )
 			{
 				return;
 			}
+			else
+			{
+				BotStrafeDodge( self );
+			}
 			break;
 		case PCL_ALIEN_LEVEL3_UPG:
 			if ( mind->goal.getTargetType() == entityType_t::ET_BUILDABLE && self->client->ps.ammo > 0 && inAttackRange )
@@ -2008,12 +2012,20 @@ void BotClassMovement( gentity_t *self, bool inAttackRange )
 			{
 				return;
 			}
+			else
+			{
+				BotStrafeDodge( self );
+			}
 			break;
 		case PCL_ALIEN_LEVEL4:
 			// Use rush to approach faster
 			if ( self->botMind->skillSet[BOT_A_TYRANT_CHARGE_ON_ATTACK] && !inAttackRange )
 			{
 				BotFireWeapon( WPM_SECONDARY, botCmdBuffer );
+			}
+			else if ( !( self->client->ps.stats[ STAT_STATE ] & SS_CHARGING ) )
+			{
+				BotStrafeDodge( self );
 			}
 			break;
 		default:
