@@ -191,6 +191,7 @@ bool        G_admin_listbots( gentity_t *ent );
 bool        G_admin_navgen( gentity_t *ent );
 bool        G_admin_listbotsShort( gentity_t *ent );
 bool        G_admin_demigod( gentity_t *ent );
+bool        G_admin_cheats( gentity_t *ent );
 
 void            G_admin_print( gentity_t *ent, Str::StringRef m );
 void            G_admin_print_plural( gentity_t *ent, Str::StringRef m, int number );
