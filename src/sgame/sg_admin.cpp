@@ -247,7 +247,13 @@ static const g_admin_cmd_t     g_admin_cmds[] =
 		N_("load a map (and optionally force layout)"),
 		N_("[^3mapname^7] (^5layout^7)")
 	},
-	
+
+	{
+		"cheats",    G_admin_cheats,   false, "cheats",
+		N_("toogle cheats"),
+		""
+	},
+
 	{
 		"demigod",    G_admin_demigod,   false, "demigod",
 		N_("make a player invulnerable"),
@@ -4006,6 +4012,21 @@ bool G_admin_denybuild( gentity_t *ent )
 
 	admin_log( va( "%d (%s) \"%s^*\"", vic->slot, vic->guid,
 	               vic->name[ vic->nameOffset ] ) );
+	return true;
+}
+
+bool G_admin_cheats( gentity_t *ent )
+{
+	RETURN_IF_INTERMISSION;
+	g_cheats = !g_cheats;
+	if ( g_cheats )
+	{
+		G_admin_action( QQ( N_("^3cheats:^* $1$^* decided that ^6CHEATS ARE ENABLED^*") ), "%s", ent );
+	}
+	else
+	{
+		G_admin_action( QQ( N_("^3cheats:^* $1$^* decided that cheats are disabled^*") ), "%s", ent );
+	}
 	return true;
 }
 
