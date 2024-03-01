@@ -4438,28 +4438,36 @@ static void PM_HumanStaminaEffects()
 	stopped   = ( pm->cmd.forwardmove == 0 && pm->cmd.rightmove == 0 );
 	crouching = ( pm->ps->pm_flags & PMF_DUCKED );
 	walking   = usercmdButtonPressed( pm->cmd.buttons, BTN_WALKING );
+	bool hasBiokit = BG_InventoryContainsUpgrade( UP_BIOKIT, stats );
 
 	// Use/Restore stamina
+	int delta = 0;
 	if ( stats[ STAT_STATE2 ] & SS2_JETPACK_WARM )
 	{
-		stats[ STAT_STAMINA ] += ( int )( pml.msec * ca->staminaJogRestore * 0.001f );
+		delta = ca->staminaJogRestore;
 	}
 	else if ( stopped )
 	{
-		stats[ STAT_STAMINA ] += ( int )( pml.msec * ca->staminaStopRestore * 0.001f );
+		delta = ca->staminaStopRestore;
 	}
 	else if ( ( stats[ STAT_STATE ] & SS_SPEEDBOOST ) && !walking && !crouching ) // walk/crouch overrides sprint
 	{
-		stats[ STAT_STAMINA ] -= ( int )( pml.msec * ca->staminaSprintCost * 0.001f );
+		delta = 0 - ca->staminaSprintCost;
 	}
 	else if ( walking || crouching )
 	{
-		stats[ STAT_STAMINA ] += ( int )( pml.msec * ca->staminaWalkRestore * 0.001f );
+		delta = ca->staminaWalkRestore;
 	}
 	else // assume jogging
 	{
-		stats[ STAT_STAMINA ] += ( int )( pml.msec * ca->staminaJogRestore * 0.001f );
+		delta = ca->staminaJogRestore;
 	}
+	if ( delta > 0 && hasBiokit )
+	{
+		delta += BIOKIT_STAMINA_REGEN; // restore stamina faster if one possesses the biokit
+	}
+
+	stats[ STAT_STAMINA ] += static_cast<int>( pml.msec * 0.001f * delta );
 
 	// Remove stamina based on status effects
 	if ( stats[ STAT_STATE2 ] & SS2_LEVEL1SLOW )
