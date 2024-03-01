@@ -127,6 +127,7 @@ int   MEDKIT_STARTUP_SPEED;
 
 int   BIOKIT_INTERVAL;
 float BIOKIT_MODIFIER;
+int   BIOKIT_STAMINA_REGEN;
 
 // Human Weapons
 
@@ -172,6 +173,7 @@ static configVar_t bg_configVars[] =
 {
 	{"u_biokit_interval", INTEGER, false, &BIOKIT_INTERVAL},
 	{"u_biokit_modifier", FLOAT, false, &BIOKIT_MODIFIER},
+	{"u_biokit_staminaRegen", INTEGER, false, &BIOKIT_STAMINA_REGEN},
 
 	{"u_medkit_poisonImmunityTime", INTEGER, false, &MEDKIT_POISON_IMMUNITY_TIME},
 	{"u_medkit_startupSpeed", INTEGER, false, &MEDKIT_STARTUP_SPEED},
