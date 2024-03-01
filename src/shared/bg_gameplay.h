@@ -395,5 +395,6 @@ extern int   MEDKIT_STARTUP_SPEED;
 
 extern int   BIOKIT_INTERVAL;
 extern float BIOKIT_MODIFIER;
+extern int   BIOKIT_STAMINA_REGEN;
 
 #endif // G_GAMEPLAY_H_
