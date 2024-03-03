@@ -1360,6 +1360,10 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_A_SPAWN;
 		}
+		else if ( !G_IsSuddenDeath() && BG_BuildableUnlocked( BA_A_BOOSTER ) && self->botMind->closestBuildings[ BA_A_BOOSTER ].ent && notAtOutpost( self->botMind->closestMaybeUnsuableBuildings[ BA_A_BOOSTER ].ent ) )
+		{
+			toBuild = BA_A_BOOSTER;
+		}
 		else if ( !G_IsSuddenDeath() )
 		{
 			toBuild = BA_A_ACIDTUBE;
