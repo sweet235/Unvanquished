@@ -3261,6 +3261,76 @@ static void Cmd_Bot_Equip_f( gentity_t * ent )
 	}
 }
 
+static void Cmd_BotBuild_f( gentity_t * ent )
+{
+	int argc = trap_Argc();
+	if ( argc != 3 )
+	{
+		std::string msg;
+		switch ( G_Team( ent ) )
+		{
+		case TEAM_HUMANS:
+			msg = "^AStatus: ^5rocketpod probability: " + std::to_string( g_bot_buildProbRocketPod.Get() );
+			break;
+		case TEAM_ALIENS:
+			msg = "^AStatus: ^5eggpod probability: " + std::to_string( g_bot_buildProbEgg.Get() );
+			break;
+		default:
+			ASSERT( false );
+			return;
+		}
+		ADMP( Quote( msg.c_str() ) );
+		return;
+	}
+
+	char buildableCstr[ MAX_STRING_CHARS ];
+	trap_Argv( 1, buildableCstr, sizeof( buildableCstr ) );
+	std::string buildableName = buildableCstr;
+
+	char probCstr[ MAX_STRING_CHARS ];
+	trap_Argv( 2, probCstr, sizeof( probCstr ) );
+	
+	switch ( G_Team( ent ) )
+	{
+	case TEAM_HUMANS:
+		if ( buildableName == "rocketpod" )
+		{
+			float val;
+			if ( !Cvar::ParseCvarValue( probCstr, val ) )
+			{
+				return;
+			}
+			g_bot_buildProbRocketPod.Set( val );
+		}
+		else
+		{
+			return;
+		}
+		break;
+	case TEAM_ALIENS:
+		if ( buildableName == "eggpod" )
+		{
+			float val;
+			if ( !Cvar::ParseCvarValue( probCstr, val ) )
+			{
+				return;
+			}
+			g_bot_buildProbEgg.Set( val );
+		}
+		else
+		{
+			return;
+		}
+		break;
+	default:
+		ASSERT( false );
+		return;
+	}
+
+	G_Say( ent, SAY_TEAM, va( "^A[botbuild]^5 %s probability is %s!", buildableCstr, probCstr ) );
+}
+
+
 static void Cmd_Tactic_f( gentity_t * ent )
 {
 	if ( level.intermissiontime )
@@ -3443,6 +3513,8 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 		usage();
 	}
 }
+
+
 
 void Cmd_TeamStatus_f( gentity_t * ent )
 {
@@ -4456,6 +4528,7 @@ static const commands_t cmds[] =
 	{ "a",               CMD_MESSAGE | CMD_INTERMISSION,      Cmd_AdminMessage_f     },
 	{ "asay",            CMD_MESSAGE | CMD_INTERMISSION,      Cmd_Say_f              },
 	{ "beacon",          CMD_TEAM | CMD_ALIVE,                Cmd_Beacon_f           },
+	{ "botbuild",        CMD_TEAM,                            Cmd_BotBuild_f        },
 	{ "botenemy",        CMD_TEAM,                            Cmd_BotEnemy_f         },
 	{ "botequip",        CMD_TEAM,                            Cmd_Bot_Equip_f        },
 	{ "build",           CMD_TEAM | CMD_ALIVE,                Cmd_Build_f            },
