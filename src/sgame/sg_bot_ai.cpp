@@ -1257,8 +1257,8 @@ Cvar::Cvar<bool> g_bot_buildHumans("g_bot_buildHumans", "whether human bots shou
 Cvar::Cvar<bool> g_bot_repair("g_bot_repair", "whether human bots should repair", Cvar::NONE, true);
 static Cvar::Cvar<int> g_bot_buildNumEggs("g_bot_buildNumEggs", "how many eggs bots should build", Cvar::NONE, 6);
 static Cvar::Cvar<int> g_bot_buildNumTelenodes("g_bot_buildNumTelenodes", "how many telenodes bots should build", Cvar::NONE, 3);
-static Cvar::Cvar<float> g_bot_buildProbRocketPod("g_bot_buildProbRocketPod", "probability of a bot building a rocket pod instead of a machine gun turret", Cvar::NONE, 0.2);
-static Cvar::Cvar<float> g_bot_buildProbEgg("g_bot_buildProbEgg", "probability of a bot building an egg instead of an acid tube", Cvar::NONE, 0.0);
+Cvar::Cvar<float> g_bot_buildProbRocketPod("g_bot_buildProbRocketPod", "probability of a bot building a rocket pod instead of a machine gun turret", Cvar::NONE, 0.2);
+Cvar::Cvar<float> g_bot_buildProbEgg("g_bot_buildProbEgg", "probability of a bot building an egg instead of an acid tube", Cvar::NONE, 0.0);
 static Cvar::Cvar<int> g_bot_buildOutpostDistance("g_bot_buildOutpostDistance", "make bots build supply buildings at outposts", Cvar::NONE, 99999);
 
 static bool isBuilder( gentity_t *self )
