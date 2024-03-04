@@ -131,6 +131,41 @@ static void Svcmd_EntityFire_f()
 	G_CallEntity(selection, &call);
 }
 
+static void Svcmd_EmptyTeam_f()
+{
+	char argument[ MAX_STRING_CHARS ];
+
+	auto usage = [&] ()
+	{
+		Log::Notice( "usage: emptyTeam (a | h) " );
+	};
+
+	if ( trap_Argc() != 2 )
+	{
+		usage();
+		return;
+	}
+
+	trap_Argv( 1, argument, sizeof( argument ) );
+	team_t team = G_TeamFromString( argument );
+
+	if ( team != TEAM_HUMANS && team != TEAM_ALIENS )
+	{
+		usage();
+		return;
+	}
+
+	for ( int id = 0; id < MAX_CLIENTS; id++ )
+	{
+		if ( !g_entities[ id ].inuse
+			 || g_entities[ id ].r.svFlags & SVF_BOT
+			 || G_Team( &g_entities[ id ] ) != team )
+		{
+			continue;
+		}
+		G_ChangeTeam( &g_entities[ id ], TEAM_NONE );
+	}
+}
 
 static inline void PrintEntityOverviewLine( gentity_t *entity )
 {
@@ -806,6 +841,7 @@ static const struct svcmd
 	{ "delaysd",            false, Svcmd_DelaySuddenDeath_f     },
 	{ "dumpuser",           false, Svcmd_DumpUser_f             },
 	{ "eject",              false, Svcmd_EjectClient_f          },
+	{ "emptyTeam",          false, Svcmd_EmptyTeam_f            },
 	{ "entityFire",         false, Svcmd_EntityFire_f           },
 	{ "entityList",         false, Svcmd_EntityList_f           },
 	{ "entityLock",         false, Svcmd_EntityLock_f           },
