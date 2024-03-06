@@ -985,6 +985,11 @@ bool G_admin_name_check( gentity_t *ent, const char *name, char *err, int len )
 	return true;
 }
 
+int G_AdminLevelOfEntity( gentity_t *ent )
+{
+	return ( !ent || !ent->inuse || !ent->client || !ent->client->pers.admin ) ? 0 : ent->client->pers.admin->level;
+}
+
 static bool admin_higher_admin( g_admin_admin_t *a, g_admin_admin_t *b )
 {
 	bool perm;
