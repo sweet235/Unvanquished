@@ -3084,6 +3084,33 @@ static void Cmd_Reload_f( gentity_t *ent )
 	}
 }
 
+static Cvar::Cvar<int> g_bot_permHumans( "g_bot_permHumans", "minimum admin level to use bot commands (humans)", Cvar::NONE, 0);
+static Cvar::Cvar<int> g_bot_permAliens( "g_bot_permAliens", "minimum admin level to use bot commands (aliens)", Cvar::NONE, 0);
+
+int G_AdminLevelOfEntity( gentity_t * );     // oops
+
+static int getBotPermLevel( gentity_t * ent )
+{
+	team_t team = G_Team( ent );
+	Cvar::Cvar<int> cvar = team == TEAM_HUMANS ? g_bot_permHumans : g_bot_permAliens;
+	int highestLevel = 0;
+	for ( int id = 0; id < MAX_CLIENTS; id++ )
+	{
+		int l = G_AdminLevelOfEntity( &g_entities[ id ] );
+		if ( l > highestLevel && G_Team( &g_entities[ id ] ) == team )
+		{
+			highestLevel = l;
+		}
+	}
+	int result = cvar.Get();
+	if ( result > highestLevel )    // reset level to 0 if the admin left the team
+	{
+		result = 0;
+		cvar.Set( 0 );
+	}
+	return result;
+}
+
 bool BotChangeGoalEntity( gentity_t *self, gentity_t const *goal );
 static void Cmd_ForgetIt_f( gentity_t * ent )
 {
@@ -3211,6 +3238,12 @@ static void botEquipStatus( gentity_t * ent, std::map<std::string, Cvar::Cvar<bo
 
 static void Cmd_Bot_Equip_f( gentity_t * ent )
 {
+	if ( G_AdminLevelOfEntity( ent ) < getBotPermLevel( ent ) )
+	{
+		ADMP( Quote( "you are not allowed to do that" ) );
+		return;
+	}
+
 	if ( trap_Argc() != 2 )
 	{
 		switch ( G_Team( ent ) )
@@ -3261,8 +3294,57 @@ static void Cmd_Bot_Equip_f( gentity_t * ent )
 	}
 }
 
+static void Cmd_Bot_Perm_f( gentity_t * ent )
+{
+	Cvar::Cvar<int> cvar = G_Team( ent ) == TEAM_HUMANS ? g_bot_permHumans : g_bot_permAliens;
+	auto usage = [&] ()
+	{
+		std::string msg = "^3usage:^* botperm <level>\n";
+		msg += "^3current level:^* " + std::to_string( cvar.Get() );
+		ADMP( Quote( msg.c_str() ) );
+	};
+	
+	if ( trap_Argc() != 2 )
+	{
+		usage();
+		return;
+	}
+
+	char levelCstr[ MAX_STRING_CHARS ];
+	trap_Argv( 1, levelCstr, sizeof( levelCstr ) );
+	int level = 0;
+	if ( !Cvar::ParseCvarValue( levelCstr, level ) )
+	{
+		usage();
+		return;
+	}
+	else if ( level < 0 || level > 99 ) // HACK: hard-coded maximum
+	{
+		usage();
+		return;
+	}
+
+	int userLevel = G_AdminLevelOfEntity( ent );
+
+	if ( userLevel < level )
+	{
+		ADMP( Quote( "you are not allowed to do that" ) );
+		return;
+	}
+	
+	cvar.Set( level );
+	G_Say( ent, SAY_TEAM, va( "^A[botperm]^5 restrict bot commands to admin level %d (and above)!", level ) );
+}
+
+
+
 static void Cmd_BotBuild_f( gentity_t * ent )
 {
+	if ( G_AdminLevelOfEntity( ent ) < getBotPermLevel( ent ) )
+	{
+		ADMP( Quote( "you are not allowed to do that" ) );
+		return;
+	}
 	int argc = trap_Argc();
 	if ( argc != 3 )
 	{
@@ -3335,6 +3417,12 @@ static void Cmd_Tactic_f( gentity_t * ent )
 {
 	if ( level.intermissiontime )
 	{
+		return;
+	}
+
+	if ( G_AdminLevelOfEntity( ent ) < getBotPermLevel( ent ) )
+	{
+		ADMP( Quote( "you are not allowed to do that" ) );
 		return;
 	}
 
@@ -3447,6 +3535,12 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 {
 	if ( level.intermissiontime )
 	{
+		return;
+	}
+
+	if ( G_AdminLevelOfEntity( ent ) < getBotPermLevel( ent ) )
+	{
+		ADMP( Quote( "you are not allowed to do that" ) );
 		return;
 	}
 
@@ -4586,6 +4680,7 @@ static const commands_t cmds[] =
 	{ "botbuild",        CMD_TEAM,                            Cmd_BotBuild_f        },
 	{ "botenemy",        CMD_TEAM,                            Cmd_BotEnemy_f         },
 	{ "botequip",        CMD_TEAM,                            Cmd_Bot_Equip_f        },
+	{ "botperm",         CMD_TEAM,                            Cmd_Bot_Perm_f         },
 	{ "build",           CMD_TEAM | CMD_ALIVE,                Cmd_Build_f            },
 	{ "buy",             CMD_HUMAN | CMD_ALIVE,               Cmd_Buy_f              },
 	{ "callteamvote",    CMD_MESSAGE | CMD_TEAM,              Cmd_CallVote_f         },
