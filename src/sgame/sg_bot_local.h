@@ -185,6 +185,8 @@ public:
 	void setHasOffmeshGoal( bool val ) { hasOffmeshGoal = val; }
 	bool hasOffmeshGoal;
 
+	int healLockTime;
+
 	int myTimer;
 	int blackboardTransient;
 

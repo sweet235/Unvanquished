@@ -1592,8 +1592,14 @@ static bool BotCurrentlyHealingWithDedicatedBuildable( gentity_t *self )
 	{
 		return true;
 	}
+	else if ( G_Team( self ) == TEAM_ALIENS && ( self->client->ps.stats[ STAT_STATE ] & SS_HEALING_8X ) )
+	{
+		return true;
+	}
 	return false;
 }
+
+static Cvar::Cvar<int> g_bot_healLockAliens("g_bot_healLockAliens", "alien heal lock time, -1 = disabled", Cvar::NONE, 5000);
 
 static AINodeStatus_t BotActionReachHealA( gentity_t *self );
 static AINodeStatus_t BotActionReachHealH( gentity_t *self );
@@ -1622,6 +1628,19 @@ AINodeStatus_t BotActionHeal( gentity_t *self, AIGenericNode_t *node )
 		return STATUS_SUCCESS;
 	}
 
+	if ( level.time < self->botMind->healLockTime )
+	{
+		return STATUS_FAILURE;
+	}
+
+	bool currentlyHealing = BotCurrentlyHealingWithDedicatedBuildable( self );
+	if ( G_Team( self ) == TEAM_ALIENS
+		 && currentlyHealing
+		 && level.time - self->client->lastCombatTime < 500 )
+	{
+		self->botMind->healLockTime = level.time + g_bot_healLockAliens.Get();
+	}
+
 	if ( !self->botMind->goal.targetsValidEntity() )
 	{
 		return STATUS_FAILURE;
@@ -1634,7 +1653,7 @@ AINodeStatus_t BotActionHeal( gentity_t *self, AIGenericNode_t *node )
 	}
 
 	// If we are properly healing, waiting without moving is good
-	if ( BotCurrentlyHealingWithDedicatedBuildable( self ) )
+	if ( currentlyHealing )
 	{
 		BotResetStuckTime( self );
 	}
