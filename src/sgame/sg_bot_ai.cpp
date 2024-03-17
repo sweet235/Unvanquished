@@ -871,6 +871,10 @@ bool BotTargetInOffmeshAttackRange( gentity_t *self, botTarget_t target )
 	case WP_ALEVEL0:
 		return distSquare < limitSquare( g_bot_offmeshRangeLevel0, LEVEL0_BITE_RANGE );
 	case WP_ALEVEL1:
+		if ( self->client->ps.weaponCharge > 0 )
+		{
+			return LEVEL1_CLAW_RANGE;
+		}
 		return distSquare < limitSquare( g_bot_offmeshRangeLevel1, LEVEL1_CLAW_RANGE );
 	case WP_ALEVEL2:
 		return distSquare < limitSquare( g_bot_offmeshRangeLevel2, LEVEL2_CLAW_RANGE );
