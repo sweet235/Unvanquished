@@ -984,6 +984,9 @@ static float BotAimAngle( gentity_t *self, const glm::vec3 &pos )
 	return glm::degrees( glm::angle( glm::normalize( forward ), glm::normalize( ideal ) ) );
 }
 
+static float hearDistanceSquare = 500.f * 500.f;
+static Cvar::Callback<Cvar::Cvar<float>> g_bot_hearDistance( "g_bot_hearDistance", "hear distance for human bots", Cvar::NONE, 500.f, []( float f ) { hearDistanceSquare = f * f; } );
+
 gentity_t* BotFindBestEnemy( gentity_t *self )
 {
 	float bestVisibleEnemyScore = 0.0f;
@@ -1000,7 +1003,10 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 		{
 			return false;
 		}
-		return level.time - ent->client->lastCombatTime < 3000;
+		glm::vec3 ownPos = VEC2GLM( self->s.origin );
+		glm::vec3 entPos = VEC2GLM( ent->s.origin );
+		return level.time - ent->client->lastCombatTime < 3000
+			&& glm::distance2( ownPos, entPos ) < hearDistanceSquare;
 	};
 
 	if ( self->botMind->aimsWithUserSpecifiedClient && self->botMind->userSpecifiedClientNum )
