@@ -286,6 +286,7 @@ AINodeStatus_t BotActionBuildHere( gentity_t *self, AIGenericNode_t *node );
 AINodeStatus_t BotActionResetMyTimer( gentity_t *self, AIGenericNode_t *node );
 AINodeStatus_t BotActionBlackboardNoteTransient( gentity_t *self, AIGenericNode_t *node );
 AINodeStatus_t BotActionSetAimWithUserSpecifiedClient( gentity_t *self, AIGenericNode_t *);
+AINodeStatus_t BotActionExtinguishFire( gentity_t *self, AIGenericNode_t *node );
 
 // class selection node "spawnAs"
 AINodeStatus_t BotSpawnNode( gentity_t *self, AIGenericNode_t *node );
