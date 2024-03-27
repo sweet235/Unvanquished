@@ -1126,7 +1126,6 @@ bool BotMoveToGoal( gentity_t *self )
 		//makes them easier to hit I'd say)
 		case PCL_ALIEN_BUILDER0:
 		case PCL_ALIEN_BUILDER0_UPG:
-		case PCL_ALIEN_LEVEL0:
 			break;
 		case PCL_ALIEN_LEVEL1:
 			if ( ps.weaponCharge <= 50 ) // I don't remember why 50
@@ -1135,6 +1134,7 @@ bool BotMoveToGoal( gentity_t *self )
 				magnitude = LEVEL1_POUNCE_DISTANCE;
 			}
 			break;
+ 		case PCL_ALIEN_LEVEL0:
 		case PCL_ALIEN_LEVEL2:
 		case PCL_ALIEN_LEVEL2_UPG:
 		{
@@ -1142,7 +1142,7 @@ bool BotMoveToGoal( gentity_t *self )
 			// don't do this on every frame though, we would loose
 			// a lot of maneuverability
 			int msec = level.time - level.previousTime;
-			constexpr float jumpChance = 0.2f; // chance per second
+			constexpr float jumpChance = 1.0f; // chance per second
 			if ( (jumpChance / 1000.0f) * msec > random() )
 			{
 				BotJump( self );
