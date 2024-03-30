@@ -431,6 +431,7 @@ Bot Thinks
 =======================
 */
 
+static Cvar::Cvar<bool> g_bot_firePanic("g_bot_firePanic", "whether bots avoid fire like the plague", Cvar::NONE, false);
 static Cvar::Cvar<bool> g_bot_jumpOverFire("g_bot_jumpOverFire", "whether bots should jump over ground flames", Cvar::NONE, true);
 
 void G_BotThink( gentity_t *self )
@@ -510,9 +511,11 @@ void G_BotThink( gentity_t *self )
 		ShowRunningNode( self, status );
 	}
 
+	bool mayPanic = G_Team( self ) == TEAM_ALIENS && self->client->ps.stats[ STAT_CLASS ] != PCL_ALIEN_LEVEL3_UPG && self->client->ps.stats[ STAT_CLASS ] != PCL_ALIEN_LEVEL4; 
+	bool mayJump = g_bot_jumpOverFire.Get() && !( g_bot_firePanic.Get() && mayPanic );
 	// jump if damaged by ground flames, and if not close to a corner that will
 	// make us turn (we might miss it and thus go back)
-	if ( g_bot_jumpOverFire.Get() && level.time - self->client->lastGroundFlameDamageTime < 200 && !G_BotCloseToPathCorner( self->num() ) )
+	if ( mayJump && level.time - self->client->lastGroundFlameDamageTime < 200 && !G_BotCloseToPathCorner( self->num() ) )
 	{
 		BotJump( self );
 	}
