@@ -1147,7 +1147,8 @@ bool BotMoveToGoal( gentity_t *self )
 		}
 		case PCL_ALIEN_LEVEL3:
 			if ( ps.weaponCharge < LEVEL3_POUNCE_TIME
-				 && obstacle != OBSTACLE_JUMPABLE )
+				 && obstacle != OBSTACLE_JUMPABLE
+				 && !G_BotCloseToPathCorner( self->num() ) )
 			{
 				wpm = WPM_SECONDARY;
 				magnitude = LEVEL3_POUNCE_JUMP_MAG;
@@ -1155,7 +1156,8 @@ bool BotMoveToGoal( gentity_t *self )
 		break;
 		case PCL_ALIEN_LEVEL3_UPG:
 			if ( ps.weaponCharge < LEVEL3_POUNCE_TIME_UPG
-				 && obstacle != OBSTACLE_JUMPABLE )
+				 && obstacle != OBSTACLE_JUMPABLE
+				 && !G_BotCloseToPathCorner( self->num() ) )
 			{
 				wpm = WPM_SECONDARY;
 				magnitude = LEVEL3_POUNCE_JUMP_MAG_UPG;
