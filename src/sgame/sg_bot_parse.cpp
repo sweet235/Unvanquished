@@ -404,6 +404,16 @@ static AIValue_t stuckTime( gentity_t *self, const AIValue_t* )
 	return AIBoxInt( level.time - self->botMind->stuckTime );
 }
 
+static AIValue_t timeSinceFloorFire( gentity_t *self, const AIValue_t* )
+{
+	return AIBoxInt( level.time - self->client->lastGroundFlameDamageTime );
+}
+
+static AIValue_t timeSinceLastCombat( gentity_t *self, const AIValue_t* )
+{
+	return AIBoxInt( level.time - self->client->lastCombatTime );
+}
+
 static Cvar::Cvar<int> g_bot_unusedBPPerMinuteAliens("g_bot_unusedBPPerMinuteAliens", "reduce the BP used by alien bots by this amount per minute of game time", Cvar::NONE, 0);
 static Cvar::Cvar<int> g_bot_unusedBPPerMinuteHumans("g_bot_unusedBPPerMinuteHumans", "reduce the BP used by human bots by this amount per minute of game time", Cvar::NONE, 0);
 
@@ -514,6 +524,8 @@ static const struct AIConditionMap_s
 	{ "stuckTime",         stuckTime,         0 },
 	{ "team",              botTeam,           0 },
 	{ "teamateHasWeapon",  teamateHasWeapon,  1 },
+	{ "timeSinceFloorFire",timeSinceFloorFire,0 },
+	{ "timeSinceLastCombat", timeSinceLastCombat, 0 },
 	{ "usableBuildPoints", usableBuildPoints, 0 },
 	{ "weapon",            currentWeapon,     0 }
 };
