@@ -433,7 +433,9 @@ float BotGetBaseRushScore( gentity_t *ent )
 	int max_value = GetMaxEquipmentCost( ent );
 	if ( max_value != 0 )
 	{
-		rush_score = ( self_value + skill_modifier * max_value )/ max_value;
+		// divide rush score by 2 for aliens
+		float teamFactor = G_Team( ent ) == TEAM_ALIENS ? 2.f : 1.f;
+		rush_score = ( self_value + skill_modifier * max_value ) / ( max_value * teamFactor );
 		rush_score = Math::Clamp( rush_score, 0.f, 1.f );
 	}
 	return rush_score;
