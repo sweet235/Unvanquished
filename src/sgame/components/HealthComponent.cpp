@@ -144,12 +144,6 @@ Util::optional<glm::vec3> direction, int flags, meansOfDeath_t meansOfDeath) {
 		entity.ApplyDamageModifier(take, location, direction, flags, meansOfDeath);
 	}
 
-	// granger is immune to fire
-	if ( client && ( client->ps.stats[STAT_CLASS] == PCL_ALIEN_BUILDER0 || client->ps.stats[STAT_CLASS] == PCL_ALIEN_BUILDER0_UPG ) && ( meansOfDeath == MOD_BURN || meansOfDeath == MOD_FIREBOMB || meansOfDeath == MOD_FLAMER ) )
-	{
-		return;
-	}
-
 	// if we don't actually take damage, stop here
 	if ( take == 0.0f )
 	{
