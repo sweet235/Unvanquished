@@ -2845,7 +2845,7 @@ glm::vec3 botTarget_t::getPosCapped( const gentity_t *self ) const
 	if ( type == targetType::ENTITY && ent )
 	{
 		glm::vec3 result = VEC2GLM( ent->s.origin );
-		if ( G_Team( self ) == TEAM_HUMANS && G_Team( ent.get() ) == TEAM_HUMANS && result.z < g_bot_humanTargetMinZ.Get() )
+		if ( G_Team( self ) == TEAM_HUMANS && G_Team( ent.get() ) == TEAM_HUMANS && result.z < g_bot_humanTargetMinZ.Get() && ent.get()->s.eType == entityType_t::ET_BUILDABLE && ent.get()->s.modelindex == BA_H_MEDISTAT )
 		{
 			result.z = g_bot_humanTargetMinZ.Get();
 		}
