@@ -229,6 +229,7 @@ extern Cvar::Cvar<int> g_bot_aliensenseRange;
 extern Cvar::Cvar<int> g_bot_radarRange;
 extern Cvar::Modified<Cvar::Cvar<int>> g_bot_defaultFill;
 extern Cvar::Cvar<bool> g_bot_navmeshReduceTypes;
+extern Cvar::Cvar<std::string> g_bot_defaultBehavior;
 
 extern Cvar::Cvar<bool> g_bot_buildAliens;
 extern Cvar::Cvar<bool> g_bot_buildHumans;
