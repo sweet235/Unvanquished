@@ -1952,7 +1952,7 @@ static bool BotAttackUpward( gentity_t *self )
 {
 	glm::vec3 ownPos = VEC2GLM( self->s.origin );
 	const gentity_t *targetEnt = self->botMind->goal.getTargetedEntity();
-	if ( !targetEnt )
+	if ( !targetEnt || !self->botMind->nav().directPathToGoal )
 	{
 		return false;
 	}
