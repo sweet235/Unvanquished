@@ -316,6 +316,7 @@ Cvar::Cvar<int> g_bot_aliensenseRange("g_bot_aliensenseRange", "custom aliensens
 Cvar::Cvar<int> g_bot_radarRange("g_bot_radarRange", "custom radar range for bots", Cvar::NONE, ALIENSENSE_RANGE);
 Cvar::Cvar<int> g_bot_preferredTargetAliens("g_bot_preferredTargetAliens", "wheter alien bots will prefer attacking players over attacking buildables: 0 = default, 1 = prefer players, 2 = prefer buildables", Cvar::NONE, 0);
 Cvar::Cvar<int> g_bot_preferredTargetHumans("g_bot_preferredTargetHumans", "wheter human bots will prefer attacking players over attacking buildables: 0 = default, 1 = prefer players, 2 = prefer buildables", Cvar::NONE, 0);
+Cvar::Cvar<std::string> g_bot_defaultBehavior("g_bot_defaultBehavior", "name of the default .bt file", Cvar::NONE, BOT_DEFAULT_BEHAVIOR);
 
 //</bot stuff>
 
