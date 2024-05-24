@@ -456,6 +456,8 @@ struct gclient_t
 	int        lastCombatTime; // time of last damage received/dealt from/to clients
 	int        lastAmmoRefillTime;
 	int        lastFuelRefillTime;
+	int        lastFirebombThrowTime;
+	vec3_t     lastFirebombPosition;
 	int        lastLockWarnTime; // used for the entity locking system
 	int        lastFirebombBuyTime;
 	bool       isDemigod;
