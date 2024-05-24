@@ -773,11 +773,31 @@ static void FirebombMissileThink( gentity_t *self )
 		}
 	}
 
-	// set floor below on fire (assumes the firebomb lays on the floor!)
-	G_SpawnFire( self->s.origin, upwards, self->parent );
-
 	// spam fire
-	for ( subMissileNum = 0; subMissileNum < FIREBOMB_SUBMISSILE_COUNT; subMissileNum++ )
+	int howManySubMissiles = FIREBOMB_SUBMISSILE_COUNT;
+	if ( self->parent && self->parent->client )
+	{
+		int deltaTime = level.time - self->parent->client->lastFirebombThrowTime;
+		int deltaSpace = glm::distance( VEC2GLM( self->s.origin ), VEC2GLM( self->parent->client->lastFirebombPosition) );
+		float factorTime = deltaTime / 15000.f;
+		float factorSpace = deltaSpace / 500.f;
+		float factor = std::min( std::max( factorTime, factorSpace ), 1.0f );
+		howManySubMissiles = factor * FIREBOMB_SUBMISSILE_COUNT;
+		if ( factor > 0.3f )
+		{
+			// prevent stacking on floor below
+			G_SpawnFire( self->s.origin, upwards, self->parent );
+		}
+		self->parent->client->lastFirebombThrowTime = level.time;
+		VectorCopy( self->s.origin, self->parent->client->lastFirebombPosition );
+	}
+	else
+	{
+		// set floor below on fire (assumes the firebomb lays on the floor!)
+		G_SpawnFire( self->s.origin, upwards, self->parent );
+	}
+
+	for ( subMissileNum = 0; subMissileNum < howManySubMissiles; subMissileNum++ )
 	{
 		dir[ 0 ] = ( rand() / ( float )RAND_MAX ) - 0.5f;
 		dir[ 1 ] = ( rand() / ( float )RAND_MAX ) - 0.5f;
