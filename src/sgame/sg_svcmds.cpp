@@ -351,17 +351,37 @@ Svcmd_EntityLock_f
 static void Svcmd_EntityLock_f()
 {
 	char      argument[ 16 ];
+	char      argumentObstacle[ 16 ] = "";
 	int       e;
 	gentity_t *door;
 
-	if ( trap_Argc() != 2 )
+	if ( trap_Argc() < 2 || trap_Argc() > 3 )
 	{
-		Log::Notice( "usage: entitylock <entityNum> (tip: use "
+		Log::Notice( "usage: entitylock <entityNum> [yes | no] (tip: use "
 		             "'cg_drawEntityInfo on' on your client to find this)" );
 		return;
 	}
 
 	trap_Argv( 1, argument, sizeof( argument ) );
+
+	enum { MAYBE, YES, NO } requestObstacle = MAYBE;
+	if ( trap_Argc() == 3 )
+	{
+		trap_Argv( 2, argumentObstacle, sizeof( argumentObstacle ) );
+		if ( strcmp( argumentObstacle, "yes" ) == 0 )
+		{
+			requestObstacle = YES;
+		}
+		else if ( strcmp( argumentObstacle, "no" ) == 0 )
+		{
+			requestObstacle = NO;
+		}
+		else
+		{
+			Log::Warn( "entitylock: invalid argument, expected: yes | no" );
+			return;
+		}
+	}
 
 	if ( !Str::ParseInt( e, argument ) )
 	{
@@ -386,7 +406,8 @@ static void Svcmd_EntityLock_f()
 
 	door->mapEntity.locked = !door->mapEntity.locked;
 
-	if ( door->mapEntity.locked )
+	bool createObstacle = ( requestObstacle == MAYBE && door->mapEntity.locked ) || requestObstacle == YES;
+	if ( createObstacle )
 	{
 		glm::vec3 mins = VEC2GLM( door->mapEntity.restingPosition ) + VEC2GLM( door->r.mins );
 		glm::vec3 maxs = VEC2GLM( door->mapEntity.restingPosition ) + VEC2GLM( door->r.maxs );
@@ -397,8 +418,8 @@ static void Svcmd_EntityLock_f()
 		G_BotRemoveObstacle( door->num() );
 	}
 
-	Log::Notice( "entitylock: entity ^5%s^7#^5%d^* %s",
-	             door->classname, e, door->mapEntity.locked ? "locked" : "unlocked" );
+	Log::Notice( "entitylock: entity ^5%s^7#^5%d^* %s, bot obstacle: %s",
+	             door->classname, e, door->mapEntity.locked ? "locked" : "unlocked", createObstacle ? "yes" : "no" );
 }
 
 /*
