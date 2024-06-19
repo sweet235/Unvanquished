@@ -2655,6 +2655,17 @@ void BotPain( gentity_t *self, gentity_t *attacker, int )
 	{
 
 		BotPushEnemy( &self->botMind->enemyQueue, attacker );
+
+		if ( G_Team( self ) == TEAM_HUMANS
+			 && self->botMind->goal.targetsValidEntity()
+			 && G_Team( self->botMind->goal.getTargetedEntity() ) == TEAM_ALIENS
+			 && self->botMind->goal.getTargetedEntity()->s.eType != entityType_t::ET_PLAYER
+			 && attacker->s.eType == entityType_t::ET_PLAYER )
+		{
+			BotResetEnemyQueue( &self->botMind->enemyQueue );
+			BotPushEnemy( &self->botMind->enemyQueue, attacker );
+			BotChangeGoalEntity( self, self );
+		}
 	}
 }
 
