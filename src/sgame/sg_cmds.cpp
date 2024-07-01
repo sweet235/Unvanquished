@@ -3398,10 +3398,25 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 
 	char subCommand[ MAX_STRING_CHARS ];
 	trap_Argv( 1, subCommand, sizeof( subCommand ) );
-	if ( strcmp( subCommand, "range") != 0 )
+	if ( strcmp( subCommand, "range") == 0 )
 	{
-		usage();
-		return;
+		if ( trap_Argc() != 3 )
+		{
+			ADMP( va( "%s %d %.0f", QQ( N_("^3botenemy: ^*attack range is $1$ ($2$ m)") ), cvar.Get(), cvar.Get() * QU_TO_METER ) );
+			return;
+		}
+		
+		char distanceStr[ MAX_STRING_CHARS ];
+		trap_Argv( 2, distanceStr, sizeof( distanceStr ) );
+		int distance = 0;
+		if ( !Str::ParseInt( distance, distanceStr ) || distance < 50 || distance > 1500 )
+		{
+			ADMP( QQ( N_( "^3botenemy:^* number must be from 50 to 1500" ) ) );
+			return;
+		}
+		
+		cvar.Set( distance );
+		G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 attack range is %d (%.0f m)!", distance, static_cast<float>( distance ) * QU_TO_METER ) );
 	}
 	else if ( strcmp( subCommand, "vertical") == 0 )
 	{
@@ -3414,33 +3429,19 @@ void Cmd_BotEnemy_f( gentity_t *ent )
 		char influenceStr[ MAX_STRING_CHARS ];
 		trap_Argv( 2, influenceStr, sizeof( influenceStr ) );
 		float influence = 1.f;
-		if ( !Cvar::ParseCvarValue( influenceStr, influence ) || influence > 1 || influence < 0.2 )
+		if ( !Cvar::ParseCvarValue( influenceStr, influence ) || influence > 1 || influence < 0.1 )
 		{
-			ADMP( QQ( N_( "^3botenemy:^* number must be from 0.2 to 1" ) ) );
+			ADMP( QQ( N_( "^3botenemy:^* number must be from 0.1 to 1" ) ) );
 			return;
 		}
 
 		verticalCvar.Set( 1 / influence );
 		G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 vertical influence %.2f! (vertical range %.0f = %.0f m)", influence, static_cast<float>( cvar.Get() ) * influence, static_cast<float>( cvar.Get() ) * influence * QU_TO_METER ) );
 	}
-
-	if ( trap_Argc() == 2 )
+	else
 	{
-		ADMP( va( "%s %d %.0f", QQ( N_("^3botenemy: ^*attack range is $1$ ($2$ m)") ), cvar.Get(), cvar.Get() * QU_TO_METER ) );
-		return;
+		usage();
 	}
-
-	char distanceStr[ MAX_STRING_CHARS ];
-	trap_Argv( 2, distanceStr, sizeof( distanceStr ) );
-	int distance = 0;
-	if ( !Str::ParseInt( distance, distanceStr ) || distance < 50 || distance > 1500 )
-	{
-		ADMP( QQ( N_( "^3botenemy:^* number must be from 50 to 1500" ) ) );
-		return;
-	}
-
-	cvar.Set( distance );
-	G_Say( ent, SAY_TEAM, va( "^A[botenemy]^5 attack range is %d (%.0f m)!", distance, static_cast<float>( distance ) * QU_TO_METER ) );
 }
 
 void Cmd_TeamStatus_f( gentity_t * ent )
