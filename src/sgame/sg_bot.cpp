@@ -766,11 +766,11 @@ void G_BotFill(bool immediately)
 	{
 		if ( g_bot_fillEvenAliens.Get() && level.team[ TEAM_ALIENS ].botFillTeamSize > 0 )
 		{
-			fillers[ TEAM_ALIENS ].actualFill = biggerTeamSize;
+			fillers[ TEAM_ALIENS ].actualFill = std::max( biggerTeamSize, level.team[ TEAM_ALIENS ].botFillTeamSize );
 		}
 		if ( g_bot_fillEvenHumans.Get() && level.team[ TEAM_HUMANS ].botFillTeamSize > 0 )
 		{
-			fillers[ TEAM_HUMANS ].actualFill = biggerTeamSize;
+			fillers[ TEAM_HUMANS ].actualFill = std::max( biggerTeamSize, level.team[ TEAM_HUMANS ].botFillTeamSize );
 		}
 	}
 
