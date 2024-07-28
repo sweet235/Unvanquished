@@ -317,10 +317,13 @@ it should be in range.
 */
 static void G_WideTrace(
 		trace_t *tr, gentity_t *ent, const glm::vec3& muzzle, const glm::vec3& forward,
-		const float range, const float width, const float height, gentity_t **target )
+		float range, const float width, const float height, gentity_t **target )
 {
-	vec3_t mins, maxs, end;
-	float  halfDiagonal;
+	vec3_t mins, maxs;
+	vec3_t end;
+
+	VectorSet( mins, -width, -width, -height );
+	VectorSet( maxs, width, width, height );
 
 	*target = nullptr;
 
@@ -329,30 +332,26 @@ static void G_WideTrace(
 		return;
 	}
 
-	// Calculate box to use for trace
-	VectorSet( maxs, width, width, height );
-	VectorNegate( maxs, mins );
-	halfDiagonal = VectorLength( maxs );
+	G_UnlaggedOn( ent, &muzzle[0], range + width );
 
-	G_UnlaggedOn( ent, &muzzle[ 0 ], range + halfDiagonal );
+	VectorMA( &muzzle[0], range, forward, end );
 
-	// Trace box against entities
-	VectorMA( muzzle, range, forward, end );
-	trap_Trace( tr, &muzzle[ 0 ], mins, maxs, end, ent->s.number, CONTENTS_BODY, 0 );
+	// Trace against entities
+	trap_Trace( tr, &muzzle[0], mins, maxs, end, ent->s.number, CONTENTS_BODY, 0 );
 
 	if ( tr->entityNum != ENTITYNUM_NONE )
 	{
 		*target = &g_entities[ tr->entityNum ];
 	}
 
-	// Line trace against the world, so we never hit through obstacles.
-	// The range is reduced according to the former trace so we don't hit something behind the
-	// current target.
-	VectorMA( muzzle, Distance( &muzzle[ 0 ], tr->endpos ) + halfDiagonal, forward, end );
-	trap_Trace( tr, &muzzle[ 0 ], nullptr, nullptr, end, ent->s.number, CONTENTS_SOLID, 0 );
+	// Set range to the trace length plus the width, so that the end of the
+	// LOS trace is close to the exterior of the target's bounding box
+	range = Distance( &muzzle[0], tr->endpos ) + width;
+	VectorMA( &muzzle[0], range, forward, end );
 
-	// In case we hit a different target, which can happen if two potential targets are close,
-	// switch to it, so we will end up with the target we were looking at.
+	// Trace for line of sight against the world
+	trap_Trace( tr, &muzzle[0], NULL, NULL, end, ent->s.number, CONTENTS_SOLID, 0 );
+
 	if ( tr->entityNum != ENTITYNUM_NONE )
 	{
 		*target = &g_entities[ tr->entityNum ];
