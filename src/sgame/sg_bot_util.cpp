@@ -43,6 +43,7 @@ static Cvar::Cvar<int> g_bot_humanAimDelay = Cvar::Cvar<int>( "g_bot_humanAimDel
 constexpr float BOT_STUCK_RADIUS = 150.0f;
 
 static void ListTeamEquipment( gentity_t *self, unsigned int (&numUpgrades)[UP_NUM_UPGRADES], unsigned int (&numWeapons)[WP_NUM_WEAPONS] );
+static void ListAlienTeamClasses( gentity_t *self, unsigned int (&numClasses)[PCL_NUM_CLASSES] );
 static const int MIN_SKILL = 1;
 static const int MAX_SKILL = 9;
 static const int RANGE_SKILL = MAX_SKILL - MIN_SKILL;
@@ -637,12 +638,20 @@ static Cvar::Cvar<float> g_bot_probLevel2upg("g_bot_probLevel2upg", "probability
 AINodeStatus_t BotActionEvolve( gentity_t *self, AIGenericNode_t* )
 {
 	class_t currentClass = static_cast<class_t>( self->client->ps.stats[ STAT_CLASS ] );
+	unsigned int numClasses[PCL_NUM_CLASSES] = {};
+
+	ListAlienTeamClasses( self, numClasses );
 
 	for ( auto const& cl : classes )
 	{
 		evolveInfo_t info = BG_ClassEvolveInfoFromTo( currentClass, cl.item );
 
 		if ( cl.item == PCL_ALIEN_LEVEL3 && rand() < RAND_MAX * g_bot_probLevel2upg.Get() )
+		{
+			continue;
+		}
+
+		if ( cl.item == PCL_ALIEN_LEVEL4 && numClasses[ PCL_ALIEN_LEVEL4 ] >= numClasses[ PCL_ALIEN_LEVEL3_UPG ] )
 		{
 			continue;
 		}
@@ -776,9 +785,18 @@ int BotGetDesiredBuy( gentity_t *self, weapon_t &weapon, upgrade_t upgrades[], s
 		if ( wp.canBuyNow() && usableCapital >= wp.price()
 				&& ( usedSlots & wp.slots() ) == 0 )
 		{
-			if ( wp.item == WP_FLAMER && numTeamWeapons[WP_FLAMER] > numTeamWeapons[WP_PULSE_RIFLE] )
+			switch ( wp.item )
 			{
-				continue;
+			case WP_FLAMER:
+				if ( numTeamWeapons[ WP_FLAMER ] >= numTeamWeapons[ WP_PULSE_RIFLE ] )
+					continue;
+				break;
+			case WP_LUCIFER_CANNON:
+				if ( numTeamWeapons[ WP_LUCIFER_CANNON ] >= numTeamWeapons[ WP_PULSE_RIFLE ] )
+					continue;
+				break;
+			default:
+				break;
 			}
 			weapon = wp.item;
 			usableCapital -= wp.price();
@@ -1939,6 +1957,21 @@ static void ListTeamEquipment( gentity_t *self, unsigned int (&numUpgrades)[UP_N
 				++numUpgrades[up];
 			}
 		}
+	});
+}
+
+static void ListAlienTeamClasses( gentity_t *self, unsigned int ( &numClasses )[ PCL_NUM_CLASSES ] )
+{
+	ASSERT( self );
+	const team_t team = static_cast<team_t>( self->client->pers.team );
+
+	ForEntities<AlienClassComponent>([&](Entity& ent, AlienClassComponent&) {
+		gentity_t* ally = ent.oldEnt;
+		if ( ally == self || ally->client->pers.team != team )
+		{
+			return;
+		}
+		++numClasses[ ally->client->ps.stats[ STAT_CLASS ] ];
 	});
 }
 
