@@ -3211,7 +3211,7 @@ static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsHumans{
 	{"firebomb", &g_bot_firebomb},
 	{"grenade", &g_bot_grenade},
 	{"radar", &g_bot_radar},
-	{"jetpack", &g_bot_radar},
+	{"jetpack", &g_bot_jetpack},
 	{"repair", &g_bot_repair},
 	{"build", &g_bot_buildHumans},
 };
