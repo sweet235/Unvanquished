@@ -3208,6 +3208,7 @@ static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsHumans{
 	{"firebomb", &g_bot_firebomb},
 	{"grenade", &g_bot_grenade},
 	{"radar", &g_bot_radar},
+	{"jetpack", &g_bot_radar},
 	{"repair", &g_bot_repair},
 	{"build", &g_bot_buildHumans},
 };
@@ -3220,7 +3221,7 @@ static std::map<std::string, Cvar::Cvar<bool> *> botEquipCvarsAliens{
 	{"level4", &g_bot_level4},
 	{"build", &g_bot_buildAliens},
 };
-std::vector<std::string> botEquipHumanKeys = { "psaw", "shotgun", "lgun", "mdriver", "chaingun", "prifle", "flamer", "lcannon", "bsuit", "firebomb", "grenade", "radar", "build", "repair" };
+std::vector<std::string> botEquipHumanKeys = { "psaw", "shotgun", "lgun", "mdriver", "chaingun", "prifle", "flamer", "lcannon", "bsuit", "firebomb", "grenade", "radar", "jetpack", "build", "repair" };
 std::vector<std::string> botEquipAlienKeys = { "level1", "level2", "level2upg", "level3", "level3upg", "level4", "build" };
 
 static void botEquipStatus( gentity_t * ent, std::map<std::string, Cvar::Cvar<bool> *> &cvarsMap, std::vector<std::string> &keys )
