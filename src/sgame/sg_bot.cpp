@@ -516,6 +516,15 @@ void G_BotThink( gentity_t *self )
 		BotJump( self );
 	}
 
+	if ( G_Team( self ) == TEAM_HUMANS && BG_InventoryContainsUpgrade( UP_JETPACK, self->client->ps.stats ) )
+	{
+		glm::vec3 ownVelocity = VEC2GLM( self->client->ps.velocity );
+		if ( ownVelocity.z < -300 )
+		{
+			self->botMind->cmdBuffer.upmove = 127;
+		}
+	}
+
 	// if we were nudged...
 	VectorAdd( self->client->ps.velocity, nudge, self->client->ps.velocity );
 
