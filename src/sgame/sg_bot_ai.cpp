@@ -1093,7 +1093,13 @@ AINodeStatus_t BotActionFight( gentity_t *self, AIGenericNode_t *node )
 	// We are human and we either are at fire range, or have
 	// a direct path to goal
 
-	BotActivateJetpack( self );
+	glm::vec3 ownPos = VEC2GLM( self->s.origin );
+	glm::vec3 targetPos = mind->goal.getPos();
+	if ( ownPos.z < targetPos.z + 400 )
+	{
+		BotActivateJetpack( self );
+	}
+
 	if ( mind->skillLevel >= 3 && goalDist < Square( MAX_HUMAN_DANCE_DIST )
 	        && ( goalDist > Square( MIN_HUMAN_DANCE_DIST ) || mind->skillLevel < 5 )
 	        && self->client->ps.weapon != WP_PAIN_SAW && self->client->ps.weapon != WP_FLAMER
