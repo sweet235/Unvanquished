@@ -1058,9 +1058,24 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 		}
 	}
 
-	for ( target = g_entities; target < &g_entities[level.num_entities]; target++ )
+	gentity_t *targetIter;
+	for ( targetIter = g_entities; targetIter < &g_entities[level.num_entities]; targetIter++ )
 	{
 		float newScore;
+		target = targetIter;
+
+		// if this is a team mate bot, look at its target, treat it as if visible
+		bool shallSwarm = G_Team( self ) == TEAM_ALIENS ? g_bot_swarmAliens.Get() : g_bot_swarmHumans.Get();
+		bool assumeVisible = false;
+		if ( shallSwarm && G_Team( target ) == G_Team( self ) && ( target->r.svFlags & SVF_BOT ) && target->botMind->goal.targetsValidEntity() )
+		{
+			const gentity_t *mateTarget = target->botMind->goal.getTargetedEntity();
+			if ( G_Team( mateTarget ) != G_Team( self ) )
+			{
+				target = (gentity_t *) mateTarget;
+				assumeVisible = true;
+			}
+		}
 
 		if ( !BotEntityIsValidEnemyTarget( self, target ) )
 		{
@@ -1089,7 +1104,7 @@ gentity_t* BotFindBestEnemy( gentity_t *self )
 
 		newScore = BotGetEnemyPriority( self, target );
 
-		if ( newScore > bestVisibleEnemyScore && BotEntityIsVisible( self, target, MASK_OPAQUE ) )
+		if ( newScore > bestVisibleEnemyScore && ( assumeVisible || BotEntityIsVisible( self, target, MASK_OPAQUE ) ) )
 		{
 			//store the new score and the index of the entity
 			bestVisibleEnemyScore = newScore;
