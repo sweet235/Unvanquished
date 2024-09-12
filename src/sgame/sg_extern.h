@@ -242,4 +242,7 @@ extern Cvar::Cvar<float> g_bot_verticalDistanceFactorHumans;
 extern Cvar::Cvar<float> g_bot_buildProbRocketPod;
 extern Cvar::Cvar<float> g_bot_buildProbEgg;
 
+extern Cvar::Cvar<bool> g_bot_swarmHumans;
+extern Cvar::Cvar<bool> g_bot_swarmAliens;
+
 #endif // SG_EXTERN_H_
