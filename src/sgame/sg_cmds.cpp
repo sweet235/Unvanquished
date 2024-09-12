@@ -3289,11 +3289,11 @@ static void Cmd_Bot_Equip_f( gentity_t * ent )
 	if ( it != cvarsMap->end() )
 	{
 		it->second->Set( !it->second->Get() );
-		G_Say( ent, SAY_TEAM, va( "^A[botequip]^5 %s is %sallowed!", itemOrClassCstr, ( it->second->Get() ? "" : "^1NOT^5 " ) ) );
+		G_Say( ent, SAY_TEAM, va( "^A[botallow]^5 %s is %sallowed!", itemOrClassCstr, ( it->second->Get() ? "" : "^1NOT^5 " ) ) );
 	}
 	else
 	{
-		ADMP( va( "%s %s", QQ( N_( "^3botequip:^* unknown $1$" ) ), Quote( errMsg.c_str() ) ) );
+		ADMP( va( "%s %s", QQ( N_( "^3botallow:^* unknown $1$" ) ), Quote( errMsg.c_str() ) ) );
 	}
 }
 
@@ -4685,6 +4685,7 @@ static const commands_t cmds[] =
 	{ "a",               CMD_MESSAGE | CMD_INTERMISSION,      Cmd_AdminMessage_f     },
 	{ "asay",            CMD_MESSAGE | CMD_INTERMISSION,      Cmd_Say_f              },
 	{ "beacon",          CMD_TEAM | CMD_ALIVE,                Cmd_Beacon_f           },
+	{ "botallow",        CMD_TEAM,                            Cmd_Bot_Equip_f        },
 	{ "botbuild",        CMD_TEAM,                            Cmd_BotBuild_f        },
 	{ "botenemy",        CMD_TEAM,                            Cmd_BotEnemy_f         },
 	{ "botequip",        CMD_TEAM,                            Cmd_Bot_Equip_f        },
