@@ -666,7 +666,7 @@ void G_FirebombMissileIgnite( gentity_t *self )
 	else
 	{
 		// set floor below on fire (assumes the firebomb lays on the floor!)
-		G_SpawnFire( self->s.origin, upwards, self->parent );
+		G_SpawnFire( self->s.origin, GLM4READ( glm::vec3( 0.f, 0.f, 1.f ) ), self->parent );
 	}
 
 	for ( subMissileNum = 0; subMissileNum < howManySubMissiles; subMissileNum++ )
