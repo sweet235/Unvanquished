@@ -1946,6 +1946,9 @@ AINodeStatus_t BotActionBuy( gentity_t *self, AIGenericNode_t *node )
 
 	if ( GoalInRange( self, ENTITY_USE_RANGE ) )
 	{
+		auto jetpackHackClass = [&] () {
+			G_BotSetNavMesh( self - g_entities, (class_t) self->client->ps.stats[ STAT_CLASS ] );
+		};
 		BotSellUpgrades( self );
 		BotSellWeapons( self );
 
@@ -1953,6 +1956,7 @@ AINodeStatus_t BotActionBuy( gentity_t *self, AIGenericNode_t *node )
 		{
 			if ( !BotBuyUpgrade( self, upgrades[i] ) )
 			{
+				jetpackHackClass();
 				return STATUS_FAILURE;
 			}
 		}
@@ -1961,6 +1965,7 @@ AINodeStatus_t BotActionBuy( gentity_t *self, AIGenericNode_t *node )
 		{
 			if ( !BotBuyWeapon( self, weapon ) )
 			{
+				jetpackHackClass();
 				return STATUS_FAILURE;
 			}
 
@@ -1971,6 +1976,7 @@ AINodeStatus_t BotActionBuy( gentity_t *self, AIGenericNode_t *node )
 			}
 		}
 
+		jetpackHackClass();
 		return STATUS_SUCCESS;
 	}
 
