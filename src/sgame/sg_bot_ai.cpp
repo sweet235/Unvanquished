@@ -937,14 +937,25 @@ bool BotTargetInOffmeshAttackRange( gentity_t *self, botTarget_t target )
 	}
 }
 
-static void BotActivateJetpack( gentity_t *self )
+static bool TargetInOffmeshAttackRange( gentity_t *self )
 {
-	if ( BG_InventoryContainsUpgrade( UP_JETPACK, self->client->ps.stats )
-		 && self->client->ps.stats[ STAT_FUEL ] > JETPACK_FUEL_MAX / 4
-		 )
+	return BotTargetInOffmeshAttackRange( self, self->botMind->goal );
+}
+
+bool BotWalkIfStaminaLow( gentity_t *self );
+
+static void BotActivateJetpack( gentity_t *self, int fuelLimit )
+{
+	if ( !BG_InventoryContainsUpgrade( UP_JETPACK, self->client->ps.stats ) )
 	{
-		self->botMind->cmdBuffer.upmove = 127;
+		return;
 	}
+	int fuel = self->client->ps.stats[ STAT_FUEL ];
+	if ( fuel < fuelLimit )
+	{
+		return;
+	}
+	self->botMind->cmdBuffer.upmove = 127;
 }
 
 static bool TargetInOffmeshAttackRange( gentity_t *self )
@@ -1129,8 +1140,7 @@ AINodeStatus_t BotActionFight( gentity_t *self, AIGenericNode_t *node )
 	glm::vec3 targetPos = mind->goal.getPos();
 	if ( ownPos.z < targetPos.z + 400 )
 	{
-		// activate the jetpack if we have it, but do not fly too high above the enemy
-		BotActivateJetpack( self );
+		BotActivateJetpack( self, JETPACK_FUEL_MAX / 4 );
 	}
 
 	if ( mind->skillLevel >= 3 && goalDist < Square( MAX_HUMAN_DANCE_DIST )
@@ -1161,6 +1171,10 @@ AINodeStatus_t BotActionFight( gentity_t *self, AIGenericNode_t *node )
 	if ( inAttackRange && self->botMind->goal.getTargetType() == entityType_t::ET_BUILDABLE )
 	{
 		BotStandStill( self );
+		if ( ownPos.z < targetPos.z + 400 )
+		{
+			BotActivateJetpack( self, JETPACK_FUEL_MAX / 3 );
+		}
 	}
 
 	if ( !BotWalkIfStaminaLow( self ) )
