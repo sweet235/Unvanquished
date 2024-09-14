@@ -1077,14 +1077,6 @@ static bool BotFlyUpward( gentity_t *self, glm::vec3 &ownPos, glm::vec3 &nextCor
 			self->botMind->jetpackState = BOT_JETPACK_NONE;
 			return false;
 		}
-		else if ( level.time > self->botMind->lastNavconTime + 10000 )
-		{
-			// timeout reached: abort the flight
-			// TODO: tweak the time limit, recharging all fuel and then flying until it
-			// depleted takes about 15 seconds
-			self->botMind->jetpackState = BOT_JETPACK_NONE;
-			return false;
-		}
 		self->botMind->cmdBuffer.upmove = 127;
 		return true;
 	default:

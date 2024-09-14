@@ -433,6 +433,7 @@ Bot Thinks
 */
 
 static Cvar::Cvar<bool> g_bot_jumpOverFire("g_bot_jumpOverFire", "whether bots should jump over ground flames", Cvar::NONE, true);
+static Cvar::Cvar<float> g_bot_jetpackTimeout("g_bot_jetpackTimeout", "time in milliseconds until a jetpack flight is aborted", Cvar::NONE, 10000);
 
 void G_BotThink( gentity_t *self )
 {
@@ -524,6 +525,20 @@ void G_BotThink( gentity_t *self )
 		if ( ownVelocity.z < -300 )
 		{
 			self->botMind->cmdBuffer.upmove = 127;
+		}
+		// clear jetpack state after some time
+		switch ( self->botMind->jetpackState )
+		{
+		case BOT_JETPACK_NAVCON_WAITING:
+		case BOT_JETPACK_NAVCON_FLYING:
+		case BOT_JETPACK_NAVCON_LANDING:
+			if ( level.time > self->botMind->lastNavconTime + g_bot_jetpackTimeout.Get() )
+			{
+				self->botMind->jetpackState = BOT_JETPACK_NONE;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
