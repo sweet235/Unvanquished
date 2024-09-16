@@ -2365,6 +2365,10 @@ G_RunFrame
 Advances the non-player objects in the world
 ================
 */
+
+static Cvar::Cvar<int> g_freeTagDelayAliens( "g_freeTagDelayAliens", "alive time of human buildings after which the alien team gets free beacons for them", Cvar::NONE, 3600000);
+static Cvar::Cvar<int> g_freeTagDelayHumans( "g_freeTagDelayHumans", "alive time of alien buildings after which the human team gets free beacons for them", Cvar::NONE, 3600000);
+
 void G_RunFrame( int levelTime )
 {
 	int        i;
@@ -2491,6 +2495,26 @@ void G_RunFrame( int levelTime )
 				//       to G_RunThink?
 				G_Physics( ent );
 				numBuildables[ ent->s.modelindex ]++;
+				team_t otherTeam;
+				int delay;
+				switch ( ent->buildableTeam )
+				{
+				case TEAM_ALIENS:
+					otherTeam = TEAM_HUMANS;
+					delay = g_freeTagDelayHumans.Get();
+					break;
+				case TEAM_HUMANS:
+					otherTeam = TEAM_ALIENS;
+					delay = g_freeTagDelayAliens.Get();
+					break;
+				default:
+					// should not happen
+					continue;
+				}
+				if ( level.time - ent->creationTime > delay )
+				{
+					Beacon::Tag( ent, otherTeam, true );
+				}
 				continue;
 
 			case entityType_t::ET_CORPSE:
