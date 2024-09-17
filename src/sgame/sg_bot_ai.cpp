@@ -1133,9 +1133,24 @@ AINodeStatus_t BotActionFight( gentity_t *self, AIGenericNode_t *node )
 	if ( inAttackRange && self->botMind->goal.getTargetType() == entityType_t::ET_BUILDABLE )
 	{
 		BotStandStill( self );
-		if ( ownPos.z < targetPos.z + 400 )
+		// try to complete navcon flight: fire jetpack and move to target
+		switch ( self->botMind->jetpackState )
 		{
-			BotActivateJetpack( self, JETPACK_FUEL_MAX / 3 );
+		case BOT_JETPACK_NAVCON_FLYING:
+		case BOT_JETPACK_NAVCON_LANDING:
+			BotActivateJetpack( self, 0 );
+			if ( targetPos.z - 100 > ownPos.z )
+			{
+				BotMoveInDir( self, MOVE_FORWARD );
+			}
+			if ( targetPos.z < ownPos.z // maybe use g_bot_jetpackOvershootZ
+				|| self->client->ps.stats[ STAT_FUEL ] < JETPACK_FUEL_MAX / 16 )
+			{
+				self->botMind->jetpackState = BOT_JETPACK_NONE;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
