@@ -1385,6 +1385,7 @@ void ClientBegin( int clientNum )
 
 	client->pers.connected = CON_CONNECTED;
 	client->pers.enterTime = level.time;
+	client->pers.lastPrivateMessageSender = -1;
 
 	ClientAdminChallenge( clientNum );
 
