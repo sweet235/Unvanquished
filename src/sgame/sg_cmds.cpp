@@ -4662,6 +4662,7 @@ static const commands_t cmds[] =
 	{ "notarget",        CMD_CHEAT | CMD_TEAM | CMD_ALIVE,    Cmd_Notarget_f         },
 	{ "print_momentum",  CMD_CHEAT,                           Cmd_PrintMomentum_f    },
 	{ "pubkey_identify", CMD_INTERMISSION,                    Cmd_Pubkey_Identify_f  },
+	{ "r",               CMD_MESSAGE | CMD_INTERMISSION,      Cmd_ReplyPrivateMessage_f   },
 	{ "reload",          CMD_HUMAN | CMD_ALIVE,               Cmd_Reload_f           },
 	{ "say",             CMD_MESSAGE | CMD_INTERMISSION,      Cmd_Say_f              },
 	{ "say_area",        CMD_MESSAGE | CMD_TEAM | CMD_ALIVE,  Cmd_SayArea_f          },
@@ -4799,6 +4800,15 @@ void G_UnEscapeString( const char *in, char *out, int len )
 	*out = '\0';
 }
 
+static void setLastPrivateMessageSenderAndTime( int selfNum, int lastSenderNum )
+{
+	if ( level.clients[ selfNum ].pers.lastPrivateMessageSender != lastSenderNum )
+	{
+		level.clients[ selfNum ].pers.lastPrivateMessageSenderTime = level.time;
+	}
+	level.clients[ selfNum ].pers.lastPrivateMessageSender = lastSenderNum;
+}
+
 void Cmd_PrivateMessage_f( gentity_t *ent )
 {
 	int      pids[ MAX_CLIENTS ];
@@ -4842,6 +4852,7 @@ void Cmd_PrivateMessage_f( gentity_t *ent )
 			count++;
 			Q_strcat( recipients, sizeof( recipients ), va( "%s^*, ",
 			          level.clients[ pids[ i ] ].pers.netname ) );
+			setLastPrivateMessageSenderAndTime( pids[ i ], ent->num() );
 		}
 	}
 
@@ -4871,6 +4882,54 @@ void Cmd_PrivateMessage_f( gentity_t *ent )
 		             name, color.c_str(), msg );
 	}
 }
+
+
+/*
+=================
+Cmd_ReplyPrivateMessage_f
+
+Reply by private message to the last private message sender
+=================
+*/
+
+void Cmd_ReplyPrivateMessage_f( gentity_t *ent )
+{
+	char *msg;
+	int target;
+
+	if ( !g_privateMessages.Get() && ent )
+	{
+		ADMP( "\"" N_("Sorry, but private messages have been disabled") "\"" );
+		return;
+	}
+
+	if ( trap_Argc() < 2 )
+	{
+		ADMP( QQ( N_("usage: /r [message]") ) );
+		return;
+	}
+
+	if ( level.time - ent->client->pers.lastPrivateMessageSenderTime < 3000 )
+	{
+		ADMP( "\"" N_("More than one possible recipient, refusing to send.") "\"" );
+		return;
+	}
+
+	msg = ConcatArgs( 1 );
+	target = ent->client->pers.lastPrivateMessageSender;
+	if ( target == -1 || !G_SayTo( ent, &g_entities[ target ], SAY_PRIVMSG, msg ) )
+	{
+		ADMP( "\"" N_("No one to reply to.") "\"" );
+		return;
+	}
+
+	setLastPrivateMessageSenderAndTime( target, ent->num() );
+	ADMP( va( "%s %s %s", QQ( N_("You have responded to $1$^* : ^2$2$ ") ), g_entities[ target ].client->pers.netname, Quote( msg ) ) );
+	G_LogPrintf( "PrivMsg: %d \"%s^*\" \"%s\": %s",
+		ent->num(), ent->client->pers.netname,
+		g_entities[target].client->pers.netname, msg);
+}
+
 
 /*
 =================
