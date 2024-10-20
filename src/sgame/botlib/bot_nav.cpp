@@ -254,7 +254,7 @@ bool G_BotCloseToPathCorner( int botClientNum )
 	glm::vec3 ownPos = VEC2GLM( self->s.origin );
 	glm::vec3 nextCorner = VEC2GLM( &bot->cornerVerts[ 0 ] );
 	std::swap( nextCorner.y, nextCorner.z );
-	recast2quake( &nextCorner[ 0 ] );
+	// recast2quake( &nextCorner[ 0 ] );
 	float distanceSquared = glm::distance2( ownPos, nextCorner );
 	if ( distanceSquared > Square( g_bot_cornerNearDistance.Get() ) )
 	{
