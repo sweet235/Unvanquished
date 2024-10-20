@@ -658,7 +658,7 @@ void G_FirebombMissileIgnite( gentity_t *self )
 		if ( factor > 0.3f )
 		{
 			// prevent stacking on floor below
-			G_SpawnFire( self->s.origin, upwards, self->parent );
+			G_SpawnFire( self->s.origin, GLM4READ( glm::vec3( 0.f, 0.f, 1.f ) ), self->parent );
 		}
 		self->parent->client->lastFirebombThrowTime = level.time;
 		VectorCopy( self->s.origin, self->parent->client->lastFirebombPosition );
@@ -669,7 +669,7 @@ void G_FirebombMissileIgnite( gentity_t *self )
 		G_SpawnFire( self->s.origin, GLM4READ( glm::vec3( 0.f, 0.f, 1.f ) ), self->parent );
 	}
 
-	for ( subMissileNum = 0; subMissileNum < howManySubMissiles; subMissileNum++ )
+	for ( int subMissileNum = 0; subMissileNum < howManySubMissiles; subMissileNum++ )
 	{
 		glm::vec3 dir =
 		{
