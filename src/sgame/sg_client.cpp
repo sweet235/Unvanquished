@@ -259,7 +259,7 @@ static gentity_t *G_SelectSpawnBuildable( vec3_t preference, buildable_t buildab
 static gentity_t *G_SelectRandomSpawnBuildable( vec3_t preference, buildable_t buildable )
 {
 	gentity_t *search = nullptr;
-	gentity_t *spots[ MAX_ENTITIES ];
+	gentity_t *spots[ MAX_GENTITIES ];
 	int index = 0;
 
 	while ( ( search = G_IterateEntitiesOfClass( search, BG_Buildable( buildable )->entityName ) ) != nullptr )
