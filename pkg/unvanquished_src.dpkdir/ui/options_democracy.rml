@@ -28,24 +28,24 @@
 			</blocklink>
 			<br/>
 
-			<button-menu style="width:100%" onclick='Cmd.exec("callvote kickbots")'><translate>Kick bots</translate></button-menu>
-			<button-menu style="width:100%" onclick='Events.pushcmd("show callvote_fillbots")'><translate>Fill with bots</translate></button-menu>
-			<button-menu style="width:100%" onclick='Events.pushcmd("show callvote_map")'><translate>Change map</translate></button-menu>
-			<button-menu style="width:100%" onclick='Cmd.exec("callvote extend")'><translate>Extend timelimit</translate></button-menu>
-			<button-menu style="width:100%" onclick='Events.pushcmd("show callvote_draw")'><translate>Call a draw</translate></button-menu>
-			<button-menu style="width:100%" onclick='Cmd.exec("callteamvote admitdefeat")'><translate>Admit defeat</translate></button-menu>
+			<!-- <button-menu style="width:100%" onclick='Cmd.exec("callvote kickbots")'><translate>Kick bots</translate></button-menu> -->
+			<!-- <button-menu style="width:100%" onclick='Events.pushcmd("show callvote_fillbots")'><translate>Fill with bots</translate></button-menu> -->
+			<!-- <button-menu style="width:100%" onclick='Events.pushcmd("show callvote_map")'><translate>Change map</translate></button-menu> -->
+			<!-- <button-menu style="width:100%" onclick='Cmd.exec("callvote extend")'><translate>Extend timelimit</translate></button-menu> -->
+			<!-- <button-menu style="width:100%" onclick='Events.pushcmd("show callvote_draw")'><translate>Call a draw</translate></button-menu> -->
+			<!-- <button-menu style="width:100%" onclick='Cmd.exec("callteamvote admitdefeat")'><translate>Admit defeat</translate></button-menu> -->
 
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("exec callvote kickbots", event)'><translate>Kick bots</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_fillbots", event)'><translate>Fill with bots</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_botskill", event)'><translate>Set bot skill</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_map", event)'><translate>Change map</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_map_custom", event)'><translate>Load PvE map</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("exec callvote extend", event)'><translate>Extend timelimit</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_draw", event)'><translate>Call a draw</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("exec callteamvote admitdefeat", event)'><translate>Admit defeat</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_maxminers", event)'><translate>Set max drills/leeches</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_minerbp", event)'><translate>BP per drill/leech</translate></button-menu> -->
-			<!-- <button-menu style="width:100%" onclick='Events.pushevent("show callvote_ff", event)'><translate>Friendly fire</translate></button-menu> -->
+			<button-menu style="width:100%" onclick='Events.pushevent("exec callvote kickbots", event)'><translate>Kick bots</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_fillbots", event)'><translate>Fill with bots</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_botskill", event)'><translate>Set bot skill</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_map", event)'><translate>Change map</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_map_custom", event)'><translate>Load PvE map</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("exec callvote extend", event)'><translate>Extend timelimit</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_draw", event)'><translate>Call a draw</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("exec callteamvote admitdefeat", event)'><translate>Admit defeat</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_maxminers", event)'><translate>Set max drills/leeches</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_minerbp", event)'><translate>BP per drill/leech</translate></button-menu>
+			<button-menu style="width:100%" onclick='Events.pushevent("show callvote_ff", event)'><translate>Friendly fire</translate></button-menu>
 
 		</indent>
 	</body>
