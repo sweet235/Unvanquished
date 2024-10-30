@@ -2366,12 +2366,60 @@ Advances the non-player objects in the world
 static Cvar::Cvar<int> g_freeTagDelayAliens( "g_freeTagDelayAliens", "alive time of human buildings after which the alien team gets free beacons for them", Cvar::NONE, 3600000);
 static Cvar::Cvar<int> g_freeTagDelayHumans( "g_freeTagDelayHumans", "alive time of alien buildings after which the human team gets free beacons for them", Cvar::NONE, 3600000);
 
+static Cvar::Cvar<int> g_bot_buildStopTimeAliens("g_bot_buildStopTimeAliens", "gradually make alien bots build less until they stop at this time (minutes)", Cvar::NONE, -1);
+static Cvar::Cvar<int> g_bot_buildStopTimeHumans("g_bot_buildStopTimeHumans", "gradually make human bots build less until they stop at this time (minutes)", Cvar::NONE, -1);
+
+static int unusedBP( team_t team )
+{
+	int stopTime = 0;
+	int teamBudget = 0;
+	if ( team == TEAM_ALIENS )
+	{
+		stopTime = g_bot_buildStopTimeAliens.Get();
+		teamBudget = g_BPInitialBudgetAliens.Get();
+	}
+	else
+	{
+		stopTime = g_bot_buildStopTimeHumans.Get();
+		teamBudget = g_BPInitialBudgetHumans.Get();
+	}
+	if ( stopTime < 0 )
+	{
+		return 0;
+	}
+	switch ( team )
+	{
+	case TEAM_ALIENS:
+		if ( level.numBuildablesEstimate[ BA_A_BOOSTER ] < 1 )
+		{
+			return 0;
+		}
+		break;
+	case TEAM_HUMANS:
+		if ( level.numBuildablesEstimate[ BA_H_MEDISTAT ] < 1
+		     || level.numBuildablesEstimate[ BA_H_ARMOURY ] < 1 )
+		{
+			return 0;
+		}
+	default:
+		break;  // not reachable
+	}
+	int total = teamBudget >= 0 ? teamBudget : g_buildPointInitialBudget.Get();
+	float ratio = static_cast<float>( level.time ) / ( static_cast<float>( stopTime ) * 60000.f );
+	return static_cast<int>( ratio * static_cast<float>( total ) );
+}
+
 void G_RunFrame( int levelTime )
 {
 	int        i;
 	gentity_t  *ent;
 	int        msec;
 	static int ptime3000 = 0;
+
+	for ( team_t team : { TEAM_ALIENS, TEAM_HUMANS } )
+	{
+		level.team[ team ].unusedBP = unusedBP( team );
+	}
 
 	// if we are waiting for the level to restart, do nothing
 	if ( level.restarted )
