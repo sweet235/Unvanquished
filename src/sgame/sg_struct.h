@@ -679,6 +679,7 @@ struct level_locals_t
 		int              lastTacticId;
 		int              lastTacticTime;
 		int              lastBuildTime;
+		int              unusedBP;
 	} team[ NUM_TEAMS ];
 
 	struct {
