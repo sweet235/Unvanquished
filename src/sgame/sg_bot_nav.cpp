@@ -397,6 +397,8 @@ bool BotTraceForFloor( gentity_t *self, uint32_t dir )
 	{
 		return false;
 	}
+	dirVec.z = 0.f;
+	glm::normalize( dirVec );
 	glm::vec3 playerMins, playerMaxs;
 	class_t pClass = static_cast<class_t>( self->client->ps.stats[STAT_CLASS] );
 	BG_BoundingBox( pClass, &playerMins, &playerMaxs, nullptr, nullptr, nullptr );
