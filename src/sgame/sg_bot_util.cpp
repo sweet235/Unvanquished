@@ -685,6 +685,9 @@ static bool BotSkillArmorIsDesirable( const gentity_t *self, upgrade_t armor )
 	}
 }
 
+static Cvar::Cvar<int> g_bot_radarFundThreshold( "g_bot_radarFundThreshold", "bots buy radars only when they have at least this much funds", Cvar::NONE, 600 );
+static Cvar::Cvar<int> g_bot_jetpackFundThreshold( "g_bot_jetpackFundThreshold", "bots buy jetpacks only when they have at least this much funds", Cvar::NONE, 600 );
+
 // Allow human bots to decide what to buy
 // pre-condition:
 // * weapon is a valid pointer
@@ -758,7 +761,7 @@ int BotGetDesiredBuy( gentity_t *self, weapon_t &weapon, upgrade_t upgrades[], s
 			&& others[0].canBuyNow() && usableCapital >= others[0].price()
 			&& ( usedSlots & others[0].slots() ) == 0
 			&& numUpgrades < upgradesSize
-		 && usableCapital >= 600 )
+	     && usableCapital >= g_bot_radarFundThreshold.Get() )
 	{
 		upgrades[numUpgrades] = others[0].item;
 		usableCapital -= others[0].price();
@@ -769,7 +772,7 @@ int BotGetDesiredBuy( gentity_t *self, weapon_t &weapon, upgrade_t upgrades[], s
 			  && others[1].canBuyNow() && usableCapital >= others[1].price()
 			  && ( usedSlots & others[1].slots() ) == 0
 			  && numUpgrades < upgradesSize
-			  && usableCapital >= 600 )
+	          && usableCapital >= g_bot_jetpackFundThreshold.Get() )
 	{
 		upgrades[numUpgrades] = others[1].item;
 		usableCapital -= others[1].price();
