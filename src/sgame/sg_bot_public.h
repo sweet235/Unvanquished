@@ -76,6 +76,7 @@ void G_BotRemoveObstacle( qhandle_t handle );
 void G_BotUpdateObstacles();
 std::string G_BotToString( gentity_t *bot );
 std::string G_BotToStringShort( gentity_t *bot );
+std::string G_BotBehaviorToString( gentity_t *bot, bool expand );
 
 const char BOT_DEFAULT_BEHAVIOR[] = "default";
 const char BOT_NAME_FROM_LIST[] = "*";
