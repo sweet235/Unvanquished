@@ -937,11 +937,6 @@ bool BotTargetInOffmeshAttackRange( gentity_t *self, botTarget_t target )
 	}
 }
 
-static bool TargetInOffmeshAttackRange( gentity_t *self )
-{
-	return BotTargetInOffmeshAttackRange( self, self->botMind->goal );
-}
-
 bool BotWalkIfStaminaLow( gentity_t *self );
 
 static void BotActivateJetpack( gentity_t *self, int fuelLimit )
