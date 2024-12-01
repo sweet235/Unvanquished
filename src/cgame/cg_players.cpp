@@ -2486,7 +2486,7 @@ static void CG_PlayerUpgrades( centity_t *cent, refEntity_t *torso )
 		AxisCopy( axisDefault, radar.axis );
 
 		//FIXME: change to tag_back when it exists
-		CG_PositionRotatedEntityOnTag( &radar, torso, "tag_head" );
+		CG_PositionRotatedEntityOnTag( &radar, torso, "head_tag" );
 
 		trap_R_AddRefEntityToScene( &radar );
 	}
