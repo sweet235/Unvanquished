@@ -763,18 +763,16 @@ static void Svcmd_DumpUser_f()
 static void Svcmd_ShowBehavior_f()
 {
 	char name[ MAX_STRING_CHARS ];
-	char arg[ MAX_STRING_CHARS ];
 	gclient_t  *cl;
 	int numArgs = trap_Argc();
 
-	if ( numArgs < 2 || numArgs > 3 )
+	if ( numArgs != 2 )
 	{
-		Log::Notice( "usage: showBehavior <bot> [expand]" );
+		Log::Notice( "usage: showBehavior <bot>" );
 		return;
 	}
 
 	trap_Argv( 1, name, sizeof( name ) );
-	trap_Argv( 2, arg, sizeof( arg ) );
 
 	cl = ClientForString( name );
 
@@ -791,21 +789,7 @@ static void Svcmd_ShowBehavior_f()
 		return;
 	}
 
-	bool expand = false;
-	if ( numArgs == 3 )
-	{
-		if ( strcmp( arg, "expand" ) == 0 )
-		{
-			expand = true;
-		}
-		else
-		{
-			Log::Notice( "showBehavior: syntax error" );
-			return;
-		}
-	}
-
-	Log::Notice( G_BotBehaviorToString( ent, expand ) );
+	Log::Notice( G_BotBehaviorToString( ent ) );
 }
 
 static void Svcmd_Pr_f()
