@@ -23,38 +23,80 @@ selector
 	}
 
 
-	condition(stuckTime > 10000)
+	condition team == TEAM_HUMANS
 	{
-		selector
+		condition(stuckTime > 5000)
 		{
-			condition(stuckTime > 20000)
+			selector
 			{
-				action suicide
-			}
-
-			decorator timer(3000)
-			{
-				decorator return(STATUS_FAILURE)
+				condition(stuckTime > 20000)
 				{
-					action jump
+					action suicide
+				}
+
+				decorator timer(1000)
+				{
+					decorator return(STATUS_FAILURE)
+					{
+						action jump
+					}
+				}
+				condition(stuckTime > 8500)
+				{
+					action moveInDir(MOVE_FORWARD)
+				}
+				condition(stuckTime > 7000)
+				{
+					action moveInDir(MOVE_RIGHT)
+				}
+				condition(stuckTime > 5500)
+				{
+					action moveInDir(MOVE_BACKWARD)
+				}
+				sequence
+				{
+					action moveInDir(MOVE_LEFT)
+					action moveTo(E_SELF) // cancel old target which may be causing the bot to walk into a wall, etc.
 				}
 			}
-			condition(stuckTime > 17500)
+		}
+	}
+
+	condition team == TEAM_ALIENS
+	{
+		condition(stuckTime > 3000)
+		{
+			selector
 			{
-				action moveInDir(MOVE_FORWARD)
-			}
-			condition(stuckTime > 15000)
-			{
-				action moveInDir(MOVE_RIGHT)
-			}
-			condition(stuckTime > 12500)
-			{
-				action moveInDir(MOVE_BACKWARD)
-			}
-			sequence
-			{
-				action moveInDir(MOVE_LEFT)
-				action moveTo(E_SELF) // cancel old target which may be causing the bot to walk into a wall, etc.
+				condition(stuckTime > 15000)
+				{
+					action suicide
+				}
+
+				decorator timer(1000)
+				{
+					decorator return(STATUS_FAILURE)
+					{
+						action jump
+					}
+				}
+				condition(stuckTime > 8500)
+				{
+					action moveInDir(MOVE_FORWARD)
+				}
+				condition(stuckTime > 6000)
+				{
+					action moveInDir(MOVE_RIGHT)
+				}
+				condition(stuckTime > 3500)
+				{
+					action moveInDir(MOVE_BACKWARD)
+				}
+				sequence
+				{
+					action moveInDir(MOVE_LEFT)
+					action moveTo(E_SELF) // cancel old target which may be causing the bot to walk into a wall, etc.
+				}
 			}
 		}
 	}
