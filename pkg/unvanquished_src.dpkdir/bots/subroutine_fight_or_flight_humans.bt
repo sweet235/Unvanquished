@@ -3,8 +3,8 @@ selector
 	sequence
 	{
 		condition alertedToEnemy
-		condition percentAmmoClip > 0 || percentClips > 0
 		condition !haveWeapon( WP_HBUILD )
+		condition percentAmmoClip > 0 || percentClips > 0
 		{
 			selector
 			{
