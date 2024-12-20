@@ -192,6 +192,28 @@ static void Svcmd_EmptyTeam_f()
 	}
 }
 
+static Cvar::Cvar<int> g_bot_noobSkill( "g_bot_noobSkill", "bot skill level for new players", Cvar::NONE, 3 );
+static Cvar::Cvar<int> g_bot_noobLevel( "g_bot_noobLevel", "define new player", Cvar::NONE, 0 );
+static void Svcmd_BotSetNoobSkill_f()
+{
+	int G_AdminLevelOfEntity( gentity_t *ent );
+	void G_BotSetDefaultSkill( int skill );
+	int highestLevel = 0;
+	for ( int id = 0; id < MAX_CLIENTS; id++ )
+	{
+		highestLevel = std::max( highestLevel, G_AdminLevelOfEntity( &g_entities[ id ] ) );
+	}
+	if ( highestLevel <= g_bot_noobLevel.Get() )
+	{
+		int skill = g_bot_noobSkill.Get();
+		for ( int i = 0; i < MAX_CLIENTS; ++i )
+		{
+			G_BotSetSkill( i, skill );
+		}
+		G_BotSetDefaultSkill( skill );
+	}
+}
+
 static inline void PrintEntityOverviewLine( gentity_t *entity )
 {
 	Log::Notice( "%3i: %15s/^5%-24s^*%s%s",
@@ -882,6 +904,7 @@ static const struct svcmd
 	{ "advanceMapRotation", false, Svcmd_G_AdvanceMapRotation_f },
 	{ "alienWin",           false, Svcmd_TeamWin_f              },
 	{ "asay",               true,  Svcmd_MessageWrapper         },
+	{ "botSetNoobSkill",    false, Svcmd_BotSetNoobSkill_f      },
 	{ "chat",               true,  Svcmd_MessageWrapper         },
 	{ "cp",                 false, Svcmd_CenterPrint_f          },
 	{ "delaysd",            false, Svcmd_DelaySuddenDeath_f     },

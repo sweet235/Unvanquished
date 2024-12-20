@@ -39,6 +39,11 @@ static Cvar::Range<Cvar::Cvar<int>> g_bot_defaultSkill( "g_bot_defaultSkill", "D
 static Cvar::Cvar<int> g_bot_alienAimDelay = Cvar::Cvar<int>( "g_bot_alienAimDelay", "make bots of alien team slower to aim", Cvar::NONE, 150 );
 static Cvar::Cvar<int> g_bot_humanAimDelay = Cvar::Cvar<int>( "g_bot_humanAimDelay", "make bots of human team slower to aim", Cvar::NONE, 150 );
 
+void G_BotSetDefaultSkill( int skill )
+{
+	g_bot_defaultSkill.Set( skill );
+}
+
 //consider bot to be stuck if it does not move farther than this in some period of time
 constexpr float BOT_STUCK_RADIUS = 150.0f;
 
