@@ -203,6 +203,7 @@ static void Svcmd_BotSetNoobSkill_f()
 	{
 		highestLevel = std::max( highestLevel, G_AdminLevelOfEntity( &g_entities[ id ] ) );
 	}
+	Log::Notice( "highest admin level: %d", highestLevel );
 	if ( highestLevel <= g_bot_noobLevel.Get() )
 	{
 		int skill = g_bot_noobSkill.Get();
