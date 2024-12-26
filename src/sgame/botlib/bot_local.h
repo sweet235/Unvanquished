@@ -78,7 +78,7 @@ struct OffMeshConnection
 
 struct OffMeshConnections
 {
-	static CONSTEXPR int MAX_CON = 512;
+	static CONSTEXPR int MAX_CON = 1024;
 	float  verts[ MAX_CON * 6 ]; // dtOffMeshConnection::pos
 	float  rad[ MAX_CON ]; // dtOffMeshConnection::rad
 	unsigned short flags[ MAX_CON ]; // dtOffMeshConnection::poly
