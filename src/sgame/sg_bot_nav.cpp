@@ -1144,7 +1144,7 @@ static bool BotTryMoveUpward( gentity_t *self )
 	case PCL_HUMAN_NAKED:
 	case PCL_HUMAN_LIGHT:
 	case PCL_HUMAN_MEDIUM:
-		if ( !BG_InventoryContainsUpgrade( UP_JETPACK, self->client->ps.stats ) )
+		if ( !BG_InventoryContainsUpgrade( UP_JETPACK, self->client->ps.stats ) || self->client->ps.gravity > 810 )
 		{
 			return false;
 		}
