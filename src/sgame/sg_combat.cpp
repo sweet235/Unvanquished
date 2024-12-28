@@ -200,6 +200,7 @@ static const gentity_t *G_FindKillAssist( const gentity_t *self, const gentity_t
 
 static Cvar::Cvar<bool> g_BPTransfer("g_BPTransfer", "BP transfer experiment", Cvar::NONE, false);
 
+void G_admin_print_raw( gentity_t *ent, Str::StringRef m );
 static void TransferBPToEnemyTeam( gentity_t *self )
 {
 	if ( !g_BPTransfer.Get() )
@@ -208,20 +209,25 @@ static void TransferBPToEnemyTeam( gentity_t *self )
 	}
 	int bpToTransfer = BG_Buildable(self->s.modelindex)->buildPoints;
 	team_t otherTeam = self->buildableTeam == TEAM_HUMANS ? TEAM_ALIENS : TEAM_HUMANS;
+	std::string msg;
 	switch ( otherTeam )
 	{
 	case TEAM_ALIENS:
 		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() + bpToTransfer );
 		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() - bpToTransfer );
-		Log::Notice( "^iAliens^* won ^3%d^* build points", bpToTransfer );
+		msg = "\"^iAliens^* won ^3$1$^* build points\"";
 		break;
 	case TEAM_HUMANS:
 		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() - bpToTransfer );
 		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() + bpToTransfer );
-		Log::Notice( "^dHumans^* won ^3%d^* build points", bpToTransfer );
+		msg = "\"^dHumans^* won ^3$1$^* build points\"";
 		break;
 	default:
-		break;
+		return;
+	}
+	for ( int i = 0; i < level.maxclients; i++ )
+	{
+		trap_SendServerCommand( i, va( "print_tr %s %d", msg.c_str(), bpToTransfer ) );
 	}
 }
 
