@@ -208,6 +208,10 @@ static void TransferBPToEnemyTeam( gentity_t *self )
 		return;
 	}
 	int bpToTransfer = BG_Buildable(self->s.modelindex)->buildPoints;
+	if ( bpToTransfer == 0 )
+	{
+		return;
+	}
 	team_t otherTeam = self->buildableTeam == TEAM_HUMANS ? TEAM_ALIENS : TEAM_HUMANS;
 	std::string msg;
 	switch ( otherTeam )
