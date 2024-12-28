@@ -1382,7 +1382,7 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_H_REACTOR;
 		}
-		else if ( level.numBuildablesEstimate[ BA_H_DRILL ] == 0 )
+		else if ( level.numBuildablesEstimate[ BA_H_DRILL ] == 0 && g_maxMiners.Get() != 0 )
 		{
 			toBuild = BA_H_DRILL;
 		}
@@ -1426,7 +1426,7 @@ buildable_t BotChooseBuildableToBuild( gentity_t *self )
 		{
 			toBuild = BA_A_OVERMIND;
 		}
-		else if ( level.numBuildablesEstimate[ BA_A_LEECH ] == 0 )
+		else if ( level.numBuildablesEstimate[ BA_A_LEECH ] == 0 && g_maxMiners.Get() != 0 )
 		{
 			toBuild = BA_A_LEECH;
 		}
