@@ -198,6 +198,33 @@ static const gentity_t *G_FindKillAssist( const gentity_t *self, const gentity_t
 	return assistant;
 }
 
+static Cvar::Cvar<bool> g_BPTransfer("g_BPTransfer", "BP transfer experiment", Cvar::NONE, false);
+
+static void TransferBPToEnemyTeam( gentity_t *self )
+{
+	if ( !g_BPTransfer.Get() )
+	{
+		return;
+	}
+	int bpToTransfer = BG_Buildable(self->s.modelindex)->buildPoints;
+	team_t otherTeam = self->buildableTeam == TEAM_HUMANS ? TEAM_ALIENS : TEAM_HUMANS;
+	switch ( otherTeam )
+	{
+	case TEAM_ALIENS:
+		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() + bpToTransfer );
+		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() - bpToTransfer );
+		Log::Notice( "^iAliens^* won ^3%d^* build points", bpToTransfer );
+		break;
+	case TEAM_HUMANS:
+		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() - bpToTransfer );
+		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() + bpToTransfer );
+		Log::Notice( "^dHumans^* won ^3%d^* build points", bpToTransfer );
+		break;
+	default:
+		break;
+	}
+}
+
 /**
  * @brief Function to distribute rewards to entities that killed this one.
  * @param self
@@ -240,6 +267,8 @@ void G_RewardAttackers( gentity_t *self )
 			value *= ( level.time - self->creationTime ) /
 			         ( float )BG_Buildable( self->s.modelindex )->buildTime;
 		}
+
+		TransferBPToEnemyTeam( self );
 	}
 	else
 	{
