@@ -213,13 +213,13 @@ static void TransferBPToEnemyTeam( gentity_t *self )
 	switch ( otherTeam )
 	{
 	case TEAM_ALIENS:
-		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() + bpToTransfer );
-		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() - bpToTransfer );
+		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() - bpToTransfer );
+		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() + bpToTransfer );
 		msg = "\"^iAliens^* won ^3$1$^* build points\"";
 		break;
 	case TEAM_HUMANS:
-		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() - bpToTransfer );
-		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() + bpToTransfer );
+		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() + bpToTransfer );
+		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() - bpToTransfer );
 		msg = "\"^dHumans^* won ^3$1$^* build points\"";
 		break;
 	default:
