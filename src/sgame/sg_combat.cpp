@@ -215,19 +215,20 @@ static void TransferBPToEnemyTeam( gentity_t *self )
 	case TEAM_ALIENS:
 		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() - bpToTransfer );
 		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() + bpToTransfer );
-		msg = "\"^iAliens^* won ^3$1$^* build points\"";
+		msg = "\"^iAliens^*";
 		break;
 	case TEAM_HUMANS:
 		g_BPInitialBudgetHumans.Set( g_BPInitialBudgetHumans.Get() + bpToTransfer );
 		g_BPInitialBudgetAliens.Set( g_BPInitialBudgetAliens.Get() - bpToTransfer );
-		msg = "\"^dHumans^* won ^3$1$^* build points\"";
+		msg = "\"^dHumans^*";
 		break;
 	default:
 		return;
 	}
+	msg += " won ^3" + std::to_string( bpToTransfer ) + "^* build points, now Humans ^3" + std::to_string( g_BPInitialBudgetHumans.Get() ) + "^* : Aliens ^3" + std::to_string( g_BPInitialBudgetAliens.Get() ) + "^*\"";
 	for ( int i = 0; i < level.maxclients; i++ )
 	{
-		trap_SendServerCommand( i, va( "print_tr %s %d", msg.c_str(), bpToTransfer ) );
+		trap_SendServerCommand( i, va( "print_tr %s ", msg.c_str() ) );
 	}
 }
 
