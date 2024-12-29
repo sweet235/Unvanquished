@@ -2419,6 +2419,9 @@ void G_RunFrame( int levelTime )
 	int        msec;
 	static int ptime3000 = 0;
 
+	extern void G_ResetStolenBP();
+	G_ResetStolenBP();
+
 	for ( team_t team : { TEAM_ALIENS, TEAM_HUMANS } )
 	{
 		level.team[ team ].unusedBP = unusedBP( team );
@@ -2633,6 +2636,9 @@ void G_RunFrame( int levelTime )
 
 	// do we need to tell people Sudden Death is due soon?
 	G_SuddenDeathWarning();
+
+	extern void G_AnnounceStolenBP();
+	G_AnnounceStolenBP();
 
 	G_DecreaseMomentum();
 	G_CalculateAvgPlayers();
