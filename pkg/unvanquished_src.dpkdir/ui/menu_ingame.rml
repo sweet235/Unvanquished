@@ -33,6 +33,21 @@
 		<img class="circles" src="/ui/assets/background/circles2" />
 		<img class="black2" src="/ui/assets/background/black2" />
 
+		<div style="position: absolute; margin: auto; top: -21em; bottom: 0; left: -35em; right: 0; padding: 1em; width: 28em; height: 17.75em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="vampire_manual">
+			<h1>Vampire Mode</h1>
+			<br/>
+			<p>This server is using the experimental vampire mode.</p>
+			<br/>
+			<h3>Rules</h3>
+			<ul>
+				<li>Each team starts with 150 build points.</li>
+				<li>Destroy enemy buildings to win more build points.</li>
+				<li>There are always a total of 300 build points. What you win, the enemy team loses.</li>
+				<li>There are no drills/leeches.</li>
+				<li>There is no sudden death.</li>
+			</ul>
+		</div>
+
 		<div style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; padding: 1em; width: 33em; height: 17em; background-color: rgba( 10%,10%,10%, 95%); color: #999999; border: .17em rgba( 0%, 0%, 0%, 35%);" id="bot_tactic_menu">
 			<h1>Bot Tactic</h1>
 			<h2>All Bots</h2>
