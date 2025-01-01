@@ -976,19 +976,6 @@ static itemBuildError_t BuildableReplacementChecks( buildable_t oldBuildable, bu
 	return IBE_NONE;
 }
 
-static int countBuildableOfType( int modelindex, team_t team )
-{
-	int counter = 0;
-	ForEntities<BuildableComponent>( [&]( Entity& entity, BuildableComponent& )
-	{
-		if ( G_Team(entity.oldEnt) == team && entity.oldEnt->s.modelindex == modelindex )
-		{
-			counter++;
-		}
-	});
-	return counter;
-}
-
 /**
  * @brief Attempts to build a set of buildables that have to be deconstructed for a new buildable.
  *
@@ -1171,22 +1158,10 @@ static itemBuildError_t PrepareBuildableReplacement( buildable_t buildable, vec3
 	// TODO: Remove alien/human distinction.
 	if ( attr->team == TEAM_ALIENS )
 	{
-		if (buildable == BA_A_BOOSTER)
-		{
-			return countBuildableOfType( BA_A_BOOSTER, TEAM_ALIENS ) <= 0 ? IBE_NONE : IBE_NOALIENBP;
-		}
 		return IBE_NOALIENBP;
 	}
 	else if ( attr->team == TEAM_HUMANS )
 	{
-		if (buildable == BA_H_ARMOURY)
-		{
-			return countBuildableOfType( BA_H_ARMOURY, TEAM_HUMANS ) <= 0 ? IBE_NONE : IBE_NOHUMANBP;
-		}
-		else if (buildable == BA_H_MEDISTAT)
-		{
-			return countBuildableOfType( BA_H_MEDISTAT, TEAM_HUMANS ) <= 0 ? IBE_NONE : IBE_NOHUMANBP;
-		}
 		return IBE_NOHUMANBP;
 	}
 	else
