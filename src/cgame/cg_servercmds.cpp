@@ -79,6 +79,44 @@ static void CG_ParseScores()
 
 /*
 =================
+CG_BPVampire
+
+=================
+*/
+static void CG_BPVampire()
+{
+	cg.bpVampireTime = cg.time;
+
+	cg.bpVampireOld[ TEAM_HUMANS ] = cg.bpVampire[ TEAM_HUMANS ];
+	cg.bpVampireOld[ TEAM_ALIENS ] = cg.bpVampire[ TEAM_ALIENS ];
+
+	cg.bpVampire[ TEAM_HUMANS ] = atoi( CG_Argv( 1 ) );
+	cg.bpVampire[ TEAM_ALIENS ] = atoi( CG_Argv( 2 ) );
+
+	auto bar = [&] ( int team )
+	{
+		std::string result;
+		int bpAmount = cg.bpVampire[ team ];
+
+		int step = ( cg.bpVampire[ TEAM_HUMANS ] + cg.bpVampire[ TEAM_ALIENS ] ) / 15;
+		int limit = ( bpAmount + step / 2 ) / step;
+		if ( bpAmount > 0 && limit == 0 )
+		{
+			limit = 1;
+		}
+		for ( int i = 0; i < limit; i++ )
+		{
+			result += "█";
+		}
+		return result;
+	};
+
+	cg.bpVampireBarH = bar( TEAM_HUMANS );
+	cg.bpVampireBarA = bar( TEAM_ALIENS );
+}
+
+/*
+=================
 CG_ParseTeamInfo
 
 =================
@@ -561,7 +599,7 @@ static void CG_Menu( int menuType, int arg )
 			longMsg = _("Building has been disabled on the server for your team.");
 			shortMsg = _("Building has been disabled for your team");
 			break;
-		
+
 		case MN_B_SUDDENDEATH_1:
 			longMsg = _( va( "^1SUDDEN DEATH HAS BEGUN.\n"
 						"^3You may only rebuild the following\n"
@@ -578,15 +616,15 @@ static void CG_Menu( int menuType, int arg )
 						( t == TEAM_ALIENS ? "^7Booster\n" : "" ),
 						( t == TEAM_HUMANS ? "^7Medistation\n" : "" ),
 						( t == TEAM_HUMANS ? "^7Armoury\n" : "" ),
-						( t == TEAM_HUMANS && cgs.suddenDeathDrillCount != 0 ? 
-						  va( "^7Drill^3* ^7(x^3%.0f^7)\n", 
+						( t == TEAM_HUMANS && cgs.suddenDeathDrillCount != 0 ?
+						  va( "^7Drill^3* ^7(x^3%.0f^7)\n",
 						      cgs.suddenDeathDrillCount > -1 ? cgs.suddenDeathDrillCount : 999 )
-							  // show the real drill count, or an unlikely max value;	
+							  // show the real drill count, or an unlikely max value;
 						  : "" ),
-						( t == TEAM_ALIENS && cgs.suddenDeathDrillCount != 0 ? 
-						  va( "^7Leech^3* ^7(x^3%.0f^7)\n", 
+						( t == TEAM_ALIENS && cgs.suddenDeathDrillCount != 0 ?
+						  va( "^7Leech^3* ^7(x^3%.0f^7)\n",
 						      cgs.suddenDeathDrillCount > -1 ? cgs.suddenDeathDrillCount : 999 )
-							  // show the real drill count, or an unlikely max value;	
+							  // show the real drill count, or an unlikely max value;
 						  : "" )
 							 ) );
 
@@ -1402,6 +1440,7 @@ static void CG_PmoveParams_f() {
 static const consoleCommand_t svcommands[] =
 {	// sorting: use 'sort -f'
 	{ "achat",            CG_AdminChat_f          },
+	{ "bpvampire",        CG_BPVampire            },
 	{ "chat",             CG_Chat_f               },
 	{ "cmds",             CG_GameCmds_f           },
 	{ "cp",               CG_CenterPrint_f        },
